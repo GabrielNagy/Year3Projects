@@ -435,34 +435,6 @@ LatexCommand tableofcontents
 
 \end_layout
 
-\begin_layout Section*
-Introducere
-\end_layout
-
-\begin_layout Standard
-
-\size normal
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-addcontentsline{toc}{section}{Introducere}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\size normal
-introducere 
-\end_layout
-
 \begin_layout Chapter
 Introduction
 \end_layout
@@ -471,175 +443,12 @@ Introduction
 Motivation
 \end_layout
 
-\begin_layout Standard
-
-\size normal
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{defn}
-\end_layout
-
-\end_inset
-
- ...
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{defn}
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{thm}
-\end_layout
-
-\end_inset
-
- ...
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{thm}
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{proof}
-\end_layout
-
-\end_inset
-
- ...
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{proof}
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{cor}
-\end_layout
-
-\end_inset
-
- ...
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{cor}
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{prop}
-\end_layout
-
-\end_inset
-
- ...
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{prop}
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{exmp}
-\end_layout
-
-\end_inset
-
- ...
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{exmp}
-\end_layout
-
-\end_inset
-
-
+\begin_layout Section
+Contribution
 \end_layout
 
 \begin_layout Section
-Titlul secţiunii 1.2
+Structure
 \end_layout
 
 \begin_layout Chapter
@@ -647,18 +456,184 @@ Technologies used
 \end_layout
 
 \begin_layout Section
-Titlul secţiunii 2.1
+Backend
+\end_layout
+
+\begin_layout Subsection
+Python
+\end_layout
+
+\begin_layout Subsection
+Twisted
+\end_layout
+
+\begin_layout Subsection
+SQLite
 \end_layout
 
 \begin_layout Section
-Titlul secţiunii 2.2
+Frontend
+\end_layout
+
+\begin_layout Subsection
+Angular
+\end_layout
+
+\begin_layout Subsection
+Gulp
+\end_layout
+
+\begin_layout Subsection
+Less
+\end_layout
+
+\begin_layout Subsection
+CoffeeScript
+\end_layout
+
+\begin_layout Subsection
+pug
+\end_layout
+
+\begin_layout Chapter
+Default implementations
+\end_layout
+
+\begin_layout Section
+Concepts and terminology
+\end_layout
+
+\begin_layout Subsection
+SourceStamps
+\end_layout
+
+\begin_layout Subsection
+Changes
+\end_layout
+
+\begin_layout Subsection
+BuildSets
+\end_layout
+
+\begin_layout Subsection
+BuildRequests
+\end_layout
+
+\begin_layout Subsection
+Builders
+\end_layout
+
+\begin_layout Subsection
+Schedulers
+\end_layout
+
+\begin_layout Subsection
+Builds
+\end_layout
+
+\begin_layout Subsection
+Master
+\end_layout
+
+\begin_layout Subsection
+Workers
+\end_layout
+
+\begin_layout Subsection
+Users
+\end_layout
+
+\begin_layout Subsection
+Data API
+\end_layout
+
+\begin_layout Section
+Web interface
+\end_layout
+
+\begin_layout Subsection
+Home page
+\end_layout
+
+\begin_layout Subsection
+Grid view
+\end_layout
+
+\begin_layout Subsection
+Waterfall view
+\end_layout
+
+\begin_layout Subsection
+Console view
+\end_layout
+
+\begin_layout Subsection
+Settings
+\end_layout
+
+\begin_layout Chapter
+Custom implementations
+\end_layout
+
+\begin_layout Section
+Backend componentization
 \end_layout
 
 \begin_layout Standard
+split master configuration into multiple modules to facilitate scalability
+\end_layout
 
-\size normal
-...etc...
- 
+\begin_layout Subsection
+Email look-up using LDAP
+\end_layout
+
+\begin_layout Subsection
+Log parsing
+\end_layout
+
+\begin_layout Subsection
+Preferential build steps
+\end_layout
+
+\begin_layout Section
+Web interface development
+\end_layout
+
+\begin_layout Subsection
+Flask/WSGI dashboards
+\end_layout
+
+\begin_layout Standard
+pros/cons
+\end_layout
+
+\begin_layout Subsection
+Angular dashboards
+\end_layout
+
+\begin_layout Standard
+pros/cons
+\end_layout
+
+\begin_layout Section
+User scripts
+\end_layout
+
+\begin_layout Standard
+user try scripts to send patches with uncomitted code to buildbot for testing
+\end_layout
+
+\begin_layout Section
+Extending the source code
+\end_layout
+
+\begin_layout Standard
+extending buildbot source to allow multiple patchfiles and more API entrypoints
+ maybe?
+\end_layout
+
+\begin_layout Chapter
+Conclusion
 \end_layout
 
 \begin_layout Bibliography
