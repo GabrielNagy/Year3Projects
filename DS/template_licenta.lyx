@@ -472,27 +472,54 @@ SQLite
 \end_layout
 
 \begin_layout Section
-Frontend
+Web interface
 \end_layout
 
 \begin_layout Subsection
 Angular
 \end_layout
 
+\begin_layout Standard
+info about the development of Angular 
+\end_layout
+
+\begin_layout Subsection
+NodeJS
+\end_layout
+
 \begin_layout Subsection
 Gulp
+\end_layout
+
+\begin_layout Standard
+gulp build system
 \end_layout
 
 \begin_layout Subsection
 Less
 \end_layout
 
+\begin_layout Standard
+extension to CSS, backwards compatible, extends CSS with dynamic variables
+\end_layout
+
 \begin_layout Subsection
 CoffeeScript
 \end_layout
 
+\begin_layout Standard
+alternative to Angular's typically used TypeScript, a pythonic type of JavaScrip
+t
+\end_layout
+
 \begin_layout Subsection
 pug
+\end_layout
+
+\begin_layout Standard
+(formerly Jade).
+ template engine for NodeJS.
+ buildbot's preferred alternative to html
 \end_layout
 
 \begin_layout Chapter
