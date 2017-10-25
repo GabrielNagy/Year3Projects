@@ -443,6 +443,28 @@ Introduction
 Motivation
 \end_layout
 
+\begin_layout Standard
+Generally, every software company, regardless how large or small, uses Continuou
+s Integration principles.
+ Verifying and testing code before delivering and merging with the mainline
+ is of paramount importance, as it saves money as well as time.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+While smaller companies might make use of more flexible ways of testing,
+ the larger ones usually run a CI tool such as Jenkins, on which they run
+ builds of every commit that finds its way to the master/trunk.
+ This is a widespread and useful practice, albeit narrow, as it only tracks
+ main branches.
+ If a commit happens to break the code, the trunk gets locked and valuable
+ time is spent to fix the issues.
+ What I will present in this thesis is how
+\end_layout
+
 \begin_layout Section
 Contribution
 \end_layout
