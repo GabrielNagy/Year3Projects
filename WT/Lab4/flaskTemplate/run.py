@@ -10,7 +10,7 @@ def template_test():
         doc = xmltodict.parse(fd.read())
     doc = json.dumps(doc['queue']['link'])
     xml_json = json.loads(doc)
-    return render_template('template.html', my_string="Wheeeee!", my_list=[0, 1, 2, 3, 4, 5], xml_json=xml_json)
+    return render_template('template.html', xml_json=xml_json)
 
 
 if __name__ == '__main__':
