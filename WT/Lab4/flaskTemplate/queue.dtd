@@ -1,0 +1,4 @@
+<!ELEMENT queue (link*)>
+<!ELEMENT link (name,uri)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT uri (#PCDATA)>

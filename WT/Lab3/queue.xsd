@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="queue">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="link" />
+				<xs:complexType>
+					<xs:element name="name" type="xs:string" />
+					<xs:element name="uri" type="xs:string" />
+				</xs:complexType>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

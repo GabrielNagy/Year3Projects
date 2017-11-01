@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE queue SYSTEM "queue.dtd">
+<queue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="queue.xsd">
+    <link>
+        <name>Paul Graham -- The Roots of Lisp</name>
+        <uri>http://www.paulgraham.com/rootsoflisp.html</uri>
+    </link>
+    <link>
+        <name>LL1: Lightweight Languages Workshop</name>
+        <uri>http://ll1.ai.mit.edu/</uri>
+    </link>
+    <link>
+        <name>The Java Language Environment</name>
+        <uri>http://java.sun.com/docs/white/langenv/</uri>
+    </link>
+    <link>
+        <name>The Evolution of Lisp</name>
+        <uri>http://citeseer.ist.psu.edu/steele93evolution.html</uri>
+    </link>
+    <link>
+        <name>Delimited continuations in operating systems</name>
+        <uri>http://okmij.org/ftp/papers/context-OS.pdf</uri>
+    </link>
+    <link>
+        <name>Pascal Costanza's Highly Opinionated Guide to Lisp</name>
+        <uri>http://p-cos.net/lisp/guide.html</uri>
+    </link>
+</queue>
