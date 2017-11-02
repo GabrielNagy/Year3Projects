@@ -10,20 +10,26 @@ def show_menu():
 
 
 def get_square_sides():
-    side = int(input("Enter the side of the square: "))
+    side = float(input("Enter the side of the square: "))
+    if side <= 0:
+        raise ValueError("Numbers must be positive")
     return side
 
 
 def get_rectangle_sides():
-    side1 = int(input("Enter the first side of the rectangle: "))
-    side2 = int(input("Enter the second side of the rectangle: "))
+    side1 = float(input("Enter the first side of the rectangle: "))
+    side2 = float(input("Enter the second side of the rectangle: "))
+    if min(side1, side2) <= 0:
+        raise ValueError("Numbers must be positive")
     return side1, side2
 
 
 def get_triangle_sides():
-    side1 = int(input("Enter the first side of the triangle: "))
-    side2 = int(input("Enter the second side of the triangle: "))
-    side3 = int(input("Enter the third side of the triangle: "))
+    side1 = float(input("Enter the first side of the triangle: "))
+    side2 = float(input("Enter the second side of the triangle: "))
+    side3 = float(input("Enter the third side of the triangle: "))
+    if min(side1, side2, side3) <= 0:
+        raise ValueError("Numbers must be positive")
     return side1, side2, side3
 
 
@@ -31,10 +37,10 @@ if __name__ == "__main__":
     show_menu()
     number = input("Enter a number: ")
     if number == '1':
-        print(shapes.square_area(*get_square_sides()))
+        print(shapes.area(get_square_sides()))
     elif number == '2':
-        print(shapes.rectangle_area(*get_rectangle_sides()))
+        print(shapes.area(*get_rectangle_sides()))
     elif number == '3':
-        print(shapes.triangle_area(*get_triangle_sides()))
+        print(shapes.area(*get_triangle_sides()))
     else:
         raise ValueError("Invalid number provided")
