@@ -20,11 +20,12 @@ class AStar(object):
         heapq.heapify(self.opened)  # open list
         self.closed = set()  # visited cells list
         self.cells = []  # grid cells
-        self.grid_height = 6
-        self.grid_width = 6
+        self.grid_height = None
+        self.grid_width = None
 
-    def initialize_grid(self):
-        walls = ((0, 5), (1, 0), (1, 1), (1, 5), (2, 3), (3, 1), (3, 2), (3, 5), (4, 1), (4, 4), (5, 1))
+    def initialize_grid(self, width, height, walls, start, end):
+        self.grid_height = height
+        self.grid_width = width
         for x in range(self.grid_width):
             for y in range(self.grid_height):
                 if (x, y) in walls:
@@ -32,8 +33,8 @@ class AStar(object):
                 else:
                     reachable = True
                 self.cells.append(Cell(x, y, reachable))
-        self.start = self.get_cell(0, 0)
-        self.end = self.get_cell(5, 5)
+        self.start = self.get_cell(*start)
+        self.end = self.get_cell(*end)
 
     def get_distance(self, cell):
         # computes distance between this cell and ending cell and multiplies by 10
@@ -102,5 +103,5 @@ class AStar(object):
 
 if __name__ == "__main__":
     a = AStar()
-    a.initialize_grid()
-    print a.process()
+    a.initialize_grid(6, 6, ((0, 5), (1, 0), (1, 1), (1, 5), (2, 3), (3, 1), (3, 2), (3, 5), (4, 1), (4, 4), (5, 1)), (0, 0), (5, 5))
+    print(a.process())
