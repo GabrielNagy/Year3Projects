@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 import heapq
+import logging
+import sys
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 
 class Cell(object):
@@ -14,7 +17,7 @@ class Cell(object):
         self.f = 0  # sum of costs
 
 
-class AStar(object):
+class IDAStar(object):
     def __init__(self):
         self.opened = []
         heapq.heapify(self.opened)  # open list
@@ -64,7 +67,7 @@ class AStar(object):
         while cell.parent is not self.start:
             cell = cell.parent
             path.append((cell.x, cell.y))
-            print('path: cell: %d, %d' % (cell.x, cell.y))
+            # logging.debug('path: cell: %d, %d' % (cell.x, cell.y))
 
         path.append((self.start.x, self.start.y))
         path.reverse()
@@ -78,30 +81,77 @@ class AStar(object):
         adjacent.f = adjacent.h + adjacent.g
 
     def process(self):
-        heapq.heappush(self.opened, (self.start.f, self.start))
-        while len(self.opened):
-            # pop cell from heap queue
-            f, cell = heapq.heappop(self.opened)
-            # add cell to closed list
-            self.closed.add(cell)
-            # if cell is ending cell, display path
-            if cell is self.end:
-                return self.display_path()
-            # get adjacent cells
-            adjacent_cells = self.get_adjacent_cells(cell)
-            for adjacent_cell in adjacent_cells:
-                if adjacent_cell.reachable and adjacent_cell not in self.closed:
-                    if (adjacent_cell.f, adjacent_cell) in self.opened:
-                        # if adjacent cell is in open list
-                        # check if current path is better than the previous one for this adjacent celll
-                        if adjacent_cell.g > cell.g + 10:
+        limit = self.get_distance(self.start)
+        INFINITY = float("inf")
+        # logging.debug("Starting limit: %d" % limit)
+        while limit < INFINITY:
+            self.opened = []
+            self.closed = set()
+            heapq.heapify(self.opened)  # open list
+            heapq.heappush(self.opened, (self.start.f, self.start))
+            while len(self.opened):  # while we have elements in the open list
+                # logging.debug("Current open list: ")
+                # logging.debug(self.opened)
+                # logging.debug("Current closed list: ")
+                # logging.debug(self.closed)
+                # pop cell from heap queue
+                f, cell = heapq.heappop(self.opened)
+                # logging.debug("Current cell: (%d, %d), f value: %d" % (cell.x, cell.y, f))
+                if f > limit:
+                    heapq.heappop(self.opened)
+                # add cell to closed list
+                self.closed.add(cell)
+                # if cell is ending cell, display path
+                if cell is self.end:
+                    print("FOUND PATH!")
+                    return self.display_path()
+                # get adjacent cells
+                adjacent_cells = self.get_adjacent_cells(cell)
+                for adjacent_cell in adjacent_cells:
+                    if adjacent_cell.reachable and adjacent_cell not in self.closed:
+                        if (adjacent_cell.f, adjacent_cell) in self.opened:
+                            # logging.debug("CHECK IF PATH IS BETTER FOR EXISTING CELL - Current cell: (%d, %d), f value: %d" % (adjacent_cell.x, adjacent_cell.y, adjacent_cell.f))
+                            # if adjacent cell is in open list
+                            # check if current path is better than the previous one for this adjacent cell
+                            if adjacent_cell.g > cell.g + 10:
+                                self.update_cell(adjacent_cell, cell)
+                        else:
                             self.update_cell(adjacent_cell, cell)
-                    else:
-                        self.update_cell(adjacent_cell, cell)
-                        # add adjacent cell to open list
-                        heapq.heappush(self.opened, (adjacent_cell.f, adjacent_cell))
+                            # add adjacent cell to open list
+                            if adjacent_cell.f <= limit:
+                                heapq.heappush(self.opened, (adjacent_cell.f, adjacent_cell))
+            limit += 10
+            print("Did not find solution. Raising f limit to: %d" % limit)
+            # logging.debug("Current limit: %d" % (limit))
+
 
 if __name__ == "__main__":
-    a = AStar()
+    #         ., ., ., ., ., #
+    #         #, #, ., ., ., #
+    #         ., ., ., #, ., .    - table a
+    #         ., #, #, ., ., #
+    #         ., #, ., ., #, .
+    #         S, #, ., ., ., F
+
+    #          10 ., ., ., ., ., #, #, #, ., ., ., F
+    #          9  ., ., ., ., ., #, #, #, ., ., ., #
+    #          8  ., ., ., ., ., #, #, #, ., ., ., #
+    #          7  ., ., #, #, #, #, ., ., ., ., ., #
+    #          6  ., ., ., ., ., #, ., ., ., ., ., #
+    #          5  ., #, ., ., ., #, ., ., ., ., ., #    - table b
+    #          4  ., #, ., ., ., #, ., ., ., ., ., #
+    #          3  ., #, ., ., ., ., ., ., ., ., ., #
+    #          2  ., #, ., ., ., #, ., ., ., ., ., #
+    #          1  ., #, ., ., ., #, #, #, ., ., ., #
+    #          0  S, #, ., ., ., #, #, #, ., ., ., #
+    #             0  1  2  3  4  5  6  7  8  9  10 11
+    #
+    #
+
+    a = IDAStar()
     a.initialize_grid(6, 6, ((0, 5), (1, 0), (1, 1), (1, 5), (2, 3), (3, 1), (3, 2), (3, 5), (4, 1), (4, 4), (5, 1)), (0, 0), (5, 5))
     print(a.process())
+
+    b = IDAStar()
+    b.initialize_grid(12, 11, ((1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 7), (3, 7), (4, 7), (5, 0), (5, 1), (5, 2), (5, 4), (5, 5), (5, 6), (5, 7), (5, 8), (5, 9), (5, 10), (6, 0), (6, 1), (6, 8), (6, 9), (6, 10), (7, 0), (7, 1), (7, 8), (7, 10), (7, 9), (11, 0), (11, 1), (11, 2), (11, 3), (11, 4), (11, 5), (11, 6), (11, 7), (11, 8), (11, 9)), (0, 0), (11, 10))
+    print(b.process())
