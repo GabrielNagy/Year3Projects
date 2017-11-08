@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 import heapq
 import logging
 import sys
@@ -18,7 +19,8 @@ class Cell(object):
 
 
 class IDAStar(object):
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.opened = []
         heapq.heapify(self.opened)  # open list
         self.closed = set()  # visited cells list
@@ -26,9 +28,9 @@ class IDAStar(object):
         self.grid_height = None
         self.grid_width = None
 
-    def initialize_grid(self, width, height, walls, start, end):
-        self.grid_height = height
-        self.grid_width = width
+    def initialize_grid(self, size, walls, start, end):
+        self.grid_height = size
+        self.grid_width = size
         for x in range(self.grid_width):
             for y in range(self.grid_height):
                 if (x, y) in walls:
@@ -72,6 +74,27 @@ class IDAStar(object):
         path.append((self.start.x, self.start.y))
         path.reverse()
         return path
+
+    def print_table(self):
+        # draw table
+        print("===== TABLE %s =====" % self.name)
+        matrix = [[0 for x in range(0, self.grid_width + 1)] for y in range(0, self.grid_height + 1)]
+        for i in range(0, self.grid_width):
+            for j in range(0, self.grid_height):
+                cell = self.get_cell(i, j)
+                if cell.reachable:
+                    if cell == self.start:
+                        matrix[self.grid_width - j - 1][i] = 'S'
+                    elif cell == self.end:
+                        matrix[self.grid_width - j - 1][i] = 'F'
+                    else:
+                        matrix[self.grid_width - j - 1][i] = '.'
+                else:
+                    matrix[self.grid_width - j - 1][i] = '#'
+        for i in range(0, self.grid_width):
+            for j in range(0, self.grid_height):
+                print(matrix[i][j], end=" ")
+            print('\n')
 
     def update_cell(self, adjacent, cell):
         # updates adjacent cell to current cell
@@ -126,32 +149,13 @@ class IDAStar(object):
 
 
 if __name__ == "__main__":
-    #         ., ., ., ., ., #
-    #         #, #, ., ., ., #
-    #         ., ., ., #, ., .    - table a
-    #         ., #, #, ., ., #
-    #         ., #, ., ., #, .
-    #         S, #, ., ., ., F
 
-    #          10 ., ., ., ., ., #, #, #, ., ., ., F
-    #          9  ., ., ., ., ., #, #, #, ., ., ., #
-    #          8  ., ., ., ., ., #, #, #, ., ., ., #
-    #          7  ., ., #, #, #, #, ., ., ., ., ., #
-    #          6  ., ., ., ., ., #, ., ., ., ., ., #
-    #          5  ., #, ., ., ., #, ., ., ., ., ., #    - table b
-    #          4  ., #, ., ., ., #, ., ., ., ., ., #
-    #          3  ., #, ., ., ., ., ., ., ., ., ., #
-    #          2  ., #, ., ., ., #, ., ., ., ., ., #
-    #          1  ., #, ., ., ., #, #, #, ., ., ., #
-    #          0  S, #, ., ., ., #, #, #, ., ., ., #
-    #             0  1  2  3  4  5  6  7  8  9  10 11
-    #
-    #
-
-    a = IDAStar()
-    a.initialize_grid(6, 6, ((0, 5), (1, 0), (1, 1), (1, 5), (2, 3), (3, 1), (3, 2), (3, 5), (4, 1), (4, 4), (5, 1)), (0, 0), (5, 5))
+    a = IDAStar('smaller_table')
+    a.initialize_grid(6, ((0, 5), (1, 0), (1, 1), (1, 5), (2, 3), (3, 1), (3, 2), (3, 5), (4, 1), (4, 4), (5, 1)), (0, 0), (5, 5))
+    a.print_table()
     print(a.process())
 
-    b = IDAStar()
-    b.initialize_grid(12, 11, ((1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 7), (3, 7), (4, 7), (5, 0), (5, 1), (5, 2), (5, 4), (5, 5), (5, 6), (5, 7), (5, 8), (5, 9), (5, 10), (6, 0), (6, 1), (6, 8), (6, 9), (6, 10), (7, 0), (7, 1), (7, 8), (7, 10), (7, 9), (11, 0), (11, 1), (11, 2), (11, 3), (11, 4), (11, 5), (11, 6), (11, 7), (11, 8), (11, 9)), (0, 0), (11, 10))
+    b = IDAStar('larger_table')
+    b.initialize_grid(12, ((1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 7), (3, 7), (4, 7), (5, 0), (5, 1), (5, 2), (5, 4), (5, 5), (5, 6), (5, 7), (5, 8), (5, 9), (5, 10), (6, 0), (6, 1), (6, 8), (6, 9), (6, 10), (7, 0), (7, 1), (7, 8), (7, 10), (7, 9), (8, 3), (8, 4), (8, 5), (8, 6), (8, 7), (8, 8), (8, 9), (8, 10), (8, 11), (11, 0), (11, 1), (11, 2), (11, 3), (11, 4), (11, 5), (11, 6), (11, 7), (11, 8), (11, 9), (11, 10)), (0, 0), (11, 11))
+    b.print_table()
     print(b.process())
