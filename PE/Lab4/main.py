@@ -9,6 +9,15 @@ def show_menu():
         3. Triangle""")
 
 
+def sides(option):
+    side = []
+    for i in range(option):
+        side.append(float(input("Enter side %d: " % (i+1))))
+        if side[i] <= 0:
+            raise ValueError("Numbers must be positive")
+    return side
+
+
 def get_square_sides():
     side = float(input("Enter the side of the square: "))
     if side <= 0:
@@ -35,12 +44,8 @@ def get_triangle_sides():
 
 if __name__ == "__main__":
     show_menu()
-    number = input("Enter a number: ")
-    if number == '1':
-        print(shapes.area(get_square_sides()))
-    elif number == '2':
-        print(shapes.area(*get_rectangle_sides()))
-    elif number == '3':
-        print(shapes.area(*get_triangle_sides()))
+    number = int(input("Enter a number: "))
+    if number in [1, 2, 3]:
+        print(shapes.area(*sides(number)))
     else:
         raise ValueError("Invalid number provided")
