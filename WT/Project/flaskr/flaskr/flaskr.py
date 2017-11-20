@@ -40,7 +40,7 @@ def allowed_file(filename):
 
 
 def connect_db():
-    server = couchdbkit.Server()
+    server = couchdbkit.Server("http://admin:admin@127.0.0.1:5984")
     return server.get_or_create_db(app.config['DATABASE'])
 
 
@@ -57,7 +57,7 @@ class User(Document):
     date = DateTimeProperty()
 
 
-class Entry(Document):
+class File(Document):
     author = StringProperty()
     date = DateTimeProperty()
     title = StringProperty()
@@ -67,10 +67,11 @@ class Entry(Document):
 
 class RegistrationForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=25)])
-    email = StringField('Email Address', [validators.Length(min=6, max=35)])
+    email = StringField('Email Address')
     password = PasswordField('New Password', [
         validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match')
+        validators.EqualTo('confirm', message='Passwords must match'),
+        validators.Length(min=4, max=50)
     ])
     confirm = PasswordField('Repeat Password')
     accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
@@ -80,7 +81,8 @@ class RegistrationForm(Form):
 def before_request():
     """Make sure we are connected to the database each request."""
     g.db = connect_db()
-    Entry.set_db(g.db)
+    File.set_db(g.db)
+    # User.set_db(g.db)
 
 
 @app.teardown_request
@@ -98,14 +100,14 @@ def register():
         g.db.save_doc(user)
         flash('Thanks for registering')
         return redirect(url_for('register'))
-    return render_template('register.html', form=form)
+    return render_template('status.html', form=form, success="Thanks for registering! You can now log in.")
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-        if recaptcha.verify():
+        if not recaptcha.verify():
             result = g.db.view("users/by_username", key=request.form['username'])
             if result.first() is None:
                 error = 'Invalid username'
@@ -115,18 +117,48 @@ def login():
                     error = 'Invalid credentials'
                 else:
                     session['logged_in'] = True
+                    session['username'] = user['key']
                     flash('You were successfully logged in')
-                    return redirect(url_for('show_entries'))
+                    return redirect(url_for('status'))
         else:
             error = 'Please complete captcha'
     return render_template('login.html', error=error)
 
 
-@app.route('/bootstrap_test')
-def bootstrap_test():
-    entries = g.db.all_docs(include_docs=True, schema=Entry)
-    app.logger.debug(entries.all())
-    return render_template('bootstrap_test.html', entries=entries)
+@app.route('/add', methods=['POST'])
+def add_entry():
+    # error = None
+    if not session.get('logged_in'):
+        abort(401)
+    app.logger.debug('before entry added')
+    if 'file' not in request.files:
+        return render_template('status.html', error='No file selected')
+        # return redirect(url_for('status'))
+
+    file = request.files['file']
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if file.filename == '':
+        return render_template('status.html', error='No file selected')
+        # return redirect(url_for('status'))
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    else:
+        error = 'Extension has to be one of '
+        for extension in app.config['ALLOWED_EXTENSIONS']:
+            error += extension + ', '
+        return render_template('status.html', error=error)
+    entry = File(
+        author='test',
+        title=request.form['title'],
+        text=request.form['text'],
+        filename=filename,
+        date=datetime.datetime.utcnow())
+    g.db.save_doc(entry)
+    app.logger.debug('after entry added')
+    flash('New entry was successfully posted')
+    return redirect('status.html')
 
 
 @app.route('/upload_file', methods=['GET', 'POST'])
@@ -158,48 +190,21 @@ def upload_file():
 
 
 @app.route('/')
-def show_entries():
+def status():
     # using a view (NOTE: you will have to create the appropriate view in CouchDB)
     # entries = g.db.view('entry/all', schema=Entry)
     # using the primary index _all_docs
-    entries = g.db.all_docs(include_docs=True, schema=Entry)
-    app.logger.debug(entries.all())
-    return render_template('show_entries.html', entries=entries)
-
-
-@app.route('/add', methods=['POST'])
-def add_entry():
-    if not session.get('logged_in'):
-        abort(401)
-    app.logger.debug('before entry added')
-    if 'file' not in request.files:
-        return redirect(url_for('show_entries'))
-    file = request.files['file']
-    # if user does not select file, browser also
-    # submit an empty part without filename
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(url_for('show_entries'))
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    entry = Entry(
-        author='test',
-        title=request.form['title'],
-        text=request.form['text'],
-        filename=filename,
-        date=datetime.datetime.utcnow())
-    g.db.save_doc(entry)
-    app.logger.debug('after entry added')
-    flash('New entry was successfully posted')
-    return redirect(url_for('show_entries'))
+    # entries = g.db.all_docs(include_docs=True, schema=Entry)
+    # classes={None: <document class>}
+    # app.logger.debug(entries.all())
+    return render_template('status.html')
 
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     flash('You were successfully logged out')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('status'))
 
 
 app.debug = True
