@@ -2,7 +2,7 @@
 import datetime
 import couchdbkit
 from couchdbkit import Document, StringProperty, DateTimeProperty
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, Markup
 from flask_bcrypt import Bcrypt
 from flask_recaptcha import ReCaptcha
 import logging
@@ -34,13 +34,19 @@ bcrypt = Bcrypt(app)
 recaptcha = ReCaptcha(app=app)
 
 
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (getattr(form, field).label.text, error), 'danger')
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit(
         '.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def connect_db():
-    server = couchdbkit.Server("http://admin:admin@127.0.0.1:5984")
+    server = couchdbkit.Server()
     return server.get_or_create_db(app.config['DATABASE'])
 
 
@@ -57,7 +63,7 @@ class User(Document):
     date = DateTimeProperty()
 
 
-class File(Document):
+class Entry(Document):
     author = StringProperty()
     date = DateTimeProperty()
     title = StringProperty()
@@ -67,11 +73,10 @@ class File(Document):
 
 class RegistrationForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=25)])
-    email = StringField('Email Address')
-    password = PasswordField('New Password', [
-        validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match'),
-        validators.Length(min=4, max=50)
+    email = StringField('Email Address', [validators.Email()])
+    password = PasswordField('Password', [
+        validators.Length(min=4),
+        validators.EqualTo('confirm', message='Passwords must match')
     ])
     confirm = PasswordField('Repeat Password')
     accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
@@ -81,8 +86,7 @@ class RegistrationForm(Form):
 def before_request():
     """Make sure we are connected to the database each request."""
     g.db = connect_db()
-    File.set_db(g.db)
-    # User.set_db(g.db)
+    Entry.set_db(g.db)
 
 
 @app.teardown_request
@@ -98,16 +102,18 @@ def register():
                     password=bcrypt.generate_password_hash(request.form['password']),
                     date=datetime.datetime.utcnow())
         g.db.save_doc(user)
-        flash('Thanks for registering')
-        return redirect(url_for('register'))
-    return render_template('status.html', form=form, success="Thanks for registering! You can now log in.")
+        flash(Markup('Thanks for registering! You can now <a href="{{ url_for(\'login\') }}">login</a>.'), 'success')
+        return redirect(url_for('status'))
+    else:
+        flash_errors(form)
+    return render_template('register.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-        if not recaptcha.verify():
+        if recaptcha.verify():
             result = g.db.view("users/by_username", key=request.form['username'])
             if result.first() is None:
                 error = 'Invalid username'
@@ -117,7 +123,7 @@ def login():
                     error = 'Invalid credentials'
                 else:
                     session['logged_in'] = True
-                    session['username'] = user['key']
+                    session['username'] = request.form['username']
                     flash('You were successfully logged in')
                     return redirect(url_for('status'))
         else:
@@ -125,40 +131,11 @@ def login():
     return render_template('login.html', error=error)
 
 
-@app.route('/add', methods=['POST'])
-def add_entry():
-    # error = None
-    if not session.get('logged_in'):
-        abort(401)
-    app.logger.debug('before entry added')
-    if 'file' not in request.files:
-        return render_template('status.html', error='No file selected')
-        # return redirect(url_for('status'))
-
-    file = request.files['file']
-    # if user does not select file, browser also
-    # submit an empty part without filename
-    if file.filename == '':
-        return render_template('status.html', error='No file selected')
-        # return redirect(url_for('status'))
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    else:
-        error = 'Extension has to be one of '
-        for extension in app.config['ALLOWED_EXTENSIONS']:
-            error += extension + ', '
-        return render_template('status.html', error=error)
-    entry = File(
-        author='test',
-        title=request.form['title'],
-        text=request.form['text'],
-        filename=filename,
-        date=datetime.datetime.utcnow())
-    g.db.save_doc(entry)
-    app.logger.debug('after entry added')
-    flash('New entry was successfully posted')
-    return redirect('status.html')
+@app.route('/bootstrap_test')
+def bootstrap_test():
+    entries = g.db.all_docs(include_docs=True, schema=Entry)
+    app.logger.debug(entries.all())
+    return render_template('bootstrap_test.html', entries=entries)
 
 
 @app.route('/upload_file', methods=['GET', 'POST'])
@@ -195,14 +172,42 @@ def status():
     # entries = g.db.view('entry/all', schema=Entry)
     # using the primary index _all_docs
     # entries = g.db.all_docs(include_docs=True, schema=Entry)
-    # classes={None: <document class>}
     # app.logger.debug(entries.all())
     return render_template('status.html')
+
+
+@app.route('/add', methods=['POST'])
+def add_entry():
+    if not session.get('logged_in'):
+        abort(401)
+    app.logger.debug('before entry added')
+    if 'file' not in request.files:
+        return redirect(url_for('show_entries'))
+    file = request.files['file']
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if file.filename == '':
+        flash('No selected file')
+        return redirect(url_for('show_entries'))
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    entry = Entry(
+        author='test',
+        title=request.form['title'],
+        text=request.form['text'],
+        filename=filename,
+        date=datetime.datetime.utcnow())
+    g.db.save_doc(entry)
+    app.logger.debug('after entry added')
+    flash('New entry was successfully posted')
+    return redirect(url_for('show_entries'))
 
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
+    session.pop('username', None)
     flash('You were successfully logged out')
     return redirect(url_for('status'))
 

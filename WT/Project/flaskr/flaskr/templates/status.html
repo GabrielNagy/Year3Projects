@@ -1,16 +1,20 @@
 {% extends "layout.html" %}
   {% block body %}
-    {% if session.logged_in %}
       <div class="container">
         <div class="panel panel-default">
           <div class="panel-heading">
+    {% if session.logged_in %}
             <div class="panel-title pull-left">Please upload a file.</div>
             <div class="pull-right">logged in as <em>{{ session.username }}</em> <a href="{{ url_for('logout') }}">(logout)</a></div>
+    {% else %}
+            <div class="pull-right"><em>not logged in. please <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('register') }}">register</a></em></div>
             <div class="clearfix"></div>
+    {% endif %}
           </div>
           {% if error %}<div class="alert alert-danger"><strong>Error:</strong> {{ error }}</div>{% endif %}
           {% if success %}<div class="alert alert-danger"><strong>Success:</strong> {{ success }}</div>{% endif %}
           <div class="panel-body">
+    {% if session.logged_in %}
             <form action="{{ url_for('add_entry') }}" method=post enctype=multipart/form-data class="form-horizontal">
               <div class="form-group">
                 <label class="control-label col-sm-2" for="file">File:</label>
@@ -24,11 +28,11 @@
                 </div>
               </div>
             </form>
+    {% else %}
+            Welcome to the application tester! In order to use it and upload files, you need to first register an account.
+    {% endif %}
           </div>
         </div>
       </div>
-    {% else %}
       {% if success %}<div class="alert alert-success"><strong>Success:</strong> {{ success }}</div>{% endif %}
-      <h1>Not logged in. <a href="{{ url_for('login') }}">Log in</a> or <a href="{{ url_for('register') }}">register</a>.</h1>
-    {% endif %}
   {% endblock %}
