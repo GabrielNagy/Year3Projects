@@ -29,7 +29,7 @@ RECAPTCHA_RTABINDEX = 10
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
-UPLOAD_FOLDER = 'upload-app/static/uploads'
+UPLOAD_FOLDER = 'upload_app/static/uploads'
 ALLOWED_EXTENSIONS = set(['sh', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'cpp', 'c', 'py', 'html', 'js'])
 
 app = Flask(__name__)

@@ -1,2 +1,2 @@
-graft upload-app/templates
-graft upload-app/static
+graft upload_app/templates
+graft upload_app/static

@@ -7,6 +7,9 @@
 *.pyc
 .Python
 [Bb]in
+[Bb]uild
+[Dd]ist
+*.egg-info
 [Ii]nclude
 [Ll]ib
 [Ll]ib64
