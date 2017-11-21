@@ -1,10 +1,11 @@
 from setuptools import setup
 
 setup(
-    name='upload-app',
-    packages=['upload-app'],
+    name='upload_app',
+    packages=['upload_app'],
     include_package_data=True,
     install_requires=[
+        'celery',
         'flask',
         'flask_bcrypt',
         'flask_bootstrap',
