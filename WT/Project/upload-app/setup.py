@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(
-    name='flaskr',
-    packages=['flaskr'],
+    name='upload-app',
+    packages=['upload-app'],
     include_package_data=True,
     install_requires=[
         'flask',

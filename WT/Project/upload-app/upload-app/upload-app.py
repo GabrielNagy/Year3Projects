@@ -11,6 +11,8 @@ from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
 import uuid
+from celery import Celery
+
 
 DATABASE = 'flaskr'
 DEBUG = True
@@ -24,14 +26,18 @@ RECAPTCHA_THEME = "light"
 RECAPTCHA_TYPE = "image"
 RECAPTCHA_SIZE = "normal"
 RECAPTCHA_RTABINDEX = 10
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
-UPLOAD_FOLDER = 'flaskr/static/uploads'
+UPLOAD_FOLDER = 'upload-app/static/uploads'
 ALLOWED_EXTENSIONS = set(['sh', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'cpp', 'c', 'py', 'html', 'js'])
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 Bootstrap(app)
 bcrypt = Bcrypt(app)
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
 recaptcha = ReCaptcha(app=app)
 
 
@@ -67,9 +73,6 @@ class User(Document):
 class Entry(Document):
     author = StringProperty()
     date = DateTimeProperty()
-    # title = StringProperty()
-    # text = StringProperty()
-    filename = StringProperty()
     original = StringProperty()
 
 
@@ -100,11 +103,19 @@ def teardown_request(exception):
 def register():
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
+        check_user = g.db.view("users/by_username", key=request.form['username'])
+        check_email = g.db.view("users/by_email", key=request.form['email'])
+        if check_user.first():
+            flash("An user with this name already exists.", 'danger')
+            return redirect(url_for('register'))
+        if check_email.first():
+            flash(Markup("An user with this email already exists. <a href='/login'>Login</a> if you already have an account."), 'danger')
+            return redirect(url_for('register'))
         user = User(username=request.form['username'], email=request.form['email'],
                     password=bcrypt.generate_password_hash(request.form['password']),
                     date=datetime.datetime.utcnow())
         g.db.save_doc(user)
-        flash(Markup('Thanks for registering! You can now <a href="{{ url_for(\'login\') }}">login</a>.'), 'success')
+        flash(Markup('Thanks for registering! You can now <a href="/login">login</a>.'), 'success')
         return redirect(url_for('status'))
     else:
         flash_errors(form)
@@ -133,41 +144,6 @@ def login():
     return render_template('login.html', error=error)
 
 
-@app.route('/bootstrap_test')
-def bootstrap_test():
-    entries = g.db.all_docs(include_docs=True, schema=Entry)
-    app.logger.debug(entries.all())
-    return render_template('bootstrap_test.html', entries=entries)
-
-
-@app.route('/upload_file', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        # check if post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('upload_file', filename=filename))
-    return '''
-        <!doctype html>
-        <title>Upload new File</title>
-        <h1>Upload new File</h1>
-        <form method=post enctype=multipart/form-data>
-        <p><input type=file name=file>
-        <input type=submit value=Upload>
-        </form>
-    '''
-
-
 @app.route('/')
 def status():
     # using a view (NOTE: you will have to create the appropriate view in CouchDB)
@@ -177,13 +153,7 @@ def status():
     # app.logger.debug(entries.all())
     files = None
     if session.get('logged_in'):
-        files = {}
-        allFiles = g.db.view("users/by_uploads")
-        for file in allFiles:
-            if file['key'][0] == session.get('username'):
-                files.update({"filename": file['key'][1], "date": file['value']})
-        for file in files:
-            print file, files[file]
+        files = g.db.view("users/by_uploads", key=session.get('username'))
     return render_template('status.html', files=files)
 
 
@@ -206,14 +176,16 @@ def add_entry():
         savedFilename = str(uuid.uuid4())
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], savedFilename))
         entry = Entry(
+            _id=savedFilename,
             author=session.get('username'),
-            filename=savedFilename,
             original=filename,
             date=datetime.datetime.utcnow())
         g.db.save_doc(entry)
         app.logger.debug('after entry added')
         flash('New entry was successfully posted', 'success')
         return redirect(url_for('status'))
+    flash('Invalid extension', 'danger')
+    return redirect(url_for('status'))
 
 
 @app.route('/logout')
@@ -226,7 +198,6 @@ def logout():
 
 app.debug = True
 app.logger.setLevel(logging.INFO)
-
 couchdbkit.set_logging('info')
 
 if __name__ == "__main__":
