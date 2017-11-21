@@ -2,16 +2,13 @@
 {% block body %}
 <div class="container">
   <div class="panel panel-default">
-    <div class="panel-heading">Complete form to register</div>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
-    {% endwith %}
+    <div class="panel-heading">
+            <div class="panel-title pull-left">Complete the form to register</div>
+            <div class="pull-right"><em>go <a href="{{ url_for('status') }}">home</a> or <a href="{{ url_for('login') }}">login</a></em></div>
+            <div class="clearfix"></div>
+            </div>
     <div class="panel-body">
+      {% include "utils/flasher.html" %}
       <form action="{{ url_for('register') }}" method=post class="form-horizontal">
         <div class="form-group">
           <label class="control-label col-sm-2" for="username">Username:</label>

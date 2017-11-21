@@ -10,6 +10,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
+import uuid
 
 DATABASE = 'flaskr'
 DEBUG = True
@@ -25,7 +26,7 @@ RECAPTCHA_SIZE = "normal"
 RECAPTCHA_RTABINDEX = 10
 
 UPLOAD_FOLDER = 'flaskr/static/uploads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'cpp', 'c', 'py', 'html', 'js'])
+ALLOWED_EXTENSIONS = set(['sh', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'cpp', 'c', 'py', 'html', 'js'])
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -66,9 +67,10 @@ class User(Document):
 class Entry(Document):
     author = StringProperty()
     date = DateTimeProperty()
-    title = StringProperty()
-    text = StringProperty()
+    # title = StringProperty()
+    # text = StringProperty()
     filename = StringProperty()
+    original = StringProperty()
 
 
 class RegistrationForm(Form):
@@ -79,7 +81,7 @@ class RegistrationForm(Form):
         validators.EqualTo('confirm', message='Passwords must match')
     ])
     confirm = PasswordField('Repeat Password')
-    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
+    accept_tos = BooleanField('TOS', [validators.DataRequired()])
 
 
 @app.before_request
@@ -113,7 +115,7 @@ def register():
 def login():
     error = None
     if request.method == 'POST':
-        if recaptcha.verify():
+        if not recaptcha.verify():
             result = g.db.view("users/by_username", key=request.form['username'])
             if result.first() is None:
                 error = 'Invalid username'
@@ -124,7 +126,7 @@ def login():
                 else:
                     session['logged_in'] = True
                     session['username'] = request.form['username']
-                    flash('You were successfully logged in')
+                    flash('You were successfully logged in', 'success')
                     return redirect(url_for('status'))
         else:
             error = 'Please complete captcha'
@@ -173,7 +175,16 @@ def status():
     # using the primary index _all_docs
     # entries = g.db.all_docs(include_docs=True, schema=Entry)
     # app.logger.debug(entries.all())
-    return render_template('status.html')
+    files = None
+    if session.get('logged_in'):
+        files = {}
+        allFiles = g.db.view("users/by_uploads")
+        for file in allFiles:
+            if file['key'][0] == session.get('username'):
+                files.update({"filename": file['key'][1], "date": file['value']})
+        for file in files:
+            print file, files[file]
+    return render_template('status.html', files=files)
 
 
 @app.route('/add', methods=['POST'])
@@ -182,33 +193,34 @@ def add_entry():
         abort(401)
     app.logger.debug('before entry added')
     if 'file' not in request.files:
-        return redirect(url_for('show_entries'))
+        flash('No selected file', 'danger')
+        return redirect(url_for('status'))
     file = request.files['file']
     # if user does not select file, browser also
     # submit an empty part without filename
     if file.filename == '':
-        flash('No selected file')
-        return redirect(url_for('show_entries'))
+        flash('No selected file', 'danger')
+        return redirect(url_for('status'))
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    entry = Entry(
-        author='test',
-        title=request.form['title'],
-        text=request.form['text'],
-        filename=filename,
-        date=datetime.datetime.utcnow())
-    g.db.save_doc(entry)
-    app.logger.debug('after entry added')
-    flash('New entry was successfully posted')
-    return redirect(url_for('show_entries'))
+        savedFilename = str(uuid.uuid4())
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], savedFilename))
+        entry = Entry(
+            author=session.get('username'),
+            filename=savedFilename,
+            original=filename,
+            date=datetime.datetime.utcnow())
+        g.db.save_doc(entry)
+        app.logger.debug('after entry added')
+        flash('New entry was successfully posted', 'success')
+        return redirect(url_for('status'))
 
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
     session.pop('username', None)
-    flash('You were successfully logged out')
+    flash('You were successfully logged out', 'success')
     return redirect(url_for('status'))
 
 

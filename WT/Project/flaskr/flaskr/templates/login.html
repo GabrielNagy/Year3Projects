@@ -2,7 +2,11 @@
 {% block body %}
 <div class="container">
   <div class="panel panel-default">
-    <div class="panel-heading">Complete form to login</div>
+    <div class="panel-heading">
+            <div class="panel-title pull-left">Complete the form to login</div>
+            <div class="pull-right"><em>go <a href="{{ url_for('status') }}">home</a> or <a href="{{ url_for('register') }}">register</a></em></div>
+            <div class="clearfix"></div>
+            </div>
   {% if error %}<div class="alert alert-danger"><strong>Error:</strong> {{ error }}</div>{% endif %}
     <div class="panel-body">
       <form action="{{ url_for('login') }}" method=post class="form-horizontal">
