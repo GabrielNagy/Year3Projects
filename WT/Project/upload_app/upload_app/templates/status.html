@@ -5,9 +5,9 @@
     <div class="panel-heading">
       {% if session.logged_in %}
       <div class="panel-title pull-left">Please upload a file.</div>
-      <div class="pull-right">logged in as <em>{{ session.username }}</em> <a href="{{ url_for('logout') }}">(logout)</a></div>
+      <div class="pull-right">logged in as <em>{{ session.username }}</em> <small><a href="{{ url_for('logout') }}">(logout)</a></small></div>
       {% else %}
-      <div class="pull-right"><em>not logged in. please <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('register') }}">register</a> <a href="{{ url_for('cel') }}">celery</a></em></div>
+      <div class="pull-right"><em>not logged in. please <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('register') }}">register</a></em></div>
       {% endif %}
       <div class="clearfix"></div>
     </div>
@@ -27,18 +27,30 @@
           </div>
         </div>
       </form>
-      <ul class="entries">
-        {% for file in files %}
-        <li><h2>{{ file.value }}</h2>{{ file.id }}
-          <!-- <li><h2>{{ file.filename }}</h2>{{ file.date }} -->
-          {% else %}
-        <li><em>You haven't uploaded any files</em>
-          {% endfor %}
-      </ul>
-      {% else %}
-      Welcome to the application tester! In order to use it and upload files, you need to first register an account.
-      {% endif %}
     </div>
   </div>
+  {% for file in files %}
+  <hr />
+  <div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+      <h4 class="panel-title pull-left" style="padding-top: 7.5px;"><a href="{{ url_for('uploads', path=file.id, filename=file.value)}}">{{ file.value }}</a> <small>(id: {{ file.id }})</small></h4>
+      <div class="pull-right">
+        <button id="start-job-{{file.id}}" class="btn btn-default">Begin test</button>
+      </div>
+    </div>
+    <div class="panel-body" id="{{file.id}}">
+      results go here
+    </div>
+  </div>
+  {% else %}
+  <div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+      <h4 class="panel-title pull-left">You haven't uploaded any files yet.</h4>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  Welcome to the application tester! In order to use it and upload files, you need to first register an account.
+  {% endif %}
 </div>
 {% endblock %}

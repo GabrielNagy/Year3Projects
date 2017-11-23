@@ -2,7 +2,7 @@
 import datetime
 import couchdbkit
 from couchdbkit import Document, StringProperty, DateTimeProperty
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, Markup
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, Markup, jsonify, send_from_directory
 from flask_bcrypt import Bcrypt
 from flask_recaptcha import ReCaptcha
 import logging
@@ -12,6 +12,7 @@ from flask_bootstrap import Bootstrap
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
 import uuid
 from celery import Celery
+import subprocess
 
 
 DATABASE = 'flaskr'
@@ -142,6 +143,18 @@ def login():
         else:
             error = 'Please complete captcha'
     return render_template('login.html', error=error)
+
+
+@app.route('/static/uploads/<path:path>')
+def uploads(path):
+    if session.get('logged_in'):
+        files = g.db.view("users/by_uploads", key=session.get('username'), id=path)
+        if files.first() or session.get('is_admin'):
+            for file in files:
+                if path in file['id']:
+                    return send_from_directory(os.path.join('.', 'static', 'uploads'), path, as_attachment=True, attachment_filename=file['value'])
+    flash("You are not authorized to view this file", 'danger')
+    return redirect(url_for('status'))
 
 
 @app.route('/')
