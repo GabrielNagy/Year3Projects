@@ -12,6 +12,7 @@ setup(
         'flask_nav',
         'flask_recaptcha',
         'couchdbkit',
+        'redis',
         'werkzeug',
         'wtforms'
     ],

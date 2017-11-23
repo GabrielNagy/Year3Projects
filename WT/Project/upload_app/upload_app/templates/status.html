@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block body %}
+{% block content %}
 <div class="container">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -7,7 +7,7 @@
       <div class="panel-title pull-left">Please upload a file.</div>
       <div class="pull-right">logged in as <em>{{ session.username }}</em> <a href="{{ url_for('logout') }}">(logout)</a></div>
       {% else %}
-      <div class="pull-right"><em>not logged in. please <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('register') }}">register</a></em></div>
+      <div class="pull-right"><em>not logged in. please <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('register') }}">register</a> <a href="{{ url_for('cel') }}">celery</a></em></div>
       {% endif %}
       <div class="clearfix"></div>
     </div>

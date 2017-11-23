@@ -1,0 +1,9 @@
+couchdbkit==0.6.5
+celery==4.1.0
+Flask==0.12.2
+Flask-Bcrypt==0.7.1
+Flask-Bootstrap==3.3.7.1
+Flask-ReCaptcha==0.4.2
+redis==2.10.6
+Werkzeug==0.12.2
+WTForms==2.1
