@@ -30,8 +30,10 @@ RECAPTCHA_RTABINDEX = 10
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
-UPLOAD_FOLDER = 'upload_app/static/uploads'
-ALLOWED_EXTENSIONS = set(['sh', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'cpp', 'c', 'py', 'html', 'js'])
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = set(['sh', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'cpp', 'c', 'py', 'html', 'js', 'out'])
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -174,28 +176,24 @@ def status():
 def add_entry():
     if not session.get('logged_in'):
         abort(401)
-    app.logger.debug('before entry added')
     if 'file' not in request.files:
         flash('No selected file', 'danger')
         return redirect(url_for('status'))
     file = request.files['file']
-    # if user does not select file, browser also
-    # submit an empty part without filename
     if file.filename == '':
         flash('No selected file', 'danger')
         return redirect(url_for('status'))
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         savedFilename = str(uuid.uuid4())
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], savedFilename))
+        file.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], savedFilename))
         entry = Entry(
             _id=savedFilename,
             author=session.get('username'),
             original=filename,
             date=datetime.datetime.utcnow())
         g.db.save_doc(entry)
-        app.logger.debug('after entry added')
-        flash('New entry was successfully posted', 'success')
+        flash('Your file was successfully uploaded.', 'success')
         return redirect(url_for('status'))
     flash('Invalid extension', 'danger')
     return redirect(url_for('status'))
@@ -207,6 +205,69 @@ def logout():
     session.pop('username', None)
     flash('You were successfully logged out', 'success')
     return redirect(url_for('status'))
+
+
+@app.route('/delete/<path:path>')
+def delete_file(path):
+    if session.get('logged_in'):
+        files = g.db.view("users/by_uploads", key=session.get('username'), id=path)
+        if files.first() or session.get('is_admin'):
+            for file in files:
+                if path in file['id']:
+                    fileToRemove = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
+                    os.remove(fileToRemove)
+                    g.db.delete_doc(path)
+                    flash("File successfully removed.", 'success')
+                    return redirect(url_for('status'))
+    flash("You are not authorized to do this.", 'danger')
+    return redirect(url_for('status'))
+
+
+@celery.task(bind=True)
+def run_task(self, path):
+    fileToRun = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
+    os.chmod(fileToRun, 0755)
+    p = subprocess.Popen(fileToRun, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout = []
+    while True:
+        line = p.stdout.readline()
+        stdout.append(line)
+        self.update_state(state='PROGRESS', meta={'status': stdout})
+        if line == '' and p.poll() is not None:
+            break
+    os.chmod(fileToRun, 0644)
+    return {'status': stdout,
+            'result': 'Task completed!'}
+
+
+@app.route('/run/<path:path>', methods=['POST'])
+def runtask(path):
+    run_task.apply_async(args=[path], task_id=path)
+    return jsonify({}), 202, {'Location': url_for('taskstatus', path=path)}
+
+
+@app.route('/status/<path:path>')
+def taskstatus(path):
+    task = run_task.AsyncResult(path)
+    if task.state == 'PENDING':
+        response = {
+            'state': task.state,
+            'status': []
+        }
+    elif task.state != 'FAILURE':
+        response = {
+            'state': task.state,
+            'status': task.info.get('status', '')
+        }
+        if 'result' in task.info:
+            response['result'] = task.info['result']
+    else:
+        # something went wrong in the background job
+        response = {
+            'state': task.state,
+            'status': str(task.info),  # this is the exception raised
+        }
+    return jsonify(response)
 
 
 app.debug = True
