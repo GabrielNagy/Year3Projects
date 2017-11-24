@@ -13,6 +13,7 @@ from wtforms import Form, BooleanField, StringField, PasswordField, validators
 import uuid
 from celery import Celery
 import subprocess
+from shutil import copy2
 
 
 DATABASE = 'flaskr'
@@ -31,7 +32,9 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = set(['sh', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'cpp', 'c', 'py', 'html', 'js', 'out'])
+SOURCE_FOLDER = 'run/src'
+BUILD_FOLDER = 'run/build'
+ALLOWED_EXTENSIONS = set(['cc', 'c', 'h', 'cpp'])
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -176,24 +179,30 @@ def status():
 def add_entry():
     if not session.get('logged_in'):
         abort(401)
-    if 'file' not in request.files:
-        flash('No selected file', 'danger')
+    if ('file-source' or 'file-header') not in request.files:
+        flash('Missing header or source file', 'danger')
         return redirect(url_for('status'))
-    file = request.files['file']
-    if file.filename == '':
-        flash('No selected file', 'danger')
+    headerfile = request.files['file-header']
+    sourcefile = request.files['file-source']
+    if headerfile.filename == '' or sourcefile.filename == '':
+        flash('Missing header or source file', 'danger')
         return redirect(url_for('status'))
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        savedFilename = str(uuid.uuid4())
-        file.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], savedFilename))
+    if (headerfile and allowed_file(headerfile.filename)) and (sourcefile and allowed_file(sourcefile.filename)):
+        headerfilename = secure_filename(headerfile.filename)
+        sourcefilename = secure_filename(sourcefile.filename)
+        unique_id = str(uuid.uuid4())
+        headerSavedFilename = unique_id + '.h'
+        sourceSavedFilename = unique_id + '.cc'
+        headerfile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], headerSavedFilename))
+        sourcefile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], sourceSavedFilename))
         entry = Entry(
-            _id=savedFilename,
+            _id=unique_id,
             author=session.get('username'),
-            original=filename,
+            original_header=headerfilename,
+            original_source=sourcefilename,
             date=datetime.datetime.utcnow())
         g.db.save_doc(entry)
-        flash('Your file was successfully uploaded.', 'success')
+        flash('Your files were successfully uploaded.', 'success')
         return redirect(url_for('status'))
     flash('Invalid extension', 'danger')
     return redirect(url_for('status'))
@@ -215,7 +224,8 @@ def delete_file(path):
             for file in files:
                 if path in file['id']:
                     fileToRemove = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
-                    os.remove(fileToRemove)
+                    os.remove(fileToRemove + '.cc')
+                    os.remove(fileToRemove + '.h')
                     g.db.delete_doc(path)
                     flash("File successfully removed.", 'success')
                     return redirect(url_for('status'))
@@ -225,9 +235,12 @@ def delete_file(path):
 
 @celery.task(bind=True)
 def run_task(self, path):
-    fileToRun = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
-    os.chmod(fileToRun, 0o755)
-    p = subprocess.Popen(['/usr/bin/stdbuf', '-oL', fileToRun], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    unique_path = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
+    sourcefile = unique_path + '.cc'
+    headerfile = unique_path + '.h'
+    copy2(sourcefile, os.path.join(basedir, app.config['SOURCE_FOLDER'], 'templateSrc.cc'))
+    copy2(headerfile, os.path.join(basedir, app.config['SOURCE_FOLDER'], 'templateSrc.h'))
+    p = subprocess.Popen(['make && make check'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=os.path.join(basedir, app.config['BUILD_FOLDER']), shell=True)
     stdout = []
     while True:
         line = p.stdout.readline()
@@ -235,7 +248,6 @@ def run_task(self, path):
         self.update_state(state='PROGRESS', meta={'status': stdout})
         if line == '' and p.poll() is not None:
             break
-    os.chmod(fileToRun, 0o644)
     return {'status': stdout,
             'result': 'Task completed!'}
 
