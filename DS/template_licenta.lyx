@@ -493,6 +493,24 @@ Twisted
 SQLite
 \end_layout
 
+\begin_layout Standard
+As of version 0.8.0, Buildbot has used a database as part of its storage backend.
+ All access to the Buildbot database is mediated by database connector classes.
+ These classes provide a functional, asynchronous interface to other parts
+ of Buildbot, and encapsulate the database-specific details in a single
+ location in the codebase.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The database schema is maintained with SQLAlchemy-Migrate.
+ This package handles the details of upgrading users between different schema
+ versions.
+\end_layout
+
 \begin_layout Section
 Web interface
 \end_layout
