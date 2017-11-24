@@ -226,8 +226,8 @@ def delete_file(path):
 @celery.task(bind=True)
 def run_task(self, path):
     fileToRun = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
-    os.chmod(fileToRun, 0755)
-    p = subprocess.Popen(fileToRun, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    os.chmod(fileToRun, 0o755)
+    p = subprocess.Popen(['/usr/bin/stdbuf', '-oL', fileToRun], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     stdout = []
     while True:
         line = p.stdout.readline()
@@ -235,7 +235,7 @@ def run_task(self, path):
         self.update_state(state='PROGRESS', meta={'status': stdout})
         if line == '' and p.poll() is not None:
             break
-    os.chmod(fileToRun, 0644)
+    os.chmod(fileToRun, 0o644)
     return {'status': stdout,
             'result': 'Task completed!'}
 
