@@ -403,9 +403,11 @@ The purpose of this thesis is to shed light on Buildbot as a Continuous
 \end_inset
 
 
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
+\begin_layout Standard
+
+\size normal
 Using Buildbot, developers cand test their components for possible errors
  without the risk of committing to version control and breaking the code.
  Buildbot is an open source project, written in Python on top of the Twisted
@@ -414,9 +416,11 @@ Using Buildbot, developers cand test their components for possible errors
 \end_inset
 
 
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
+\begin_layout Standard
+
+\size normal
 In this thesis we will emphasize the extensibility of Buildbot, and how
  we can use Python and Angular to strengthen the capabilities of this tool,
  customizing it to best suit our project.
@@ -454,9 +458,9 @@ s Integration principles.
 \end_inset
 
 
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
+\begin_layout Standard
 While smaller companies might make use of more flexible ways of testing,
  the larger ones usually run a CI tool such as Jenkins, on which they run
  builds of every commit that finds its way to the master/trunk.
@@ -702,6 +706,13 @@ Twisted supports an abstraction over raw threads — using a thread as a deferre
  is using this model to call into databases.
  The database call itself happens on a foreign thread, but the analysis
  of the result happens in the main thread.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "twisted-ideas"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1173,6 +1184,50 @@ status open
 \end_inset
 
  
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "twisted-ideas"
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Twisted Framework: Core ideas, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://en.wikipedia.org/w/index.php?title=Twisted_(software)&oldid=808304626
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Bibliography
