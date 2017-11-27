@@ -7,7 +7,9 @@
 \textclass report
 \begin_preamble
 \usepackage{amsthm}%% \usepackage[romanian]{babel}
+\usepackage{graphicx}
 %\usepackage{...insert other packages here...}
+\usepackage{indentfirst}
 \newtheorem{thm}{Teorema}[section]
 \newtheorem{lem}[thm]{Lema}\newtheorem{cor}[thm]{Corolarul}\newtheorem{prop}[thm]{Propozi\c tia}\theoremstyle{definition}
 \newtheorem{defn}{Defini\c tia}[section]
@@ -485,12 +487,225 @@ Backend
 Python
 \end_layout
 
+\begin_layout Standard
+The bulk of Buildbot is written in 
+\emph on
+Python
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Python
+\emph default
+ is a widely used high-level programming language for general-purpose programmin
+g, created by Guido van Rossum and first released in 1991.
+ It is an interpreted language, meaning that it executes its instructions
+ directly and freely, without previously compiling a program into machine-langua
+ge instructions.
+ The interpreter executes the program directly, translating each statement
+ into a sequence of one or more subroutines already compiled into machine
+ code.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Python
+\emph default
+ has a design philosophy that emphasizes code readability (notably using
+ whitespace indentation to delimit code blocks rather than curly brackets
+ or keywords), and a syntax that allows programmers to express concepts
+ in fewer lines of code than might be used in languages such as 
+\emph on
+C++
+\emph default
+ or 
+\emph on
+Java
+\emph default
+.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "python-usage"
+
+\end_inset
+
+ 
+\emph on
+Python
+\emph default
+ features a dynamic type system and automatic memory management.
+ It supports multiple programming paradigms, including object-oriented,
+ imperative, functional and procedural, and has a large and comprehensive
+ standard library.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "python-about"
+
+\end_inset
+
+ Besides being present in the Buildbot backend, we will also encounter it
+ when implementing custom web dashboards, and in 
+\emph on
+Angular
+\emph default
+ with 
+\emph on
+CoffeeScript
+\emph default
+, which is a language that cross-compiles to 
+\emph on
+JavaScript
+\emph default
+ and has Python-inspired syntax.
+\end_layout
+
+\begin_layout Standard
+Since 2003, Python has consistently ranked in the top ten most popular programmi
+ng languages in the TIOBE Programming Community Index
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+A measure of popularity of programming languages, created and maintained
+ by the TIOBE Company based in Eindhoven, Netherlands.
+ TIOBE stands for 
+\begin_inset Quotes eld
+\end_inset
+
+The Importance of Being Earnest
+\begin_inset Quotes erd
+\end_inset
+
+, taken from the name of a comedy play written by Oscar Wilde at the end
+ of the nineteenth century.
+\end_layout
+
+\end_inset
+
+.
+ As of November 2017, it is the fourth most popular language.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "python-popularity"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An empirical study found that scripting languages, such as Python, are more
+ productive than conventional languages, such as C and Java, for programming
+ problems involving string manipulation and search in a dictionary, and
+ determined that memory consumption was often "better than Java and not
+ much worse than C or C++
+\begin_inset Quotes erd
+\end_inset
+
+.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "python-empirical-comparison"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Twisted
 \end_layout
 
+\begin_layout Standard
+Twisted is an event-driven network programming framework written in Python
+ and licensed under the MIT License.
+\end_layout
+
+\begin_layout Standard
+Twisted projects variously support TCP, UDP, SSL/TLS, IP multicast, Unix
+ domain sockets, a large number of protocols (including HTTP, XMPP, NNTP,
+ IMAP, SSH, IRC, FTP, and others), and much more.
+ Twisted is based on the event-driven programming paradigm, which means
+ that users of Twisted write short callbacks which are called by the framework.
+\end_layout
+
+\begin_layout Subsubsection
+Protocol/transport separation
+\end_layout
+
+\begin_layout Standard
+Twisted is designed for complete separation between logical protocols (usually
+ relying on stream-based connection semantics, such as HTTP or POP3) and
+ physical transport layers supporting such stream-based semantics (such
+ as files, sockets or SSL libraries).
+ Connection between a logical protocol and a transport layer happens at
+ the last possible moment — just before information is passed into the logical
+ protocol instance.
+ The logical protocol is informed of the transport layer instance, and can
+ use it to send messages back and to check for the peer's identity.
+ Note that it is still possible, in protocol code, to deeply query the transport
+ layer on transport issues (such as checking a client-side SSL certificate).
+ Naturally, such protocol code will fail (raise an exception) if the transport
+ layer does not support such semantics.
+\end_layout
+
+\begin_layout Subsubsection
+The Deferred API
+\end_layout
+
+\begin_layout Standard
+Central to the Twisted application model is the concept of a deferred (elsewhere
+ called a future).
+ A deferred is an instance of a class designed to receive and process a
+ result which has not been computed yet, for example because it is based
+ on data from a remote peer.
+ Deferreds can be passed around, just like regular objects, but cannot be
+ asked for their value.
+ Each deferred supports a callback chain.
+ When the deferred gets the value, it is passed to the functions on the
+ callback chain, with the result of each callback becoming the input for
+ the next.
+ Deferreds make it possible to arrange to operate on the result of a function
+ call before its value has become available.
+\end_layout
+
+\begin_layout Standard
+For example, if a deferred returns a string from a remote peer containing
+ an IP address in quad format, a callback can be attached to translate it
+ into a 32-bit number.
+ Any user of the deferred can now treat it as a deferred returning a 32-bit
+ number.
+ This, and the related ability to define "errbacks" (callbacks which are
+ called as error handlers), allows code to specify in advance what to do
+ when an asynchronous event occurs, without stopping to wait for the event.
+ In non-event-driven systems, for example using threads, the operating system
+ incurs premature and additional overhead organizing threads each time a
+ blocking call is made.
+\end_layout
+
+\begin_layout Subsubsection
+Thread support
+\end_layout
+
+\begin_layout Standard
+Twisted supports an abstraction over raw threads — using a thread as a deferred
+ source.
+ Thus, a deferred is returned immediately, which will receive a value when
+ the thread finishes.
+ Callbacks can be attached which will run in the main thread, thus alleviating
+ the need for complex locking solutions.
+ A prime example of such usage, which comes from Twisted's support libraries,
+ is using this model to call into databases.
+ The database call itself happens on a foreign thread, but the analysis
+ of the result happens in the main thread.
+\end_layout
+
 \begin_layout Subsection
-SQLite
+Database
 \end_layout
 
 \begin_layout Standard
@@ -503,12 +718,109 @@ As of version 0.8.0, Buildbot has used a database as part of its storage backend
 \end_inset
 
 
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
-The database schema is maintained with SQLAlchemy-Migrate.
+\begin_layout Standard
+The connectors all use 
+\emph on
+SQLAlchemy Core
+\emph default
+ to achieve (almost) database-independent operation.
+ Note that the 
+\emph on
+SQLAlchemy ORM
+\emph default
+ is not used in Buildbot.
+ Database queries are carried out in threads, and report their results back
+ to the main thread via Twisted Deferreds.
+ The database schema is maintained with 
+\emph on
+SQLAlchemy-Migrate
+\emph default
+.
  This package handles the details of upgrading users between different schema
  versions.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "buildbot-database"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the default configuration Buildbot uses a file-based 
+\emph on
+SQLite
+\emph default
+ database, stored in the 
+\family typewriter
+state.sqlite
+\family default
+ file of the master’s base directory.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "buildbot-cfg"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+SQLite is a relational database management system (DBMS) contained in a
+ C programming library.
+ In contrast to many other database management systems, SQLite is not a
+ client–server database engine.
+ Rather, it is embedded into the end program.
+ SQLite is ACID-compliant
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Acronym for 
+\emph on
+Atomicity, Consistency, Isolation, Durability
+\emph default
+.
+ A set of properties of database transactions intended to guarantee validity
+ even in the event of errors, power failures, etc.
+\end_layout
+
+\end_inset
+
+ and implements most of the SQL standard, using a dynamically and weakly
+ typed SQL syntax that does not guarantee the domain integrity.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sqlite-apress"
+
+\end_inset
+
+ SQLite is a popular choice as embedded database software for local/client
+ storage in application software such as web browsers.
+ It is arguably the most widely deployed database engine, as it is used
+ today by several widespread browsers, operating systems, and embedded systems
+ (such as mobile phones), among others.
+ SQLite has bindings to many programming languages, including Python.
+ Among its most popular users are browsers like 
+\emph on
+Google Chrome, Safari 
+\emph default
+and 
+\emph on
+Mozilla Firefox 
+\emph default
+which stores a variety of configuration data (bookmarks, cookies, contacts
+ etc.) inside internally managed SQLite databases.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sqlite-deployed"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -704,17 +1016,17 @@ Conclusion
 \end_layout
 
 \begin_layout Bibliography
-
-\size normal
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "ocarte"
+key "python-usage"
 
 \end_inset
 
 
+\size normal
+
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -723,9 +1035,10 @@ status collapsed
 
 \end_inset
 
-Autori, Titlu carte, Editura, An apariţie.
+McConnell, Steve, Code Complete, Microsoft Press, 2009, p.
+ 100
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -738,17 +1051,17 @@ status collapsed
 \end_layout
 
 \begin_layout Bibliography
-
-\size normal
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "unarticol"
+key "python-about"
 
 \end_inset
 
 
+\size normal
+
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -757,49 +1070,263 @@ status collapsed
 
 \end_inset
 
-Autori, Titlu articol, Nume jurnal Număr (An apariţie), pag.
- start - pag.
- final.
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Bibliography
-
-\size normal
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "resursaonline"
-
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-Descriere resursă online, URL: 
+About Python, URL: 
 \begin_inset Flex URL
 status open
 
 \begin_layout Plain Layout
 
-https://www.google.com
+https://www.python.org/about/
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "python-popularity"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+TIOBE Index for November 2017, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://www.tiobe.com/tiobe-index/
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "python-empirical-comparison"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Prechelt, Lutz, An empirical comparison of C, C++, Java, Perl, Python, Rexx,
+ and TCL, Fakultät für Informatik, Universität Karlsruhe, 2000
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+
+\size normal
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "sqlite-apress"
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Owens, Michael, The Definitive Guide to SQLite, Apress, 2014, p.
+ 133
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+
+\size normal
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "sqlite-deployed"
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Most Widely Deployed SQL Database Engine, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://sqlite.org/mostdeployed.html
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+
+\size normal
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "buildbot-database"
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Database - Buildbot latest documentation, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/developer/database.html
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "buildbot-cfg"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Global Configuration - Buildbot latest documentation, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-global.html
 \end_layout
 
 \end_inset
