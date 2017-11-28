@@ -16,7 +16,7 @@ import subprocess
 from shutil import copy2
 
 
-DATABASE = 'flaskr'
+DATABASE = 'upload_app'
 DEBUG = True
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
