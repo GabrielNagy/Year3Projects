@@ -240,7 +240,7 @@ def run_task(self, path):
     headerfile = unique_path + '.h'
     copy2(sourcefile, os.path.join(basedir, app.config['SOURCE_FOLDER'], 'templateSrc.cc'))
     copy2(headerfile, os.path.join(basedir, app.config['SOURCE_FOLDER'], 'templateSrc.h'))
-    p = subprocess.Popen(['make && make check'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=os.path.join(basedir, app.config['BUILD_FOLDER']), shell=True)
+    p = subprocess.Popen(['cmake .. && make && make check'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=os.path.join(basedir, app.config['BUILD_FOLDER']), shell=True)
     stdout = []
     while True:
         line = p.stdout.readline()
