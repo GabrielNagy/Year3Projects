@@ -8,6 +8,10 @@
 \begin_preamble
 \usepackage{amsthm}%% \usepackage[romanian]{babel}
 \usepackage{graphicx}
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
 %\usepackage{...insert other packages here...}
 \usepackage{indentfirst}
 \newtheorem{thm}{Teorema}[section]
@@ -16,6 +20,9 @@
 \theoremstyle{remark}
 \newtheorem{rem}{Remarca}[section]
 \newtheorem{exmp}{Exemplul}[section]
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{10} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{10}  % for normal
 \end_preamble
 \use_default_options false
 \maintain_unincluded_children false
@@ -62,8 +69,8 @@
 \use_package stackrel 0
 \use_package stmaryrd 0
 \use_package undertilde 0
-\cite_engine basic
-\cite_engine_type default
+\cite_engine natbib
+\cite_engine_type numerical
 \biblio_style plain
 \use_bibtopic false
 \use_indices false
@@ -454,29 +461,139 @@ Generally, every software company, regardless how large or small, uses Continuou
 s Integration principles.
  Verifying and testing code before delivering and merging with the mainline
  is of paramount importance, as it saves money as well as time.
-\begin_inset Newline newline
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
 While smaller companies might make use of more flexible ways of testing,
  the larger ones usually run a CI tool such as Jenkins, on which they run
- builds of every commit that finds its way to the master/trunk.
+ builds of every commit that finds its way to the master/trunk branch.
  This is a widespread and useful practice, albeit narrow, as it only tracks
  main branches.
  If a commit happens to break the code, the trunk gets locked and valuable
- time is spent to fix the issues.
- What I will present in this thesis is how
+ time is spent to fix the regressions.
+ What I will present in this thesis is how developers can use Buildbot as
+ a tool to remotely test their software, without interfering with other
+ people's work.
+ We tell Buildbot the same step sequence the developer uses to test their
+ code, and it does the job for us.
+\end_layout
+
+\begin_layout Standard
+By transferring these tasks to Buildbot, the developer can work on other
+ important issues without worrying about the testing part.
+ 
 \end_layout
 
 \begin_layout Section
 Contribution
 \end_layout
 
+\begin_layout Standard
+Even though Buildbot is a powerful tool out-of-the-box, it really shines
+ if properly customized and extended.
+ Being an open-source project, it receives frequent contributions from users
+ around the world.
+ The codebase is modular and properly documented, and one can easily begin
+ writing their own extensions and helpers.
+\end_layout
+
+\begin_layout Standard
+Some of Buildbot's default features are:
+\end_layout
+
+\begin_layout Itemize
+run builds on a variety of worker platforms
+\end_layout
+
+\begin_layout Itemize
+arbitrary build process: if you can build it locally, so can Buildbot
+\end_layout
+
+\begin_layout Itemize
+minimal requirements: Python and Twisted
+\end_layout
+
+\begin_layout Itemize
+status delivery through a variety of protocols: web page, email, IRC
+\end_layout
+
+\begin_layout Itemize
+tracks builds in progress, estimates completion time
+\end_layout
+
+\begin_layout Itemize
+flexible configuration by subclassing generic build process classes
+\end_layout
+
+\begin_layout Itemize
+released under the GPL
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The 
+\series bold
+\size normal
+GNU General Public License
+\series default
+ (
+\series bold
+GPL
+\series default
+), originally written by Richard Stallman of the Free Software Foundation,
+ is a widely used free software license, which guarantees end users the
+ freedom to run, study, share and modify the software.
+\end_layout
+
+\end_inset
+
+ license
+\end_layout
+
+\begin_layout Standard
+The custom implementations that we will go over consist in:
+\end_layout
+
+\begin_layout Itemize
+send an email with the build results to the user using LDAP to search the
+ directory for the user's email address
+\end_layout
+
+\begin_layout Itemize
+parse custom output logs, counting errors and creating a summary of the
+ passed and failed tests
+\end_layout
+
+\begin_layout Itemize
+preferential build steps: do not run this step if the previous failed
+\end_layout
+
+\begin_layout Itemize
+use Flask to deploy a custom web dashboard
+\end_layout
+
+\begin_layout Itemize
+use Angular to deploy an asynchronous, live-reloading, custom web dashboard
+\end_layout
+
+\begin_layout Itemize
+buildbot try script: the developer executes a script in his working directory,
+ and his changes are instantly send to the Buildbot queue to be built
+\end_layout
+
+\begin_layout Itemize
+extend buildbot commands to support additional arguments such as multiple
+ patchfiles
+\end_layout
+
 \begin_layout Section
 Structure
+\end_layout
+
+\begin_layout Standard
+Besides presenting the technologies used, before getting into the extensibility
+ of Buildbot, I will also shed light on some of its default implementations
+ to see their purposes.
 \end_layout
 
 \begin_layout Chapter
@@ -485,6 +602,40 @@ Technologies used
 
 \begin_layout Section
 Backend
+\end_layout
+
+\begin_layout Standard
+By definition, Buildbot is a system to automate the compile/test cycle required
+ by most software projects to validate code changes.
+ By automatically rebuilding and testing the tree each time something has
+ changed, build problems are pinpointed quickly, before other developers
+ are inconvenienced by the failure.
+ By running the builds on a variety of platforms, developers who do not
+ have the facilities to test their changes everywhere before checkin will
+ at least know shortly afterwards whether they have broken the build or
+ not.
+ The overall goal is to reduce tree breakage and provide a platform to run
+ tests or code-quality checks that are too annoying or pedantic for any
+ human to waste their time with.
+ Developers get immediate (and potentially public) feedback about their
+ changes, encouraging them to be more careful about testing before checkin.
+\end_layout
+
+\begin_layout Standard
+The Buildbot was written to automate the human process of walking into the
+ office, updating a tree, compiling (and discovering the breakage), finding
+ the developer at fault, and complaining to them about the problem they
+ had introduced.
+ With multiple platforms it was difficult for developers to do the right
+ thing (compile their potential change on all platforms); the buildbot offered
+ a way to help.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "buildbot-introduction"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -569,7 +720,7 @@ JavaScript
 
 \begin_layout Standard
 Since 2003, Python has consistently ranked in the top ten most popular programmi
-ng languages in the TIOBE Programming Community Index
+ng languages in the TIOBE Programming Community Index.
 \begin_inset Foot
 status open
 
@@ -590,7 +741,6 @@ The Importance of Being Earnest
 
 \end_inset
 
-.
  As of November 2017, it is the fourth most popular language.
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -625,16 +775,40 @@ Twisted
 \end_layout
 
 \begin_layout Standard
-Twisted is an event-driven network programming framework written in Python
- and licensed under the MIT License.
+The cornerstone of Buildbot is Twisted, an open-source, event-driven network
+ programming framework written in Python and licensed under the MIT License.
 \end_layout
 
 \begin_layout Standard
-Twisted projects variously support TCP, UDP, SSL/TLS, IP multicast, Unix
- domain sockets, a large number of protocols (including HTTP, XMPP, NNTP,
- IMAP, SSH, IRC, FTP, and others), and much more.
- Twisted is based on the event-driven programming paradigm, which means
- that users of Twisted write short callbacks which are called by the framework.
+Twisted supports many common transport and application layer protocols,
+ including TCP, UDP, SSL/TLS, HTTP, IMAP, SSH, IRC, and FTP.
+ Like the language in which is written, it is 
+\begin_inset Quotes eld
+\end_inset
+
+batteries-included
+\begin_inset Quotes erd
+\end_inset
+
+; Twisted comes with client and server implementations for all of its protocols,
+ as well as utilities that make it easy to configure and deploy production-grade
+ Twisted applications from the command line.
+\end_layout
+
+\begin_layout Standard
+Twisted includes both high- and low-level tools for building performant,
+ cross-platform applications.
+ One can deploy a web or mail server with just a few lines of code, or one
+ can write their own protocol from scratch.
+ At every level, Twisted provides a tested, RFC-conforming, extensible API
+ that makes it possible to rapidly develop powerful network software.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "twisted-intro"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -709,6 +883,115 @@ Twisted supports an abstraction over raw threads — using a thread as a deferre
 \begin_inset CommandInset citation
 LatexCommand cite
 key "twisted-ideas"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Example: A TCP Echo Server and Client
+\end_layout
+
+\begin_layout Standard
+A basic implementation for a simple TCP echo server and client pair can
+ be seen below.
+ The server's job is to listen for TCP connections on a particular port
+ and echo back anything it receives.
+ The client's job is to connect to the server, send it a message, receive
+ a response, and terminate the connection.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "twisted-example"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/echoserver.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{echoserver.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/echoclient.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{echoclient.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To test the scripts, the server should be run in a first terminal using
+ 
+\family typewriter
+python echoserver.py
+\family default
+.
+ This will start a TCP server listening for connections on port 8000.
+ The client should be run in a second terminal with 
+\family typewriter
+python echoclient.py
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+A sample command sequence would be:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttm},otherkeywords={python echoclient.py},keywordstyle={\ttb},frame=b,captionpos=b"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$ python echoserver.py # in terminal 1
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$ python echoclient.py # in terminal 2
+\end_layout
+
+\begin_layout Plain Layout
+
+Server said: Hello, world!
+\end_layout
+
+\begin_layout Plain Layout
+
+Connection lost.
+\end_layout
+
+\begin_layout Plain Layout
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Command sequence example
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -834,8 +1117,32 @@ key "sqlite-deployed"
 
 \end_layout
 
+\begin_layout Standard
+Although Buildbot's default database is SQLite, it also supports MySQL and
+ PostgreSQL.
+\end_layout
+
 \begin_layout Section
 Web interface
+\end_layout
+
+\begin_layout Standard
+In previous releases, the web part of buildbot was implemented using a WebStatus
+ plugin.
+ That has since become deprecated, and as of Buildbot 0.9.0, the built-in
+ web server supersedes it.
+\end_layout
+
+\begin_layout Standard
+The client side of the web UI is written in JavaScript and based on the
+ Angular framework and concepts.
+\end_layout
+
+\begin_layout Standard
+Being a Single Page Application, all Buildbot pages are loaded from the
+ same path, at the master's base URL.
+ A JavaScript technique is used to avoid reloading the whole page over HTTP
+ when the users changes the URI or clicks a link.
 \end_layout
 
 \begin_layout Subsection
@@ -843,7 +1150,69 @@ Angular
 \end_layout
 
 \begin_layout Standard
-info about the development of Angular 
+Angular is a framework for building client applications in HTML and either
+ JavaScript or a language like TypeScript that compiles to JavaScript (in
+ Buildbot's case, CoffeeScript, because of its similarities to Python).
+\begin_inset CommandInset citation
+LatexCommand citep
+key "angular-architecture"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The framework works by first reading the HTML page, which has additional
+ custom tag attributes embedded into it.
+ Angular interprets those attributes as directives to bind input or output
+ parts of the page to a model that is represented by standard JavaScript
+ variables.
+ The values of those JavaScript variables can be manually set within the
+ code, or retrieved from static or dynamic JSON resources.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "angular-how-it-works"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Angular is built around the belief that declarative code is better than
+ imperative when it comes to building UIs and wiring software components
+ together, while imperative code is excellent for expressing business logic.
+\end_layout
+
+\begin_layout Standard
+Angular's design goals include:
+\end_layout
+
+\begin_layout Itemize
+decoupling DOM manipulation from app logic, improving the testability of
+ the code
+\end_layout
+
+\begin_layout Itemize
+decoupling the client side of an application from the server side, allowing
+ development work to progress in paralel
+\end_layout
+
+\begin_layout Itemize
+providing guidance through the entire journey of building an app, from designing
+ the UI, through writing the business logic, to testing
+\end_layout
+
+\begin_layout Itemize
+making common tasks trivial and difficult tasks possible
+\begin_inset CommandInset citation
+LatexCommand citep
+key "angular-introduction"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1189,6 +1558,76 @@ status open
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
+key "twisted-intro"
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+McKellar, J.
+ and Fettig, A., Twisted Network Programming Essentials, O'Reilly Media,
+ 2013, p.
+ xiii
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "twisted-example"
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+McKellar, J.
+ and Fettig, A., Twisted Network Programming Essentials, O'Reilly Media,
+ 2013, p.
+ 11
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
 key "twisted-ideas"
 
 \end_inset
@@ -1311,6 +1750,51 @@ status collapsed
 \end_layout
 
 \begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "buildbot-introduction"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Introduction - Buildbot latest documentation, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/current/manual/introduction.html
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
 
 \size normal
 \begin_inset CommandInset bibitem
@@ -1382,6 +1866,141 @@ status open
 \begin_layout Plain Layout
 
 http://docs.buildbot.net/latest/manual/cfg-global.html
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "angular-architecture"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Angular - Architecture Overview, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://angular.io/guide/architecture
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "angular-how-it-works"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+AngularJS - Wikipedia, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://en.wikipedia.org/w/index.php?title=AngularJS&oldid=812169171
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "angular-introduction"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+AngularJS: Developer Guide: Introduction, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://docs.angularjs.org/guide/introduction
 \end_layout
 
 \end_inset
