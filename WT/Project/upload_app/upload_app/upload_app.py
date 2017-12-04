@@ -14,7 +14,7 @@ from wtforms import Form, BooleanField, StringField, PasswordField, validators
 import uuid
 from celery import Celery
 import subprocess
-from shutil import copy2
+from shutil import copy2, copytree, rmtree
 
 
 DATABASE = 'upload_app'
@@ -260,12 +260,15 @@ def store_duration(path, stdout):
 
 @celery.task(bind=True)
 def run_task(self, path):
+    if os.path.exists(os.path.join(basedir, path)):
+        rmtree(os.path.join(basedir, path))
+    copytree(os.path.join(basedir, 'run'), os.path.join(basedir, path))
     unique_path = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
     sourcefile = unique_path + '.cc'
     headerfile = unique_path + '.h'
-    copy2(sourcefile, os.path.join(basedir, app.config['SOURCE_FOLDER'], 'templateSrc.cc'))
-    copy2(headerfile, os.path.join(basedir, app.config['SOURCE_FOLDER'], 'templateSrc.h'))
-    p = subprocess.Popen(['cmake .. && make && make check'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=os.path.join(basedir, app.config['BUILD_FOLDER']), shell=True)
+    copy2(sourcefile, os.path.join(basedir, path, 'templateSrc.cc'))
+    copy2(headerfile, os.path.join(basedir, path, 'templateSrc.h'))
+    p = subprocess.Popen(['cmake .. && make && make check'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path, 'build'), shell=True)
     stdout = []
     while True:
         line = p.stdout.readline()
@@ -273,6 +276,7 @@ def run_task(self, path):
         self.update_state(state='PROGRESS', meta={'status': stdout})
         if line == '' and p.poll() is not None:
             break
+    rmtree(os.path.join(basedir, path))
     store_duration(path, stdout)
     return {'status': stdout,
             'result': 'Task completed!'}
