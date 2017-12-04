@@ -31,7 +31,10 @@ RECAPTCHA_SIZE = "normal"
 RECAPTCHA_RTABINDEX = 10
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-COUCHDB_URL = 'http://admin:admin@127.0.0.1:5984'
+if "COUCHDB_USER" and "COUCHDB_PASS" in os.environ:
+    COUCHDB_URL = 'http://%s:%s@127.0.0.1:5984' % (os.getenv("COUCHDB_USER"), os.getenv("COUCHDB_PASS"))
+else:
+    COUCHDB_URL = 'http://admin:admin@127.0.0.1:5984'
 
 UPLOAD_FOLDER = 'static/uploads'
 SOURCE_FOLDER = 'run/src'
