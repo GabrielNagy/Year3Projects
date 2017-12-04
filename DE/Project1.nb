@@ -10,12 +10,11 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       145,          7]
-NotebookDataLength[     82671,       1279]
-NotebookOptionsPosition[     82155,       1255]
-NotebookOutlinePosition[     82489,       1270]
-CellTagsIndexPosition[     82446,       1267]
-WindowFrame->Normal
-ContainsDynamic->False*)
+NotebookDataLength[     11033,        281]
+NotebookOptionsPosition[     10541,        259]
+NotebookOutlinePosition[     10884,        274]
+CellTagsIndexPosition[     10841,        271]
+WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
@@ -42,526 +41,69 @@ Cell[BoxData[
        RowBox[{"(", 
         RowBox[{"10", " ", "t"}], ")"}], "/", "3"}], ")"}]}]}], ",", " ", 
    RowBox[{"{", 
-    RowBox[{"t", ",", " ", "0", ",", " ", "10"}], "}"}]}], "]"}]], "Input",
+    RowBox[{"t", ",", " ", "0", ",", " ", "10"}], "}"}], ",", " ", 
+   RowBox[{"AxesLabel", " ", "\[Rule]", " ", 
+    RowBox[{"{", 
+     RowBox[{"t", ",", " ", "w"}], "}"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.721401239368923*^9, 3.721401265419753*^9}},
  CellID->1],
 
 Cell[BoxData[
- GraphicsBox[{{{}, {}, 
-    TagBox[
-     {RGBColor[0.368417, 0.506779, 0.709798], AbsoluteThickness[1.6], Opacity[
-      1.], LineBox[CompressedData["
-1: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
-       "]]},
-     Annotation[#, "Charting`Private`Tag$16988#1"]& ]}, {}, {}},
-  BoxID -> 
-  "{\"jsonData\":\"{\\\"type\\\": \\\"Graphics\\\",\\n\\\"version\\\": \
-\\\"1.0\\\",\\n\\\"height\\\": 221.000000,\\n\\\"width\\\": \
-360.000000,\\n\\\"offset\\\": [-66.000000, -5.000000],\\n\\\"UserCoords\\\": \
-[-0.445779, 85.652806, 10.252911, -6.105072],\\n\\\"AxesOrigin\\\": \
-[0.000000, 0.000000],\\n\\\"primitives\\\": [\\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[73,5], [73,223], [425,223], [425,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : true, \\\"edgeForm\\\": \
-{\\\"color\\\": [93.9455, 129.23, 181], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 1.6}, \\\"capForm\\\": \\\"Square\\\", \
-\\\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\
-\\\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,208.887],[81.1032,208.838],[81.2064,208.788],[81.4128,208.685],[81.8256,\
-208.473],[82.6512,208.017],[82.7544,207.958],[82.8576,207.897],[83.064,207.\
-774],[83.4768,207.52],[84.3024,206.979],[84.4056,206.908],[84.5088,206.837],[\
-84.7152,206.692],[85.128,206.395],[85.9536,205.767],[87.6048,204.379],[87.\
-7167,204.279],[87.8286,204.177],[88.0524,203.972],[88.4999,203.553],[89.3949,\
-202.676],[91.185,200.77],[91.2969,200.644],[91.4088,200.517],[91.6326,200.262]\
-,[92.0801,199.742],[92.9751,198.665],[94.7652,196.372],[94.8697,196.232],[94.\
-9742,196.092],[95.1831,195.81],[95.601,195.238],[96.4367,194.067],[98.1082,\
-191.614],[101.451,186.304],[108.006,174.623],[115.116,160.707],[121.752,147.\
-23],[128.943,132.719],[136.004,119.036],[142.589,107.059],[149.731,95.1121],[\
-156.397,85.0138],[162.933,76.1172],[170.024,67.5561],[176.641,60.535],[183.\
-813,53.8956],[190.854,48.2671],[197.421,43.7274],[204.543,39.488],[211.19,36.\
-0958],[218.394,32.9551],[225.466,30.3398],[232.063,28.2601],[239.216,26.3423],\
-[245.895,24.8233],[252.442,23.552],[259.545,22.3813],[266.174,21.456],[273.\
-358,20.6077],[280.411,19.9074],[286.989,19.3544],[294.123,18.8472],[300.782,\
-18.4474],[307.311,18.1141],[314.395,17.808],[321.004,17.5668],[328.169,17.\
-3461],[334.859,17.1724],[341.419,17.0278],[348.533,16.8953],[355.174,16.7909],\
-[355.286,16.7893],[355.399,16.7877],[355.623,16.7844],[356.073,16.778],[356.\
-973,16.7655],[358.772,16.7411],[362.37,16.6956],[362.48,16.6942],[362.59,16.\
-6929],[362.811,16.6903],[363.253,16.685],[364.136,16.6747],[365.902,16.6546],[\
-369.434,16.6171],[376.025,16.5553],[383.17,16.4987],[389.842,16.4542],[396.\
-382,16.4172],[403.477,16.3832],[410.099,16.3565],[410.214,16.356],[410.33,16.\
-3556],[410.561,16.3548],[411.022,16.3531],[411.946,16.3498],[413.794,16.3433],\
-[413.91,16.3429],[414.025,16.3426],[414.256,16.3418],[414.718,16.3402],[415.\
-642,16.3372],[415.757,16.3368],[415.873,16.3365],[416.104,16.3357],[416.566,\
-16.3343],[416.681,16.3339],[416.797,16.3335],[417.028,16.3328],[417.143,16.\
-3324],[417.259,16.3321],[417.374,16.3317],[417.49,16.3314]]}, \
-\\n{\\\"type\\\": \\\"Group\\\", \\\"name\\\": \
-\\\"Frame\\\",\\n\\\"metadata\\\": {\\\"left\\\": -0.208333, \\\"top\\\": \
-85.4452, \\\"right\\\": 10.2083, \\\"bottom\\\": \
--4.49712},\\n\\\"primitives\\\":[]}, \\n{\\\"type\\\": \\\"Group\\\", \
-\\\"name\\\": \\\"Axes\\\",\\n\\\"metadata\\\": \\\"TBD\\\",\\n\\\"primitives\
-\\\":[\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,211.296],[81,207.296]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\
-\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[97.8245,211.296],[97.8245,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[114.649,211.296],[114.649,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[131.473,211.296],[131.473,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[148.298,211.296],[148.298,207.296]]}, \\n{\\\"type\\\": \\\"Inset\\\", \
-\\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 145.298, 214.296], \
-\\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 6, \
-\\\"bottom\\\": 11}, \\\"pos\\\": [2, 0], \\\"opos\\\": [0.5, \
-1]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"2\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[165.122,211.296],[165.122,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[181.947,211.296],[181.947,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[198.771,211.296],[198.771,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[215.596,211.296],[215.596,207.296]]}, \\n{\\\"type\\\": \\\"Inset\\\", \
-\\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 212.596, 214.296], \
-\\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 6, \
-\\\"bottom\\\": 11}, \\\"pos\\\": [4, 0], \\\"opos\\\": [0.5, \
-1]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"4\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[232.42,211.296],[232.42,208.896]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[249.245,211.296],[249.245,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[266.069,211.296],[266.069,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[282.894,211.296],[282.894,207.296]]}, \\n{\\\"type\\\": \\\"Inset\\\", \
-\\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 279.894, 214.296], \
-\\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 6, \
-\\\"bottom\\\": 11}, \\\"pos\\\": [6, 0], \\\"opos\\\": [0.5, \
-1]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"6\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[299.718,211.296],[299.718,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[316.543,211.296],[316.543,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[333.367,211.296],[333.367,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[350.192,211.296],[350.192,207.296]]}, \\n{\\\"type\\\": \\\"Inset\\\", \
-\\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 347.192, 214.296], \
-\\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 6, \
-\\\"bottom\\\": 11}, \\\"pos\\\": [8, 0], \\\"opos\\\": [0.5, \
-1]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"8\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[367.016,211.296],[367.016,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[383.841,211.296],[383.841,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[400.665,211.296],[400.665,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[417.49,211.296],[417.49,207.296]]}, \\n{\\\"type\\\": \\\"Inset\\\", \
-\\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 411.49, 214.296], \
-\\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 12, \
-\\\"bottom\\\": 11}, \\\"pos\\\": [10, 0], \\\"opos\\\": [0.5, \
-1]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"10\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[73.9898,211.296],[424.5,211.296]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,211.296],[85,211.296]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\
-\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,199.253],[83.4,199.253]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,187.211],[83.4,187.211]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,175.168],[83.4,175.168]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,163.126],[85,163.126]]}, \\n{\\\"type\\\": \\\"Inset\\\", \\\"metadata\\\
-\": {\\\"transform\\\": [1, 0, 0, 1, 66, 157.626], \\\"localRect\\\": \
-{\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 12, \\\"bottom\\\": 11}, \
-\\\"pos\\\": [0, 20], \\\"opos\\\": [1, 0.5]},\\n\\\"boxdata\\\": \
-\\\"\\\\nStyleBox[\\\\\\\"20\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,151.083],[83.4,151.083]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,139.04],[83.4,139.04]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\
-\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,126.998],[83.4,126.998]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,114.955],[85,114.955]]}, \\n{\\\"type\\\": \\\"Inset\\\", \\\"metadata\\\
-\": {\\\"transform\\\": [1, 0, 0, 1, 66, 109.455], \\\"localRect\\\": \
-{\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 12, \\\"bottom\\\": 11}, \
-\\\"pos\\\": [0, 40], \\\"opos\\\": [1, 0.5]},\\n\\\"boxdata\\\": \
-\\\"\\\\nStyleBox[\\\\\\\"40\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,102.913],[83.4,102.913]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,90.8702],[83.4,90.8702]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,78.8277],[83.4,78.8277]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,66.7851],[85,66.7851]]}, \\n{\\\"type\\\": \\\"Inset\\\", \\\"metadata\\\
-\": {\\\"transform\\\": [1, 0, 0, 1, 66, 61.2851], \\\"localRect\\\": \
-{\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 12, \\\"bottom\\\": 11}, \
-\\\"pos\\\": [0, 60], \\\"opos\\\": [1, 0.5]},\\n\\\"boxdata\\\": \
-\\\"\\\\nStyleBox[\\\\\\\"60\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,54.7425],[83.4,54.7425]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": [[81,42.7],[83.4,42.7]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,30.6574],[83.4,30.6574]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,18.6149],[85,18.6149]]}, \\n{\\\"type\\\": \
-\\\"Inset\\\", \\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 66, \
-13.1149], \\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": \
-12, \\\"bottom\\\": 11}, \\\"pos\\\": [0, 80], \\\"opos\\\": [1, \
-0.5]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"80\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,6.57229],[83.4,6.57229]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": [[81,222.127],[81,5.5]]}]}],\
-\\n\\\"PlotRange\\\": {\\\"left\\\": 7.989796, \\\"top\\\": -111.500000, \
-\\\"right\\\": 358.500000, \\\"bottom\\\": \
-105.127220}\\n}\\n\",\"requestedImageSize\":null}",
+ GraphicsBox[{{}, {}, 
+   {Hue[0.67, 0.6, 0.6], LineBox[CompressedData["
+1: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
+     "]]}},
   AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
-  Axes->{True, True},
-  AxesLabel->{None, None},
+  Axes->True,
+  AxesLabel->{
+    FormBox["t", TraditionalForm], 
+    FormBox["w", TraditionalForm]},
   AxesOrigin->{0, 0},
-  DisplayFunction->Identity,
-  Frame->{{False, False}, {False, False}},
-  FrameLabel->{{None, None}, {None, None}},
-  FrameTicks->{{Automatic, 
-     Charting`ScaledFrameTicks[{Identity, Identity}]}, {Automatic, 
-     Charting`ScaledFrameTicks[{Identity, Identity}]}},
-  GridLines->{None, None},
-  GridLinesStyle->Directive[
-    GrayLevel[0.5, 0.4]],
-  ImagePadding->All,
-  Method->{
-   "DefaultBoundaryStyle" -> Automatic, "DefaultMeshStyle" -> 
-    AbsolutePointSize[6], "ScalingFunctions" -> None, 
-    "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
-        (Identity[#]& )[
-         Part[#, 1]], 
-        (Identity[#]& )[
-         Part[#, 2]]}& ), "CopiedValueFunction" -> ({
-        (Identity[#]& )[
-         Part[#, 1]], 
-        (Identity[#]& )[
-         Part[#, 2]]}& )}},
   PlotRange->{{0, 10}, {0., 80.94809266287132}},
   PlotRangeClipping->True,
-  PlotRangePadding->{{
-     Scaled[0.02], 
-     Scaled[0.02]}, {
-     Scaled[0.05], 
-     Scaled[0.05]}},
-  Ticks->{Automatic, Automatic}]], "Output",
- CellID->2]
+  PlotRangePadding->{
+    Scaled[0.02], 
+    Scaled[0.02]}]], "Output",
+ CellChangeTimes->{{3.7214012563747015`*^9, 3.721401266271328*^9}}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -588,622 +130,84 @@ Cell[BoxData[
        RowBox[{"0.83", " ", "t"}], ")"}]}]}], " ", "+", " ", 
     RowBox[{"0.4", " ", "t"}]}], ",", " ", 
    RowBox[{"{", 
-    RowBox[{"t", ",", " ", "0", ",", " ", "40"}], "}"}]}], "]"}]], "Input",
+    RowBox[{"t", ",", " ", "0", ",", " ", "40"}], "}"}], ",", " ", 
+   RowBox[{"AxesLabel", " ", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"t", ",", "c"}], "}"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.721401510396715*^9, 3.7214015143371515`*^9}},
  NumberMarks->False],
 
 Cell[BoxData[
- GraphicsBox[{{{}, {}, 
-    TagBox[
-     {RGBColor[0.368417, 0.506779, 0.709798], AbsoluteThickness[1.6], Opacity[
-      1.], LineBox[CompressedData["
-1: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
-0kVtPv4HTGJgVA==
-       "]]},
-     Annotation[#, "Charting`Private`Tag$33260#1"]& ]}, {}, {}},
-  BoxID -> 
-  "{\"jsonData\":\"{\\\"type\\\": \\\"Graphics\\\",\\n\\\"version\\\": \
-\\\"1.0\\\",\\n\\\"height\\\": 221.000000,\\n\\\"width\\\": \
-360.000000,\\n\\\"offset\\\": [-66.000000, -5.000000],\\n\\\"UserCoords\\\": \
-[-1.783115, 26.558815, 41.011645, -1.893032],\\n\\\"AxesOrigin\\\": \
-[0.000000, 0.000000],\\n\\\"primitives\\\": [\\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[73,5], [73,223], [425,223], [425,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : true, \\\"edgeForm\\\": \
-{\\\"color\\\": [93.9455, 129.23, 181], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 1.6}, \\\"capForm\\\": \\\"Square\\\", \
-\\\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\
-\\\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,202.752],[81.1032,202.641],[81.2064,202.528],[81.4128,202.293],[81.8256,\
-201.786],[81.9288,201.651],[82.032,201.513],[82.2384,201.228],[82.6512,200.\
-618],[82.7544,200.458],[82.8576,200.294],[83.064,199.956],[83.4768,199.241],[\
-84.3024,197.657],[84.4056,197.445],[84.5088,197.23],[84.7152,196.791],[85.128,\
-195.879],[85.9536,193.929],[87.6048,189.605],[87.7167,189.296],[87.8286,188.\
-985],[88.0524,188.358],[88.4999,187.087],[89.3949,184.49],[91.185,179.179],[\
-91.2969,178.845],[91.4088,178.512],[91.6326,177.847],[92.0801,176.519],[92.\
-9751,173.886],[94.7652,168.769],[94.8697,168.479],[94.9742,168.189],[95.1831,\
-167.613],[95.601,166.473],[96.4367,164.247],[98.1082,160.025],[98.2127,159.\
-772],[98.3171,159.52],[98.5261,159.02],[98.9439,158.036],[99.7797,156.129],[\
-101.451,152.565],[101.554,152.357],[101.656,152.151],[101.861,151.741],[102.\
-27,150.937],[103.09,149.385],[104.729,146.5],[104.831,146.329],[104.933,146.\
-16],[105.138,145.823],[105.548,145.162],[106.367,143.89],[108.006,141.53],[\
-108.117,141.379],[108.228,141.228],[108.45,140.93],[108.895,140.346],[109.783,\
-139.225],[111.561,137.155],[111.672,137.033],[111.783,136.912],[112.005,136.\
-671],[112.45,136.199],[113.339,135.291],[115.116,133.606],[115.22,133.513],[\
-115.324,133.42],[115.531,133.236],[115.946,132.874],[116.775,132.174],[118.\
-434,130.858],[118.538,130.779],[118.641,130.701],[118.849,130.545],[119.264,\
-130.239],[120.093,129.643],[121.752,128.516],[121.864,128.443],[121.977,128.\
-369],[122.201,128.224],[122.651,127.937],[123.55,127.379],[125.348,126.316],[\
-128.943,124.371],[129.054,124.315],[129.164,124.259],[129.385,124.146],[129.\
-826,123.924],[130.708,123.487],[132.473,122.639],[136.004,121.031],[142.589,\
-118.248],[149.731,115.417],[156.397,112.863],[162.933,110.402],[170.024,107.\
-757],[176.641,105.301],[183.813,102.645],[190.854,100.041],[197.421,97.6141],[\
-204.543,94.9827],[211.19,92.5271],[218.394,89.8664],[225.466,87.2543],[232.\
-063,84.8175],[239.216,82.1755],[245.895,79.7088],[252.442,77.2905],[259.545,\
-74.6671],[266.174,72.2189],[273.358,69.5655],[280.411,66.9606],[286.989,64.\
-5309],[294.123,61.896],[300.782,59.4364],[307.311,57.0252],[314.395,54.4088],[\
-321.004,51.9677],[328.169,49.3214],[334.859,46.8504],[341.419,44.4277],[348.\
-533,41.7999],[355.174,39.3474],[362.37,36.6896],[369.434,34.0803],[376.025,31.\
-6463],[383.17,29.007],[389.842,26.543],[396.382,24.1275],[403.477,21.5067],[\
-410.099,19.0613],[410.214,19.0186],[410.33,18.9759],[410.561,18.8906],[411.\
-022,18.72],[411.946,18.3788],[413.794,17.6963],[413.91,17.6537],[414.025,17.\
-611],[414.256,17.5257],[414.718,17.3551],[415.642,17.0138],[415.757,16.9712],[\
-415.873,16.9285],[416.104,16.8432],[416.566,16.6726],[416.681,16.6299],[416.\
-797,16.5873],[417.028,16.502],[417.143,16.4593],[417.259,16.4167],[417.374,16.\
-374],[417.49,16.3314]]}, \\n{\\\"type\\\": \\\"Group\\\", \\\"name\\\": \
-\\\"Frame\\\",\\n\\\"metadata\\\": {\\\"left\\\": -0.833333, \\\"top\\\": \
-26.4944, \\\"right\\\": 40.8333, \\\"bottom\\\": \
--1.39444},\\n\\\"primitives\\\":[]}, \\n{\\\"type\\\": \\\"Group\\\", \
-\\\"name\\\": \\\"Axes\\\",\\n\\\"metadata\\\": \\\"TBD\\\",\\n\\\"primitives\
-\\\":[\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,211.296],[81,207.296]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\
-\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[97.8245,211.296],[97.8245,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[114.649,211.296],[114.649,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[131.473,211.296],[131.473,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[148.298,211.296],[148.298,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[165.122,211.296],[165.122,207.296]]}, \
-\\n{\\\"type\\\": \\\"Inset\\\", \\\"metadata\\\": {\\\"transform\\\": [1, 0, \
-0, 1, 159.122, 214.296], \\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \
-\\\"right\\\": 12, \\\"bottom\\\": 11}, \\\"pos\\\": [10, 0], \\\"opos\\\": \
-[0.5, 1]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"10\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[181.947,211.296],[181.947,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[198.771,211.296],[198.771,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[215.596,211.296],[215.596,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[232.42,211.296],[232.42,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[249.245,211.296],[249.245,207.296]]}, \
-\\n{\\\"type\\\": \\\"Inset\\\", \\\"metadata\\\": {\\\"transform\\\": [1, 0, \
-0, 1, 243.245, 214.296], \\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \
-\\\"right\\\": 12, \\\"bottom\\\": 11}, \\\"pos\\\": [20, 0], \\\"opos\\\": \
-[0.5, 1]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"20\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[266.069,211.296],[266.069,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[282.894,211.296],[282.894,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[299.718,211.296],[299.718,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[316.543,211.296],[316.543,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[333.367,211.296],[333.367,207.296]]}, \
-\\n{\\\"type\\\": \\\"Inset\\\", \\\"metadata\\\": {\\\"transform\\\": [1, 0, \
-0, 1, 327.367, 214.296], \\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \
-\\\"right\\\": 12, \\\"bottom\\\": 11}, \\\"pos\\\": [30, 0], \\\"opos\\\": \
-[0.5, 1]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"30\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[350.192,211.296],[350.192,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[367.016,211.296],[367.016,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[383.841,211.296],[383.841,208.896]]}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[400.665,211.296],[400.665,208.896]]}, \\n{\\\"type\\\": \\\"Clip\\\", \
-\\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, \
-0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\
-\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\
-\\\": [102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\
-\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[417.49,211.296],[417.49,207.296]]}, \\n{\\\"type\\\": \
-\\\"Inset\\\", \\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 411.49, \
-214.296], \\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": \
-12, \\\"bottom\\\": 11}, \\\"pos\\\": [40, 0], \\\"opos\\\": [0.5, \
-1]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"40\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[73.9898,211.296],[424.5,211.296]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,219.063],[83.4,219.063]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,211.296],[85,211.296]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,203.528],[83.4,203.528]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,195.761],[83.4,195.761]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,187.993],[83.4,187.993]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,180.226],[83.4,180.226]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,172.458],[85,172.458]]}, \\n{\\\"type\\\": \\\"Inset\\\", \\\"metadata\\\
-\": {\\\"transform\\\": [1, 0, 0, 1, 72, 166.958], \\\"localRect\\\": \
-{\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 6, \\\"bottom\\\": 11}, \
-\\\"pos\\\": [0, 5], \\\"opos\\\": [1, 0.5]},\\n\\\"boxdata\\\": \
-\\\"\\\\nStyleBox[\\\\\\\"5\\\\\\\",\\\\n FontFamily->\\\\\\\"Roboto\\\\\\\",\
-\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\"Plain\\\\\\\",\\\\n FontSlant->\\\
-\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\\\\\"Plain\\\\\\\",\\\\n \
-PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\\\\\"->True},\\\\n \
-FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n Background->None]\\\"}, \
-\\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, \
-0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], \
-[426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : \
-false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,164.691],[83.4,164.691]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,156.923],[83.4,156.923]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,149.156],[83.4,149.156]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,141.388],[83.4,141.388]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,133.621],[85,133.621]]}, \\n{\\\"type\\\": \\\"Inset\\\", \\\"metadata\\\
-\": {\\\"transform\\\": [1, 0, 0, 1, 66, 128.121], \\\"localRect\\\": \
-{\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": 12, \\\"bottom\\\": 11}, \
-\\\"pos\\\": [0, 10], \\\"opos\\\": [1, 0.5]},\\n\\\"boxdata\\\": \
-\\\"\\\\nStyleBox[\\\\\\\"10\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,125.853],[83.4,125.853]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,118.086],[83.4,118.086]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,110.318],[83.4,110.318]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,102.551],[83.4,102.551]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,94.7832],[85,94.7832]]}, \\n{\\\"type\\\": \
-\\\"Inset\\\", \\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 66, \
-89.2832], \\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": \
-12, \\\"bottom\\\": 11}, \\\"pos\\\": [0, 15], \\\"opos\\\": [1, \
-0.5]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"15\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,87.0157],[83.4,87.0157]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,79.2482],[83.4,79.2482]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,71.4807],[83.4,71.4807]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,63.7132],[83.4,63.7132]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,55.9457],[85,55.9457]]}, \\n{\\\"type\\\": \
-\\\"Inset\\\", \\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 66, \
-50.4457], \\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": \
-12, \\\"bottom\\\": 11}, \\\"pos\\\": [0, 20], \\\"opos\\\": [1, \
-0.5]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"20\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,48.1781],[83.4,48.1781]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,40.4106],[83.4,40.4106]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,32.6431],[83.4,32.6431]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": \
-[[81,24.8756],[83.4,24.8756]]}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\
-\\\": [1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \
-\\\"path\\\": [[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \
-\\\"Line\\\", \\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": \
-[102, 102, 102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": \
-0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,17.1081],[85,17.1081]]}, \\n{\\\"type\\\": \
-\\\"Inset\\\", \\\"metadata\\\": {\\\"transform\\\": [1, 0, 0, 1, 66, \
-11.6081], \\\"localRect\\\": {\\\"left\\\": 0, \\\"top\\\": 0, \\\"right\\\": \
-12, \\\"bottom\\\": 11}, \\\"pos\\\": [0, 25], \\\"opos\\\": [1, \
-0.5]},\\n\\\"boxdata\\\": \\\"\\\\nStyleBox[\\\\\\\"25\\\\\\\",\\\\n \
-FontFamily->\\\\\\\"Roboto\\\\\\\",\\\\n FontSize->9,\\\\n FontWeight->\\\\\\\
-\"Plain\\\\\\\",\\\\n FontSlant->\\\\\\\"Plain\\\\\\\",\\\\n FontTracking->\\\
-\\\\\"Plain\\\\\\\",\\\\n PrivateFontOptions->{\\\\\\\"OperatorSubstitution\\\
-\\\\\"->True},\\\\n FontColor->GrayLevel[0.4],\\\\n FontOpacity->1,\\\\n \
-Background->None]\\\"}, \\n{\\\"type\\\": \\\"Clip\\\", \\\"transform\\\": \
-[1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000], \\\"path\\\": \
-[[66,5], [66,226], [426,226], [426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \
-\\\"antialiased\\\" : false, \\\"edgeForm\\\": {\\\"color\\\": [102, 102, \
-102], \\\"opacity\\\": 1, \\\"thickness\\\": {\\\"absolute\\\": 0.2}, \
-\\\"capForm\\\": \\\"Butt\\\", \\\"joinForm\\\": {\\\"type\\\": \
-\\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\": []}, \\\"faceform\\\": \
-null, \\\"points\\\": [[81,9.3406],[83.4,9.3406]]}, \\n{\\\"type\\\": \
-\\\"Clip\\\", \\\"transform\\\": [1.000000, 0.000000, 0.000000, 1.000000, \
-0.000000, 0.000000], \\\"path\\\": [[66,5], [66,226], [426,226], \
-[426,5]]},\\n{\\\"type\\\": \\\"Line\\\", \\\"antialiased\\\" : false, \
-\\\"edgeForm\\\": {\\\"color\\\": [102, 102, 102], \\\"opacity\\\": 1, \
-\\\"thickness\\\": {\\\"absolute\\\": 0.2}, \\\"capForm\\\": \\\"Butt\\\", \\\
-\"joinForm\\\": {\\\"type\\\": \\\"Miter\\\", \\\"d\\\": 3.25}, \\\"dashing\\\
-\": []}, \\\"faceform\\\": null, \\\"points\\\": [[81,222.127],[81,5.5]]}]}],\
-\\n\\\"PlotRange\\\": {\\\"left\\\": 7.989796, \\\"top\\\": -111.500000, \
-\\\"right\\\": 358.500000, \\\"bottom\\\": \
-105.127220}\\n}\\n\",\"requestedImageSize\":null}",
+ GraphicsBox[{{}, {}, 
+   {Hue[0.67, 0.6, 0.6], LineBox[CompressedData["
+1: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
+F2fz8T9gwWB0
+     "]]}},
   AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
-  Axes->{True, True},
-  AxesLabel->{None, None},
+  Axes->True,
+  AxesLabel->{
+    FormBox["t", TraditionalForm], 
+    FormBox["c", TraditionalForm]},
   AxesOrigin->{0, 0},
-  DisplayFunction->Identity,
-  Frame->{{False, False}, {False, False}},
-  FrameLabel->{{None, None}, {None, None}},
-  FrameTicks->{{Automatic, 
-     Charting`ScaledFrameTicks[{Identity, Identity}]}, {Automatic, 
-     Charting`ScaledFrameTicks[{Identity, Identity}]}},
-  GridLines->{None, None},
-  GridLinesStyle->Directive[
-    GrayLevel[0.5, 0.4]],
-  ImagePadding->All,
-  Method->{
-   "DefaultBoundaryStyle" -> Automatic, "DefaultMeshStyle" -> 
-    AbsolutePointSize[6], "ScalingFunctions" -> None, 
-    "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
-        (Identity[#]& )[
-         Part[#, 1]], 
-        (Identity[#]& )[
-         Part[#, 2]]}& ), "CopiedValueFunction" -> ({
-        (Identity[#]& )[
-         Part[#, 1]], 
-        (Identity[#]& )[
-         Part[#, 2]]}& )}},
   PlotRange->{{0, 40}, {0., 25.099999673469306`}},
   PlotRangeClipping->True,
-  PlotRangePadding->{{
-     Scaled[0.02], 
-     Scaled[0.02]}, {
-     Scaled[0.05], 
-     Scaled[0.05]}},
-  Ticks->{Automatic, Automatic}]], "Output",
- CellID->59]
+  PlotRangePadding->{
+    Scaled[0.02], 
+    Scaled[0.02]}]], "Output",
+ CellChangeTimes->{3.7214015164464846`*^9}]
 }, Open  ]],
 
 Cell[BoxData[
@@ -1253,9 +257,9 @@ Cell[BoxData[
  CellChangeTimes->{{3.720249061976441*^9, 3.720249062498726*^9}},
  EmphasizeSyntaxErrors->True]
 },
-WindowSize->{640, 623},
-WindowMargins->{{355, Automatic}, {39, Automatic}},
-FrontEndVersion->"6.0 for Linux x86 (64-bit) (June 19, 2007)",
+WindowSize->{1904, 953},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (November 7, 2010)",
 StyleDefinitions->"Default.nb"
 ]
 (* End of Notebook Content *)
@@ -1270,20 +274,17 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[590, 23, 627, 22, 32, "Input",
+Cell[567, 22, 812, 26, 31, "Input",
  CellID->1],
-Cell[1220, 47, 35770, 516, 239, "Output",
- CellID->2]
+Cell[1382, 50, 2924, 55, 255, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[37027, 568, 764, 23, 55, "Input"],
-Cell[37794, 593, 42892, 612, 239, "Output",
- CellID->59]
+Cell[4343, 110, 941, 27, 31, "Input"],
+Cell[5287, 139, 3785, 70, 255, "Output"]
 }, Open  ]],
-Cell[80701, 1208, 1450, 45, 99, "Input"]
+Cell[9087, 212, 1450, 45, 31, "Input"]
 }
 ]
 *)
 
 (* End of internal cache information *)
-
