@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="panel-title pull-left">Rankings</div>
+      {% if session.logged_in %}
+      <div class="pull-right">logged in as <em>{{ session.username }}</em> <small><a href="{{url_for('status') }}">(home)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
+      {% else %}
+      <div class="pull-right"><small><a href="{{ url_for('login') }}">(login)</a> | <a href="{{ url_for('register') }}">(register)</a> | <a href="{{ url_for('status') }}">(home)</a></small></div>
+      {% endif %}
+      <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+      {% include "utils/flasher.html" %}
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for entry in rankings %}
+        <tr>
+          <td>{{loop.index}}</td>
+          <td>{{entry.value}}</td>
+          <td>{{entry.key}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+</div>
+{% endblock %}

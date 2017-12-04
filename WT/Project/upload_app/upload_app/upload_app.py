@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# from extensions import RequestContextTask
 import datetime
 import couchdbkit
 from couchdbkit import Document, StringProperty, DateTimeProperty
@@ -30,6 +31,7 @@ RECAPTCHA_SIZE = "normal"
 RECAPTCHA_RTABINDEX = 10
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+COUCHDB_URL = 'http://admin:admin@127.0.0.1:5984'
 
 UPLOAD_FOLDER = 'static/uploads'
 SOURCE_FOLDER = 'run/src'
@@ -59,7 +61,7 @@ def allowed_file(filename):
 
 
 def connect_db():
-    server = couchdbkit.Server()
+    server = couchdbkit.Server(app.config['COUCHDB_URL'])
     return server.get_or_create_db(app.config['DATABASE'])
 
 
@@ -216,6 +218,15 @@ def logout():
     return redirect(url_for('status'))
 
 
+@app.route('/rankings')
+def generate_rankings():
+    rankings = g.db.view("users/by_duration")
+    if rankings.first():
+        return render_template('rankings.html', rankings=rankings)
+    flash("There are no rankings available yet", 'danger')
+    return redirect(url_for('status'))
+
+
 @app.route('/delete/<path:path>')
 def delete_file(path):
     if session.get('logged_in'):
@@ -233,6 +244,20 @@ def delete_file(path):
     return redirect(url_for('status'))
 
 
+def store_duration(path, stdout):
+    for row in stdout:
+        if "Total Test time" in row:
+            if '=' in row:
+                server = couchdbkit.Server(app.config['COUCHDB_URL'])
+                db = server.get_or_create_db(app.config['DATABASE'])
+                doc = db.get(path)
+                if 'duration' not in doc:
+                    key, value = row.split('=')
+                    doc['duration'] = float(value.strip('sec').split()[0])
+                    db.save_doc(doc)
+                    return True
+
+
 @celery.task(bind=True)
 def run_task(self, path):
     unique_path = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
@@ -248,6 +273,7 @@ def run_task(self, path):
         self.update_state(state='PROGRESS', meta={'status': stdout})
         if line == '' and p.poll() is not None:
             break
+    store_duration(path, stdout)
     return {'status': stdout,
             'result': 'Task completed!'}
 
