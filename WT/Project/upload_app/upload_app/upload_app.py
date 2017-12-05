@@ -15,6 +15,10 @@ import uuid
 from celery import Celery
 import subprocess
 from shutil import copy2, copytree, rmtree
+import glob
+import filecmp
+from timeit import timeit
+import errno
 
 
 DATABASE = 'upload_app'
@@ -103,6 +107,7 @@ def before_request():
     """Make sure we are connected to the database each request."""
     g.db = connect_db()
     Entry.set_db(g.db)
+    User.set_db(g.db)
 
 
 @app.teardown_request
@@ -180,30 +185,71 @@ def status():
     return render_template('status.html', files=files)
 
 
+# @app.route('/add', methods=['POST'])
+# def add_entry():
+#     if not session.get('logged_in'):
+#         abort(401)
+#     # if ('file-source' or 'file-header') not in request.files:
+#     if 'file-source' not in request.files:
+#         flash('Missing source file', 'danger')
+#         return redirect(url_for('status'))
+#     # headerfile = request.files['file-header']
+#     sourcefile = request.files['file-source']
+#     # if 'file-header' in request.files:
+#         # headerfile = request.files['file-header'
+#     # if headerfile.filename == '' or sourcefile.filename == '':
+#     if sourcefile.filename == '':
+#         flash('Missing header or source file', 'danger')
+#         return redirect(url_for('status'))
+#     # if (headerfile and allowed_file(headerfile.filename)) and (sourcefile and allowed_file(sourcefile.filename)):
+#     if sourcefile and allowed_file(sourcefile.filename):
+#         # headerfilename = secure_filename(headerfile.filename)
+#         sourcefilename = secure_filename(sourcefile.filename)
+#         unique_id = str(uuid.uuid4())
+#         # headerSavedFilename = unique_id + '.h'
+#         sourceSavedFilename = unique_id + '.cc'
+#         # headerfile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], headerSavedFilename))
+#         sourcefile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], sourceSavedFilename))
+#         entry = Entry(
+#             _id=unique_id,
+#             author=session.get('username'),
+#             original_header=headerfilename or 'None',
+#             original_source=sourcefilename,
+#             date=datetime.datetime.utcnow())
+#         g.db.save_doc(entry)
+#         flash('Your files were successfully uploaded.', 'success')
+#         return redirect(url_for('status'))
+#     flash('Invalid extension', 'danger')
+#     return redirect(url_for('status'))
+
+
 @app.route('/add', methods=['POST'])
 def add_entry():
     if not session.get('logged_in'):
         abort(401)
-    if ('file-source' or 'file-header') not in request.files:
-        flash('Missing header or source file', 'danger')
+    if 'file-source' not in request.files:
+        flash('Missing source file', 'danger')
         return redirect(url_for('status'))
-    headerfile = request.files['file-header']
     sourcefile = request.files['file-source']
-    if headerfile.filename == '' or sourcefile.filename == '':
+    if 'file-header' in request.files and request.form.get:
+        # headerfile = request.files['file-header'
+    # if headerfile.filename == '' or sourcefile.filename == '':
+    if sourcefile.filename == '':
         flash('Missing header or source file', 'danger')
         return redirect(url_for('status'))
-    if (headerfile and allowed_file(headerfile.filename)) and (sourcefile and allowed_file(sourcefile.filename)):
-        headerfilename = secure_filename(headerfile.filename)
+    # if (headerfile and allowed_file(headerfile.filename)) and (sourcefile and allowed_file(sourcefile.filename)):
+    if sourcefile and allowed_file(sourcefile.filename):
+        # headerfilename = secure_filename(headerfile.filename)
         sourcefilename = secure_filename(sourcefile.filename)
         unique_id = str(uuid.uuid4())
-        headerSavedFilename = unique_id + '.h'
+        # headerSavedFilename = unique_id + '.h'
         sourceSavedFilename = unique_id + '.cc'
-        headerfile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], headerSavedFilename))
+        # headerfile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], headerSavedFilename))
         sourcefile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], sourceSavedFilename))
         entry = Entry(
             _id=unique_id,
             author=session.get('username'),
-            original_header=headerfilename,
+            original_header=headerfilename or 'None',
             original_source=sourcefilename,
             date=datetime.datetime.utcnow())
         g.db.save_doc(entry)
@@ -262,7 +308,7 @@ def store_duration(path, stdout):
 
 
 @celery.task(bind=True)
-def run_task(self, path):
+def run_task_old(self, path):
     if os.path.exists(os.path.join(basedir, path)):
         rmtree(os.path.join(basedir, path))
     copytree(os.path.join(basedir, 'run'), os.path.join(basedir, path))
@@ -281,6 +327,56 @@ def run_task(self, path):
             break
     rmtree(os.path.join(basedir, path))
     store_duration(path, stdout)
+    return {'status': stdout,
+            'result': 'Task completed!'}
+
+
+def number_of_tests(problem):
+    return len([name for name in os.listdir('%s/tests/%s' % (basedir, problem)) if os.path.isfile(os.path.join(basedir, 'tests', problem, name))]) / 2
+
+
+def run_tests(path, problem, test_count):
+    results = []
+    total = 0
+    working_directory = basedir + '/' + path
+    for test in range(1, test_count + 1):
+        for file_path in glob.glob(r'%s/tests/%s/grader_test%d.*' % (basedir, problem, test)):
+            filename, extension = file_path.split('.')
+            dest_file = problem + '.' + extension
+            copy2(file_path, os.path.join(basedir, path, dest_file))
+        time_elapsed = timeit(stmt="subprocess.check_output('./%s;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % (problem, working_directory), setup="import subprocess", number=1)
+        # time_elapsed = timeit(stmt="subprocess.check_output('./%s', cwd='%s', stderr=subprocess.STDOUT)" % (problem, working_directory), setup="import subprocess", number=1)
+        if filecmp.cmp('%s/%s/%s.out' % (basedir, path, problem), '%s/%s/%s.ok' % (basedir, path, problem)):
+            results.append('PASSED in {0:.3f}\n'.format(time_elapsed))
+            total += time_elapsed
+        else:
+            results.append('FAILED')
+    results.append(round(total, 3))
+    return results
+
+
+@celery.task(bind=True)
+def run_task(self, path):
+    if os.path.exists(os.path.join(basedir, path)):
+        rmtree(os.path.join(basedir, path))
+    unique_path = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
+    sourcefile = unique_path + '.cc'
+    # headerfile = unique_path + '.h'
+    try:
+        copy2(sourcefile, os.path.join(basedir, path, 'templateSrc.cc'))
+    except IOError as e:
+        # ENOENT(2): file does not exist, raised also on missing dest parent dir
+        if e.errno != errno.ENOENT:
+            raise
+        # try creating parent directories
+        os.makedirs(os.path.join(basedir, path))
+        copy2(sourcefile, os.path.join(basedir, path, 'templateSrc.cc'))
+    copy2(sourcefile, os.path.join(basedir, path, 'templateSrc.cc'))
+    # if os.path.isfile(headerfile):
+    #     copy2(headerfile, os.path.join(basedir, path, 'templateSrc.h'))
+    subprocess.check_call(['g++', 'templateSrc.cc', '-I.', '-o', 'kfib'], cwd=os.path.join(basedir, path))
+    stdout = run_tests(path, 'kfib', number_of_tests('kfib'))
+    rmtree(os.path.join(basedir, path))
     return {'status': stdout,
             'result': 'Task completed!'}
 
