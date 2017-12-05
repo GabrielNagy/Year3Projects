@@ -13,23 +13,35 @@
     </div>
     <div class="panel-body">
       {% include "utils/flasher.html" %}
+      {% if request.view_args['problem'] %}
       <table class="table table-hover">
         <thead>
           <tr>
             <th>Rank</th>
             <th>Username</th>
             <th>Duration</th>
+            <th>Penalties</th>
+            <th>Language</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody>{% set count = [1] %}
         {% for entry in rankings %}
+        {% if entry.value == request.view_args['problem'] %}
         <tr>
-          <td>{{loop.index}}</td>
-          <td>{{entry.value}}</td>
-          <td>{{entry.key}}</td>
+          <td>{{count[0]}}</td>
+{% if count.append(count.pop() + 1) %}{% endif %} {# increment count by 1 #}
+          <td>{{entry.key[3]}}</td>
+          <td>{{entry.key[0]}}</td>
+          <td>{{entry.key[1]}}</td>
+          <td>{{entry.key[2]}}</td>
         </tr>
+        {% endif %}
         {% endfor %}
+        
         </tbody>
         </table>
+      {% else %}
+      Select a problem to view the rankings: <a href="{{ url_for('generate_specific_rankings', problem='kfib') }}">kfib</a>, <a href="{{ url_for('generate_specific_rankings', problem='dijkstra') }}">dijkstra</a>
+      {% endif %}
 </div>
 {% endblock %}

@@ -16,9 +16,8 @@ from celery import Celery
 import subprocess
 from shutil import copy2, copytree, rmtree
 import glob
-import filecmp
 from timeit import timeit
-import errno
+from itertools import izip
 
 
 DATABASE = 'upload_app'
@@ -43,7 +42,7 @@ else:
 UPLOAD_FOLDER = 'static/uploads'
 SOURCE_FOLDER = 'run/src'
 BUILD_FOLDER = 'run/build'
-ALLOWED_EXTENSIONS = set(['cc', 'c', 'h', 'cpp'])
+ALLOWED_EXTENSIONS = set(['cc', 'c', 'h', 'cpp', 'pas', 'java', 'c++', 'hh', 'hpp', 'h++'])
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -88,7 +87,6 @@ class User(Document):
 class Entry(Document):
     author = StringProperty()
     date = DateTimeProperty()
-    original = StringProperty()
 
 
 class RegistrationForm(Form):
@@ -167,7 +165,9 @@ def uploads(path):
         if files.first() or session.get('is_admin'):
             for file in files:
                 if path in file['id']:
-                    return send_from_directory(os.path.join('.', 'static', 'uploads'), path, as_attachment=True, attachment_filename=file['value'])
+                    print path
+                    path = path + '.' + file['value'][2]
+                    return send_from_directory(os.path.join('.', 'static', 'uploads'), path, as_attachment=True, attachment_filename=file['value'][0])
     flash("You are not authorized to view this file", 'danger')
     return redirect(url_for('status'))
 
@@ -185,44 +185,6 @@ def status():
     return render_template('status.html', files=files)
 
 
-# @app.route('/add', methods=['POST'])
-# def add_entry():
-#     if not session.get('logged_in'):
-#         abort(401)
-#     # if ('file-source' or 'file-header') not in request.files:
-#     if 'file-source' not in request.files:
-#         flash('Missing source file', 'danger')
-#         return redirect(url_for('status'))
-#     # headerfile = request.files['file-header']
-#     sourcefile = request.files['file-source']
-#     # if 'file-header' in request.files:
-#         # headerfile = request.files['file-header'
-#     # if headerfile.filename == '' or sourcefile.filename == '':
-#     if sourcefile.filename == '':
-#         flash('Missing header or source file', 'danger')
-#         return redirect(url_for('status'))
-#     # if (headerfile and allowed_file(headerfile.filename)) and (sourcefile and allowed_file(sourcefile.filename)):
-#     if sourcefile and allowed_file(sourcefile.filename):
-#         # headerfilename = secure_filename(headerfile.filename)
-#         sourcefilename = secure_filename(sourcefile.filename)
-#         unique_id = str(uuid.uuid4())
-#         # headerSavedFilename = unique_id + '.h'
-#         sourceSavedFilename = unique_id + '.cc'
-#         # headerfile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], headerSavedFilename))
-#         sourcefile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], sourceSavedFilename))
-#         entry = Entry(
-#             _id=unique_id,
-#             author=session.get('username'),
-#             original_header=headerfilename or 'None',
-#             original_source=sourcefilename,
-#             date=datetime.datetime.utcnow())
-#         g.db.save_doc(entry)
-#         flash('Your files were successfully uploaded.', 'success')
-#         return redirect(url_for('status'))
-#     flash('Invalid extension', 'danger')
-#     return redirect(url_for('status'))
-
-
 @app.route('/add', methods=['POST'])
 def add_entry():
     if not session.get('logged_in'):
@@ -230,30 +192,44 @@ def add_entry():
     if 'file-source' not in request.files:
         flash('Missing source file', 'danger')
         return redirect(url_for('status'))
-    sourcefile = request.files['file-source']
-    if 'file-header' in request.files and request.form.get:
-        # headerfile = request.files['file-header'
-    # if headerfile.filename == '' or sourcefile.filename == '':
-    if sourcefile.filename == '':
-        flash('Missing header or source file', 'danger')
+    if request.files['file-source'].filename == '':
+        flash('Missing source file', 'danger')
         return redirect(url_for('status'))
-    # if (headerfile and allowed_file(headerfile.filename)) and (sourcefile and allowed_file(sourcefile.filename)):
+    sourcefile = request.files['file-source']
+    if request.files['file-header'].filename and request.form['language'] not in ['c', 'cpp']:
+        flash('Header file only available for C and C++', 'danger')
+        return redirect(url_for('status'))
+    else:
+        headerfile = request.files['file-header']
     if sourcefile and allowed_file(sourcefile.filename):
-        # headerfilename = secure_filename(headerfile.filename)
-        sourcefilename = secure_filename(sourcefile.filename)
         unique_id = str(uuid.uuid4())
-        # headerSavedFilename = unique_id + '.h'
-        sourceSavedFilename = unique_id + '.cc'
-        # headerfile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], headerSavedFilename))
+        if headerfile and allowed_file(headerfile.filename):
+            headerfilename = secure_filename(headerfile.filename)
+            headerSavedFilename = unique_id + '.h'
+            headerfile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], headerSavedFilename))
+        else:
+            headerfilename = None
+        sourcefilename = secure_filename(sourcefile.filename)
+        if request.form['language'] == 'c':
+            sourceSavedFilename = unique_id + '.c'
+        elif request.form['language'] == 'cpp':
+            sourceSavedFilename = unique_id + '.cpp'
+        elif request.form['language'] == 'pas':
+            sourceSavedFilename = unique_id + '.pas'
+        elif request.form['language'] == 'java':
+            sourceSavedFilename = unique_id + '.java'
         sourcefile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], sourceSavedFilename))
         entry = Entry(
             _id=unique_id,
             author=session.get('username'),
-            original_header=headerfilename or 'None',
             original_source=sourcefilename,
+            language=request.form['language'],
+            problem=request.form['problem'],
             date=datetime.datetime.utcnow())
+        if headerfilename is not None:
+            entry['original_header'] = headerfilename
         g.db.save_doc(entry)
-        flash('Your files were successfully uploaded.', 'success')
+        flash('Your problem was successfully uploaded.', 'success')
         return redirect(url_for('status'))
     flash('Invalid extension', 'danger')
     return redirect(url_for('status'))
@@ -267,9 +243,21 @@ def logout():
     return redirect(url_for('status'))
 
 
+@app.route('/rankings/<problem>')
+def generate_specific_rankings(problem):
+    if problem not in ['kfib', 'dijkstra']:
+        flash("Invalid problem name", 'danger')
+        return redirect(url_for('status'))
+    rankings = g.db.view("users/by_results", value=problem)
+    if rankings.first():
+        return render_template('rankings.html', rankings=rankings)
+    flash("There are no rankings available yet", 'danger')
+    return redirect(url_for('status'))
+
+
 @app.route('/rankings')
 def generate_rankings():
-    rankings = g.db.view("users/by_duration")
+    rankings = g.db.view("users/by_results")
     if rankings.first():
         return render_template('rankings.html', rankings=rankings)
     flash("There are no rankings available yet", 'danger')
@@ -284,8 +272,8 @@ def delete_file(path):
             for file in files:
                 if path in file['id']:
                     fileToRemove = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
-                    os.remove(fileToRemove + '.cc')
-                    os.remove(fileToRemove + '.h')
+                    for f in glob.glob('%s*' % fileToRemove):
+                        os.remove(f)
                     g.db.delete_doc(path)
                     flash("File successfully removed.", 'success')
                     return redirect(url_for('status'))
@@ -294,88 +282,93 @@ def delete_file(path):
 
 
 def store_duration(path, stdout):
-    for row in stdout:
-        if "Total Test time" in row:
-            if '=' in row:
-                server = couchdbkit.Server(app.config['COUCHDB_URL'])
-                db = server.get_or_create_db(app.config['DATABASE'])
-                doc = db.get(path)
-                if 'duration' not in doc:
-                    key, value = row.split('=')
-                    doc['duration'] = float(value.strip('sec').split()[0])
-                    db.save_doc(doc)
-                    return True
-
-
-@celery.task(bind=True)
-def run_task_old(self, path):
-    if os.path.exists(os.path.join(basedir, path)):
-        rmtree(os.path.join(basedir, path))
-    copytree(os.path.join(basedir, 'run'), os.path.join(basedir, path))
-    unique_path = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
-    sourcefile = unique_path + '.cc'
-    headerfile = unique_path + '.h'
-    copy2(sourcefile, os.path.join(basedir, path, 'templateSrc.cc'))
-    copy2(headerfile, os.path.join(basedir, path, 'templateSrc.h'))
-    p = subprocess.Popen(['cmake .. && make && make check'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path, 'build'), shell=True)
-    stdout = []
-    while True:
-        line = p.stdout.readline()
-        stdout.append(line)
-        self.update_state(state='PROGRESS', meta={'status': stdout})
-        if line == '' and p.poll() is not None:
-            break
-    rmtree(os.path.join(basedir, path))
-    store_duration(path, stdout)
-    return {'status': stdout,
-            'result': 'Task completed!'}
+    server = couchdbkit.Server(app.config['COUCHDB_URL'])
+    db = server.get_or_create_db(app.config['DATABASE'])
+    doc = db.get(path)
+    concat = ''.join(stdout)
+    total = float(stdout[-1].split(',')[0].strip('Total: '))
+    failed = int(stdout[-1].split(',')[1].strip(' Failed: '))
+    points = int(stdout[-2].split(':')[1].strip())
+    if 'tested' not in doc:
+        doc['total'] = total
+        doc['failed'] = failed
+        doc['points'] = points
+        doc['stdout'] = concat
+        doc['tested'] = 1
+        db.save_doc(doc)
+    return True
 
 
 def number_of_tests(problem):
     return len([name for name in os.listdir('%s/tests/%s' % (basedir, problem)) if os.path.isfile(os.path.join(basedir, 'tests', problem, name))]) / 2
 
 
-def run_tests(path, problem, test_count):
+def compare_files(fpath1, fpath2):
+    with open(fpath1, 'r') as file1, open(fpath2, 'r') as file2:
+        for linef1, linef2 in izip(file1, file2):
+            linef1 = linef1.rstrip('\r\n')
+            linef2 = linef2.rstrip('\r\n')
+            if linef1 != linef2:
+                return False
+        return next(file1, None) is None and next(file2, None) is None
+
+
+def run_tests(path, problem, language, test_count):
     results = []
     total = 0
+    failed = 0
     working_directory = basedir + '/' + path
     for test in range(1, test_count + 1):
         for file_path in glob.glob(r'%s/tests/%s/grader_test%d.*' % (basedir, problem, test)):
             filename, extension = file_path.split('.')
             dest_file = problem + '.' + extension
             copy2(file_path, os.path.join(basedir, path, dest_file))
-        time_elapsed = timeit(stmt="subprocess.check_output('./%s;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % (problem, working_directory), setup="import subprocess", number=1)
-        # time_elapsed = timeit(stmt="subprocess.check_output('./%s', cwd='%s', stderr=subprocess.STDOUT)" % (problem, working_directory), setup="import subprocess", number=1)
-        if filecmp.cmp('%s/%s/%s.out' % (basedir, path, problem), '%s/%s/%s.ok' % (basedir, path, problem)):
-            results.append('PASSED in {0:.3f}\n'.format(time_elapsed))
+        if language == 'java':
+            time_elapsed = timeit(stmt="subprocess.check_output('java Main;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % working_directory, setup="import subprocess", number=1)
+        else:
+            time_elapsed = timeit(stmt="subprocess.check_output('./%s;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % (problem, working_directory), setup="import subprocess", number=1)
+        if compare_files('%s/%s/%s.out' % (basedir, path, problem), '%s/%s/%s.ok' % (basedir, path, problem)):
+            results.append('Test {:d} PASSED in {:.3f} seconds\n'.format(test, time_elapsed))
             total += time_elapsed
         else:
             results.append('FAILED')
-    results.append(round(total, 3))
+            failed += 1
+    points = (test_count - failed) * 5
+    results.append('Points: {:d}'.format(points))
+    results.append('Total: {:.3f}, Failed: {:d}'.format(total, failed))
     return results
 
 
 @celery.task(bind=True)
-def run_task(self, path):
+def run_task(self, path, problem, language):
     if os.path.exists(os.path.join(basedir, path)):
         rmtree(os.path.join(basedir, path))
     unique_path = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
-    sourcefile = unique_path + '.cc'
-    # headerfile = unique_path + '.h'
-    try:
-        copy2(sourcefile, os.path.join(basedir, path, 'templateSrc.cc'))
-    except IOError as e:
-        # ENOENT(2): file does not exist, raised also on missing dest parent dir
-        if e.errno != errno.ENOENT:
-            raise
-        # try creating parent directories
-        os.makedirs(os.path.join(basedir, path))
-        copy2(sourcefile, os.path.join(basedir, path, 'templateSrc.cc'))
-    copy2(sourcefile, os.path.join(basedir, path, 'templateSrc.cc'))
-    # if os.path.isfile(headerfile):
-    #     copy2(headerfile, os.path.join(basedir, path, 'templateSrc.h'))
-    subprocess.check_call(['g++', 'templateSrc.cc', '-I.', '-o', 'kfib'], cwd=os.path.join(basedir, path))
-    stdout = run_tests(path, 'kfib', number_of_tests('kfib'))
+    os.makedirs(os.path.join(basedir, path))
+    if language == 'c':
+        sourcefile = unique_path + '.c'
+        headerfile = unique_path + '.h'
+        if os.path.isfile(headerfile):
+            copy2(headerfile, os.path.join(basedir, path, '%s.h' % problem))
+        copy2(sourcefile, os.path.join(basedir, path, '%s.c' % problem))
+        subprocess.check_call(['gcc', '-Wall', '-O2', '-static', '%s.c' % problem, '-I.', '-o', '%s' % problem], cwd=os.path.join(basedir, path))
+    elif language == 'cpp':
+        sourcefile = unique_path + '.cpp'
+        headerfile = unique_path + '.h'
+        if os.path.isfile(headerfile):
+            copy2(headerfile, os.path.join(basedir, path, '%s.h' % problem))
+        copy2(sourcefile, os.path.join(basedir, path, '%s.cpp' % problem))
+        subprocess.check_call(['g++', '-std=c++11', '-Wall', '-O2', '-static', '%s.cpp' % problem, '-I.', '-o', '%s' % problem], cwd=os.path.join(basedir, path))
+    elif language == 'pas':
+        sourcefile = unique_path + '.pas'
+        copy2(sourcefile, os.path.join(basedir, path, '%s.pas' % problem))
+        subprocess.check_call(['fpc', '-O2', '-Xs', '%s.pas' % problem, '-o%s' % problem], cwd=os.path.join(basedir, path))
+    elif language == 'java':
+        sourcefile = unique_path + '.java'
+        copy2(sourcefile, os.path.join(basedir, path, 'Main.java'))
+        subprocess.check_call(['javac', 'Main.java'], cwd=os.path.join(basedir, path))
+    stdout = run_tests(path, problem, language, number_of_tests(problem))
+    store_duration(path, stdout)
     rmtree(os.path.join(basedir, path))
     return {'status': stdout,
             'result': 'Task completed!'}
@@ -383,7 +376,12 @@ def run_task(self, path):
 
 @app.route('/run/<path:path>', methods=['POST'])
 def runtask(path):
-    run_task.apply_async(args=[path], task_id=path)
+    info = g.db.view("users/by_uploads", key=session['username'])
+    for f in info:
+        if path in f['id']:
+            problem = f['value'][1]
+            language = f['value'][2]
+    run_task.apply_async(args=[path, problem, language], task_id=path)
     return jsonify({}), 202, {'Location': url_for('taskstatus', path=path)}
 
 
