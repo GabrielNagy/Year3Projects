@@ -1,6 +1,6 @@
 # upload_app
 
-Flask-based web app with register/login capabilities where users upload their C++ sources to be asynchronously tested by the app with the results returned to them live. 
+Flask-based web app with register/login capabilities where users upload their C/C++/Pascal/Java sources to be asynchronously tested by the app with the results returned to them live. Current mode tests using predefined input files. 
 
 ## Getting Started
 
@@ -13,6 +13,7 @@ These instructions will get you a copy of the project up and running on your loc
 * Redis
 * CouchDB
 * svn (to easily get project files)
+* gcc/g++/fpc/javac (depending on what you want to compile)
 
 Besides packages installed with ```pip```, you also need Redis and CouchDB installed on your system. A quick guide to install Redis can be found [here](https://redis.io/download), while CouchDB can be installed from [here](http://couchdb.apache.org/#download). They may also be available in your preferred distribution's package manager.
 
@@ -58,7 +59,7 @@ upload_app$ celery worker -A upload_app.upload_app.celery --loglevel=info
 
 ## Running a test
 
-Assuming you already created and logged in to your account, to run a quick test just upload ```templateSrc.cc``` and ```templateSrc.h``` from the ```upload_app/run/src``` folder to the web app, then click on Begin test.
+Assuming you already created and logged in to your account, to run a quick test just upload ```tests/kfib/implementations/kfib.cpp``` to the web app, then click on Begin test.
 
 ## Built With
 
