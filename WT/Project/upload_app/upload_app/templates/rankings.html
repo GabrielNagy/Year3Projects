@@ -26,7 +26,7 @@
         </thead>
         <tbody>
           {% for entry in rankings %}
-          <tr>
+          <tr {% if session.username == entry.key[4] %}class="success"{% endif %}>
           <td>{{loop.index}}</td>
           <td>{{entry.key[4]}}</td>
           <td>{{entry.key[1]}}</td>

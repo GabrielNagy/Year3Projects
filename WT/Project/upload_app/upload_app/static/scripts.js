@@ -1,6 +1,7 @@
 function start_task(uuid) {
     div = $('<div class="progress-' + uuid + '"><div class="result"></div><samp><div class="replace-with-code">...</div></samp><div></div></div><hr>');
     $('#progress-' + uuid).append(div);
+    $('.btn-' + uuid).prop('disabled', true);
     $.ajax({
         type: 'POST',
         url: '/run/' + uuid,

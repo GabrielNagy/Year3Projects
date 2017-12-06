@@ -276,21 +276,25 @@ def delete_file(path):
     return redirect(url_for('status'))
 
 
-def store_duration(path, stdout):
+def store_duration(path, stdout, failed=None):
     server = couchdbkit.Server(app.config['COUCHDB_URL'])
     db = server.get_or_create_db(app.config['DATABASE'])
     doc = db.get(path)
-    concat = ''.join(stdout)
-    total = float(stdout[-1].split(',')[0].strip('Total: '))
-    failed = int(stdout[-1].split(',')[1].strip(' Failed: '))
-    points = int(stdout[-2].split(':')[1].strip())
-    if 'tested' not in doc:
-        doc['total'] = total
-        doc['failed'] = failed
-        doc['points'] = points
-        doc['stdout'] = concat
-        doc['tested'] = 1
-        db.save_doc(doc)
+    if failed is None:
+        concat = ''.join(stdout)
+        total = float(stdout[-1].split(',')[0].strip('Total: '))
+        failed = int(stdout[-1].split(',')[1].strip(' Failed: '))
+        points = int(stdout[-2].split(':')[1].strip())
+        if 'tested' not in doc:
+            doc['total'] = total
+            doc['failed'] = failed
+            doc['points'] = points
+            doc['stdout'] = concat
+            doc['tested'] = 1
+    else:
+        doc['stdout'] = stdout
+        doc['tested'] = 2
+    db.save_doc(doc)
     return True
 
 
@@ -349,6 +353,7 @@ def run_task(self, path, problem, language):
         try:
             subprocess.check_call(['gcc', '-Wall', '-O2', '-static', '%s.c' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
         except subprocess.CalledProcessError, e:
+            store_duration(path, e.output, 1)
             return {'status': e.output,
                     'result': 'Compilation error'}
     elif language == 'cpp':
@@ -360,6 +365,7 @@ def run_task(self, path, problem, language):
         try:
             subprocess.check_output(['g++', '-std=c++11', '-Wall', '-O2', '-static', '%s.cpp' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
         except subprocess.CalledProcessError, e:
+            store_duration(path, e.output, 1)
             return {'status': e.output,
                     'result': 'Compilation error'}
     elif language == 'pas':
@@ -368,6 +374,7 @@ def run_task(self, path, problem, language):
         try:
             subprocess.check_call(['fpc', '-O2', '-Xs', '%s.pas' % problem, '-o%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
         except subprocess.CalledProcessError, e:
+            store_duration(path, e.output, 1)
             return {'status': e.output,
                     'result': 'Compilation error'}
     elif language == 'java':
@@ -376,6 +383,7 @@ def run_task(self, path, problem, language):
         try:
             subprocess.check_call(['javac', 'Main.java'], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
         except subprocess.CalledProcessError, e:
+            store_duration(path, e.output, 1)
             return {'status': e.output,
                     'result': 'Compilation error'}
     stdout = run_tests(path, problem, language, number_of_tests(problem))

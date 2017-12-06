@@ -67,7 +67,7 @@
         {% if file.value[3] %}
         <button onclick="location.href = '{{ url_for('delete_file', path=file.id) }}';" class="btn btn-danger">Delete item</button>
         {% else %}
-        <button onclick="start_task('{{file.id}}');" class="btn btn-default">Test</button>
+        <button onclick="start_task('{{file.id}}');" class="btn btn-default btn-{{file.id}}">Test</button>
         <button onclick="location.href = '{{ url_for('delete_file', path=file.id) }}';" class="btn btn-danger">Delete item</button>
         {% endif %}
       </div>
