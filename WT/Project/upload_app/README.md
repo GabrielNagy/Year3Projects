@@ -23,7 +23,6 @@ Get the sources (since they are residing in a subfolder of the repository your b
 
 ```
 svn export https://github.com/GabrielNagy/Year3Projects/trunk/WT/Project/upload_app
-git clone https://github.com/google/googletest upload_app/upload_app/run/googletest
 mkdir upload_app/upload_app/run/build
 ```
 
