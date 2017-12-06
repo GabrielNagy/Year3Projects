@@ -21,21 +21,18 @@
             <th>Username</th>
             <th>Duration</th>
             <th>Penalties</th>
-            <th>Language</th>
+            <th>Compiler</th>
           </tr>
         </thead>
-        <tbody>{% set count = [1] %}
-        {% for entry in rankings %}
-        {% if entry.value == request.view_args['problem'] %}
-        <tr>
-          <td>{{count[0]}}</td>
-{% if count.append(count.pop() + 1) %}{% endif %} {# increment count by 1 #}
-          <td>{{entry.key[3]}}</td>
-          <td>{{entry.key[0]}}</td>
+        <tbody>
+          {% for entry in rankings %}
+          <tr>
+          <td>{{loop.index}}</td>
+          <td>{{entry.key[4]}}</td>
           <td>{{entry.key[1]}}</td>
           <td>{{entry.key[2]}}</td>
+          <td>{{entry.key[3]}}</td>
         </tr>
-        {% endif %}
         {% endfor %}
         
         </tbody>

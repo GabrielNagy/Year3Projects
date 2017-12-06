@@ -64,12 +64,20 @@
     <div class="panel-heading clearfix">
       <h4 class="panel-title pull-left" style="padding-top: 7.5px;"><a href="{{ url_for('uploads', path=file.id, filename=file.value[0])}}">{{ file.value[0] }}</a> <small>(problem: {{ file.value[1] }}) (language: {{ file.value[2] }}) (id: {{ file.id }})</small></h4>
       <div class="pull-right">
-        <button onclick="start_task('{{file.id}}');" class="btn btn-default">Test/View Results</button>
+        {% if file.value[3] %}
         <button onclick="location.href = '{{ url_for('delete_file', path=file.id) }}';" class="btn btn-danger">Delete item</button>
+        {% else %}
+        <button onclick="start_task('{{file.id}}');" class="btn btn-default">Test</button>
+        <button onclick="location.href = '{{ url_for('delete_file', path=file.id) }}';" class="btn btn-danger">Delete item</button>
+        {% endif %}
       </div>
     </div>
     <div class="panel-body">
+      {% if file.value[3] %}
+    <pre>{{ file.value[3] }}</pre>
+    {% else %}
     <div id="progress-{{file.id}}"></div>
+    {% endif %}
     </div>
   </div>
   {% else %}

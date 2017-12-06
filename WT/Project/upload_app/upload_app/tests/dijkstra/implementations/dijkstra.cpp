@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
  
 using namespace std;
-#define ll long long
+#define l long long
  
 ifstream fin("dijkstra.in");
 ofstream fout("dijkstra.out");
@@ -10,7 +10,7 @@ const int N = 50005;
 const int INF = 1e9;
 vector < pair < int, int > > edge[N];
  
-bool in_q[N];
+bool i_q[N];
 int dp[N];
  
 struct comp{

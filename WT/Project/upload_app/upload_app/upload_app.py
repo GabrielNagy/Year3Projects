@@ -14,7 +14,7 @@ from wtforms import Form, BooleanField, StringField, PasswordField, validators
 import uuid
 from celery import Celery
 import subprocess
-from shutil import copy2, copytree, rmtree
+from shutil import copy2, rmtree
 import glob
 from timeit import timeit
 from itertools import izip
@@ -174,11 +174,6 @@ def uploads(path):
 
 @app.route('/')
 def status():
-    # using a view (NOTE: you will have to create the appropriate view in CouchDB)
-    # entries = g.db.view('entry/all', schema=Entry)
-    # using the primary index _all_docs
-    # entries = g.db.all_docs(include_docs=True, schema=Entry)
-    # app.logger.debug(entries.all())
     files = None
     if session.get('logged_in'):
         files = g.db.view("users/by_uploads", key=session.get('username'))
@@ -248,7 +243,7 @@ def generate_specific_rankings(problem):
     if problem not in ['kfib', 'dijkstra']:
         flash("Invalid problem name", 'danger')
         return redirect(url_for('status'))
-    rankings = g.db.view("users/by_results", value=problem)
+    rankings = g.db.view('users/by_results', startkey=["%s" % problem], endkey=["%s" % problem, {}])
     if rankings.first():
         return render_template('rankings.html', rankings=rankings)
     flash("There are no rankings available yet", 'danger')
@@ -331,10 +326,10 @@ def run_tests(path, problem, language, test_count):
             results.append('Test {:d} PASSED in {:.3f} seconds\n'.format(test, time_elapsed))
             total += time_elapsed
         else:
-            results.append('FAILED')
+            results.append('Test {:d} FAILED\n'.format(test))
             failed += 1
     points = (test_count - failed) * 5
-    results.append('Points: {:d}'.format(points))
+    results.append('Points: {:d}\n'.format(points))
     results.append('Total: {:.3f}, Failed: {:d}'.format(total, failed))
     return results
 
@@ -351,22 +346,38 @@ def run_task(self, path, problem, language):
         if os.path.isfile(headerfile):
             copy2(headerfile, os.path.join(basedir, path, '%s.h' % problem))
         copy2(sourcefile, os.path.join(basedir, path, '%s.c' % problem))
-        subprocess.check_call(['gcc', '-Wall', '-O2', '-static', '%s.c' % problem, '-I.', '-o', '%s' % problem], cwd=os.path.join(basedir, path))
+        try:
+            subprocess.check_call(['gcc', '-Wall', '-O2', '-static', '%s.c' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
+        except subprocess.CalledProcessError, e:
+            return {'status': e.output,
+                    'result': 'Compilation error'}
     elif language == 'cpp':
         sourcefile = unique_path + '.cpp'
         headerfile = unique_path + '.h'
         if os.path.isfile(headerfile):
             copy2(headerfile, os.path.join(basedir, path, '%s.h' % problem))
         copy2(sourcefile, os.path.join(basedir, path, '%s.cpp' % problem))
-        subprocess.check_call(['g++', '-std=c++11', '-Wall', '-O2', '-static', '%s.cpp' % problem, '-I.', '-o', '%s' % problem], cwd=os.path.join(basedir, path))
+        try:
+            subprocess.check_output(['g++', '-std=c++11', '-Wall', '-O2', '-static', '%s.cpp' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
+        except subprocess.CalledProcessError, e:
+            return {'status': e.output,
+                    'result': 'Compilation error'}
     elif language == 'pas':
         sourcefile = unique_path + '.pas'
         copy2(sourcefile, os.path.join(basedir, path, '%s.pas' % problem))
-        subprocess.check_call(['fpc', '-O2', '-Xs', '%s.pas' % problem, '-o%s' % problem], cwd=os.path.join(basedir, path))
+        try:
+            subprocess.check_call(['fpc', '-O2', '-Xs', '%s.pas' % problem, '-o%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
+        except subprocess.CalledProcessError, e:
+            return {'status': e.output,
+                    'result': 'Compilation error'}
     elif language == 'java':
         sourcefile = unique_path + '.java'
         copy2(sourcefile, os.path.join(basedir, path, 'Main.java'))
-        subprocess.check_call(['javac', 'Main.java'], cwd=os.path.join(basedir, path))
+        try:
+            subprocess.check_call(['javac', 'Main.java'], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
+        except subprocess.CalledProcessError, e:
+            return {'status': e.output,
+                    'result': 'Compilation error'}
     stdout = run_tests(path, problem, language, number_of_tests(problem))
     store_duration(path, stdout)
     rmtree(os.path.join(basedir, path))
