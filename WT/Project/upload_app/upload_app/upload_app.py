@@ -23,8 +23,6 @@ from itertools import izip
 DATABASE = 'upload_app'
 DEBUG = True
 SECRET_KEY = 'development key'
-USERNAME = 'admin'
-PASSWORD = 'admin'
 RECAPTCHA_ENABLED = True
 RECAPTCHA_SITE_KEY = "6LcqfTkUAAAAABorDOh3Ex1fgOKoeDxC9_n9yCi8"
 RECAPTCHA_SECRET_KEY = "6LeYIbsSAAAAACRPIllxA7wvXjIE411PfdB2gt2J"
@@ -195,6 +193,10 @@ def add_entry():
         return redirect(url_for('status'))
     if request.files['file-source'].filename == '':
         flash('Missing source file', 'danger')
+        return redirect(url_for('status'))
+    existing = g.db.view("users/by_existing", key=[session.get('username'), request.form['problem']])
+    if existing.first():
+        flash('You can only upload one of each problem at a time', 'danger')
         return redirect(url_for('status'))
     sourcefile = request.files['file-source']
     if request.files['file-header'].filename and request.form['language'] not in ['c', 'cpp']:
