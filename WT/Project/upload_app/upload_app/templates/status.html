@@ -32,8 +32,8 @@
           <label class="control-label" for="language">Select programming language:</label>
           <!-- <div class="col-sm-10"> -->
           <select class="form-control" name="language">
-            <option value="cpp">C++ (gcc -Wall -static -O2 -I. file.cpp)</option>
-            <option value="c">C (g++ -std=c++11 -Wall -static -O2 -I. file.cpp)</option>
+            <option value="cpp">C++ (g++ -std=c++11 -Wall -static -O2 -I. file.cpp)</option>
+            <option value="c">C (gcc -Wall -static -O2 -I. file.cpp)</option>
             <option value="pas">Pascal (fpc -O2 -Xs file.pas)</option>
             <option value="java">Java (javac Main.java)</option>
             </select>
@@ -64,7 +64,14 @@
   <hr />
   <div class="panel panel-primary">
     <div class="panel-heading clearfix">
+      {% if session.admin %}
+      <h4 class="panel-title pull-left" style="padding-top: 7.5px;">
+
+        <a href="{{ url_for('uploads', path=file.id, filename=file.value[0])}}">{{ file.value[0] }}</a> <small>(author: {{file.key }}) (problem: {{ file.value[1] }}) (language: {{ file.value[2] }}) (id: {{ file.id }})</small></h4>
+
+      {% else %}
       <h4 class="panel-title pull-left" style="padding-top: 7.5px;"><a href="{{ url_for('uploads', path=file.id, filename=file.value[0])}}">{{ file.value[0] }}</a> <small>(problem: {{ file.value[1] }}) (language: {{ file.value[2] }}) (id: {{ file.id }})</small></h4>
+      {% endif %}
       <div class="pull-right">
         {% if file.value[3] %}
         <button onclick="location.href = '{{ url_for('delete_file', path=file.id) }}';" class="btn btn-danger">Delete item</button>
@@ -72,6 +79,7 @@
         <button onclick="start_task('{{file.id}}');" class="btn btn-default btn-{{file.id}}">Test</button>
         <button onclick="location.href = '{{ url_for('delete_file', path=file.id) }}';" class="btn btn-danger">Delete item</button>
         {% endif %}
+
       </div>
     </div>
     <div class="panel-body">

@@ -3,11 +3,12 @@
 <div class="container">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div class="panel-title pull-left">Rankings</div>
-      {% if session.logged_in %}
-      <div class="pull-right">logged in as {{ session.grade }} <em>{{ session.username }}</em> <small><a href="{{url_for('status') }}">(home)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
+      {% if request.view_args['problem'] %}
+      <div class="panel-title pull-left">Rankings for problem <strong>{{ request.view_args['problem'] }}</strong></div>
+      <div class="pull-right">logged in as {{ session.grade }} <em>{{ session.username }}</em> <small><a href="{{url_for('status') }}">(home)</a> | <a href="{{url_for('generate_rankings') }}">(rankings)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
       {% else %}
-      <div class="pull-right"><small><a href="{{ url_for('login') }}">(login)</a> | <a href="{{ url_for('register') }}">(register)</a> | <a href="{{ url_for('status') }}">(home)</a></small></div>
+      <div class="panel-title pull-left">Rankings</div>
+      <div class="pull-right">logged in as {{ session.grade }} <em>{{ session.username }}</em> <small><a href="{{url_for('status') }}">(home)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
       {% endif %}
       <div class="clearfix"></div>
     </div>
@@ -41,8 +42,49 @@
         
         </tbody>
         </table>
+  
       {% else %}
       Select a problem to view the rankings: <a href="{{ url_for('generate_specific_rankings', problem='kfib') }}">kfib</a>, <a href="{{ url_for('generate_specific_rankings', problem='dijkstra') }}">dijkstra</a>
+    </div>
+  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <div class="panel-title pull-left">General rankings</div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Total Points</th>
+            <th>Total Duration</th>
+            {% if session.admin %}<th>Grade</th>{% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in rankings %}
+          <tr{% if session.username == entry.username %} class="success">
+            <td>{{loop.index}}</td>
+            <td>{{entry.username}}</td>
+            {% elif session.admin %}
+            {% if entry.grade == "elev" %} class="info">
+            {% else %} class="success">
+            {% endif %}
+            <td>{{loop.index}}</td>
+            <td>{{entry.username}}</td>
+            {% endif %}
+            <td>{{entry.points * -1}}</td>
+            <td>{{entry.duration}}</td>
+            {% if session.admin %}<td>{{entry.grade}}</td>{% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    </div>
+      
       {% endif %}
 </div>
 {% endblock %}

@@ -153,6 +153,8 @@ def login():
                     session['logged_in'] = True
                     session['username'] = request.form['username']
                     session['grade'] = user['value'][1]
+                    if user['value'][2]:
+                        session['admin'] = user['value'][2]
                     flash('You were successfully logged in', 'success')
                     return redirect(url_for('status'))
         else:
@@ -163,7 +165,7 @@ def login():
 @app.route('/static/uploads/<path:path>')
 def uploads(path):
     if session.get('logged_in'):
-        files = g.db.view("users/by_uploads", key=session.get('username'), id=path)
+        files = g.db.view("users/by_uploads", key=session.get('username'))
         if files.first() or session.get('is_admin'):
             for file in files:
                 if path in file['id']:
@@ -177,7 +179,10 @@ def uploads(path):
 def status():
     files = None
     if session.get('logged_in'):
-        files = g.db.view("users/by_uploads", key=session.get('username'))
+        if session.get('admin'):
+            files = g.db.view("users/by_uploads")
+        else:
+            files = g.db.view("users/by_uploads", key=session.get('username'))
     return render_template('status.html', files=files)
 
 
@@ -237,6 +242,7 @@ def logout():
     session.pop('logged_in', None)
     session.pop('username', None)
     session.pop('grade', None)
+    session.pop('admin', None)
     flash('You were successfully logged out', 'success')
     return redirect(url_for('status'))
 
@@ -250,14 +256,20 @@ def generate_specific_rankings(problem):
     rankings = g.db.view('users/by_results', startkey=["%s" % problem, "%s" % grade], endkey=["%s" % problem, "%s" % grade, {}])
     if rankings.first():
         return render_template('rankings.html', rankings=rankings)
-    flash("There are no rankings available yet", 'danger')
-    return redirect(url_for('status'))
+    flash("No rankings available for that problem yet", 'danger')
+    return redirect(url_for('generate_rankings'))
 
 
 @app.route('/rankings')
 def generate_rankings():
-    rankings = g.db.view("users/by_results")
-    if rankings.first():
+    grade = session.get('grade')
+    if not grade:
+        abort(401)
+    rankings = g.db.list("users/by_total", "users/by_total", group="true", group_level=2)
+    if rankings:
+        for entry in rankings:
+            if entry['grade'] != grade and not session.get('admin'):
+                rankings.remove(entry)
         return render_template('rankings.html', rankings=rankings)
     flash("There are no rankings available yet", 'danger')
     return redirect(url_for('status'))
@@ -266,8 +278,11 @@ def generate_rankings():
 @app.route('/delete/<path:path>')
 def delete_file(path):
     if session.get('logged_in'):
-        files = g.db.view("users/by_uploads", key=session.get('username'), id=path)
-        if files.first() or session.get('is_admin'):
+        if session.get('admin'):
+            files = g.db.view("users/by_uploads")
+        else:
+            files = g.db.view("users/by_uploads", key=session.get('username'))
+        if files.first() or session.get('admin'):
             for file in files:
                 if path in file['id']:
                     fileToRemove = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
@@ -420,7 +435,7 @@ def taskstatus(path):
     if task.state == 'PENDING':
         response = {
             'state': task.state,
-            'status': []
+            'status': 'running...'
         }
     elif task.state != 'FAILURE':
         response = {
