@@ -5,7 +5,7 @@
     <div class="panel-heading">
       <div class="panel-title pull-left">Rankings</div>
       {% if session.logged_in %}
-      <div class="pull-right">logged in as <em>{{ session.username }}</em> <small><a href="{{url_for('status') }}">(home)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
+      <div class="pull-right">logged in as {{ session.grade }} <em>{{ session.username }}</em> <small><a href="{{url_for('status') }}">(home)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
       {% else %}
       <div class="pull-right"><small><a href="{{ url_for('login') }}">(login)</a> | <a href="{{ url_for('register') }}">(register)</a> | <a href="{{ url_for('status') }}">(home)</a></small></div>
       {% endif %}
@@ -19,19 +19,23 @@
           <tr>
             <th>Rank</th>
             <th>Username</th>
+            <th>Points</th>
             <th>Duration</th>
-            <th>Penalties</th>
             <th>Compiler</th>
           </tr>
         </thead>
         <tbody>
           {% for entry in rankings %}
-          <tr {% if session.username == entry.key[4] %}class="success"{% endif %}>
+          <tr {% if session.username == entry.key[5] %}class="success">
           <td>{{loop.index}}</td>
-          <td>{{entry.key[4]}}</td>
-          <td>{{entry.key[1]}}</td>
-          <td>{{entry.key[2]}}</td>
+          <td>{{entry.key[5]}}</td>
+          {% else %}>
+          <td>{{loop.index}}</td>
+          <td>...</td>
+          {% endif %}
+          <td>{{entry.key[2] * -1}}</td>
           <td>{{entry.key[3]}}</td>
+          <td>{{entry.key[4]}}</td>
         </tr>
         {% endfor %}
         

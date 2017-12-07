@@ -10,7 +10,7 @@ import logging
 import os
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
-from wtforms import Form, BooleanField, StringField, PasswordField, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, SelectField, validators
 import uuid
 from celery import Celery
 import subprocess
@@ -97,6 +97,7 @@ class RegistrationForm(Form):
         validators.EqualTo('confirm', message='Passwords must match')
     ])
     confirm = PasswordField('Repeat Password')
+    grade = SelectField('Grade', [validators.DataRequired()], choices=[('elev', 'elev'), ('student', 'student')])
     accept_tos = BooleanField('TOS', [validators.DataRequired()])
 
 
@@ -127,7 +128,7 @@ def register():
             return redirect(url_for('register'))
         user = User(username=request.form['username'], email=request.form['email'],
                     password=bcrypt.generate_password_hash(request.form['password']),
-                    date=datetime.datetime.utcnow())
+                    grade=request.form['grade'], date=datetime.datetime.utcnow())
         g.db.save_doc(user)
         flash(Markup('Thanks for registering! You can now <a href="/login">login</a>.'), 'success')
         return redirect(url_for('status'))
@@ -146,11 +147,12 @@ def login():
                 error = 'Invalid username'
             else:
                 user = result.first()
-                if not bcrypt.check_password_hash(user['value'], request.form['password']):
+                if not bcrypt.check_password_hash(user['value'][0], request.form['password']):
                     error = 'Invalid credentials'
                 else:
                     session['logged_in'] = True
                     session['username'] = request.form['username']
+                    session['grade'] = user['value'][1]
                     flash('You were successfully logged in', 'success')
                     return redirect(url_for('status'))
         else:
@@ -165,7 +167,6 @@ def uploads(path):
         if files.first() or session.get('is_admin'):
             for file in files:
                 if path in file['id']:
-                    print path
                     path = path + '.' + file['value'][2]
                     return send_from_directory(os.path.join('.', 'static', 'uploads'), path, as_attachment=True, attachment_filename=file['value'][0])
     flash("You are not authorized to view this file", 'danger')
@@ -220,6 +221,7 @@ def add_entry():
             original_source=sourcefilename,
             language=request.form['language'],
             problem=request.form['problem'],
+            grade=session.get('grade'),
             date=datetime.datetime.utcnow())
         if headerfilename is not None:
             entry['original_header'] = headerfilename
@@ -234,16 +236,18 @@ def add_entry():
 def logout():
     session.pop('logged_in', None)
     session.pop('username', None)
+    session.pop('grade', None)
     flash('You were successfully logged out', 'success')
     return redirect(url_for('status'))
 
 
 @app.route('/rankings/<problem>')
 def generate_specific_rankings(problem):
+    grade = session.get('grade')
     if problem not in ['kfib', 'dijkstra']:
         flash("Invalid problem name", 'danger')
         return redirect(url_for('status'))
-    rankings = g.db.view('users/by_results', startkey=["%s" % problem], endkey=["%s" % problem, {}])
+    rankings = g.db.view('users/by_results', startkey=["%s" % problem, "%s" % grade], endkey=["%s" % problem, "%s" % grade, {}])
     if rankings.first():
         return render_template('rankings.html', rankings=rankings)
     flash("There are no rankings available yet", 'danger')
@@ -283,23 +287,26 @@ def store_duration(path, stdout, failed=None):
     if failed is None:
         concat = ''.join(stdout)
         total = float(stdout[-1].split(',')[0].strip('Total: '))
-        failed = int(stdout[-1].split(',')[1].strip(' Failed: '))
         points = int(stdout[-2].split(':')[1].strip())
         if 'tested' not in doc:
             doc['total'] = total
             doc['failed'] = failed
-            doc['points'] = points
+            doc['points'] = points * -1
             doc['stdout'] = concat
             doc['tested'] = 1
     else:
+        # for row in stdout.split('\n'):
+        #     if 'Points' in row:
+        #         points = row.split(': ')[1]
         doc['stdout'] = stdout
+        # doc['points'] = int(points)
         doc['tested'] = 2
     db.save_doc(doc)
     return True
 
 
-def number_of_tests(problem):
-    return len([name for name in os.listdir('%s/tests/%s' % (basedir, problem)) if os.path.isfile(os.path.join(basedir, 'tests', problem, name))]) / 2
+def number_of_tests(problem, grade):
+    return len([name for name in os.listdir('%s/tests/%s' % (basedir, problem)) if name.startswith(grade) and os.path.isfile(os.path.join(basedir, 'tests', problem, name))]) / 2
 
 
 def compare_files(fpath1, fpath2):
@@ -312,13 +319,13 @@ def compare_files(fpath1, fpath2):
         return next(file1, None) is None and next(file2, None) is None
 
 
-def run_tests(path, problem, language, test_count):
+def run_tests(path, problem, language, grade, test_count):
     results = []
     total = 0
     failed = 0
     working_directory = basedir + '/' + path
     for test in range(1, test_count + 1):
-        for file_path in glob.glob(r'%s/tests/%s/grader_test%d.*' % (basedir, problem, test)):
+        for file_path in glob.glob(r'%s/tests/%s/%s-test%d.*' % (basedir, problem, grade, test)):
             filename, extension = file_path.split('.')
             dest_file = problem + '.' + extension
             copy2(file_path, os.path.join(basedir, path, dest_file))
@@ -331,7 +338,10 @@ def run_tests(path, problem, language, test_count):
             total += time_elapsed
         else:
             results.append('Test {:d} FAILED\n'.format(test))
-            failed += 1
+            points = (test - 1) * 5
+            results.append('Points: {:d}\n'.format(points))
+            results.append('Total: {:.3f}, Stopped because of failure.'.format(total, failed))
+            return results
     points = (test_count - failed) * 5
     results.append('Points: {:d}\n'.format(points))
     results.append('Total: {:.3f}, Failed: {:d}'.format(total, failed))
@@ -339,7 +349,7 @@ def run_tests(path, problem, language, test_count):
 
 
 @celery.task(bind=True)
-def run_task(self, path, problem, language):
+def run_task(self, path, problem, language, grade):
     if os.path.exists(os.path.join(basedir, path)):
         rmtree(os.path.join(basedir, path))
     unique_path = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
@@ -386,7 +396,7 @@ def run_task(self, path, problem, language):
             store_duration(path, e.output, 1)
             return {'status': e.output,
                     'result': 'Compilation error'}
-    stdout = run_tests(path, problem, language, number_of_tests(problem))
+    stdout = run_tests(path, problem, language, grade, number_of_tests(problem, grade))
     store_duration(path, stdout)
     rmtree(os.path.join(basedir, path))
     return {'status': stdout,
@@ -395,12 +405,12 @@ def run_task(self, path, problem, language):
 
 @app.route('/run/<path:path>', methods=['POST'])
 def runtask(path):
-    info = g.db.view("users/by_uploads", key=session['username'])
+    info = g.db.view("users/by_uploads", key=session.get('username'))
     for f in info:
         if path in f['id']:
             problem = f['value'][1]
             language = f['value'][2]
-    run_task.apply_async(args=[path, problem, language], task_id=path)
+    run_task.apply_async(args=[path, problem, language, session.get('grade')], task_id=path)
     return jsonify({}), 202, {'Location': url_for('taskstatus', path=path)}
 
 

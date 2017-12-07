@@ -5,7 +5,7 @@
     <div class="panel-heading">
       {% if session.logged_in %}
       <div class="panel-title pull-left">Please upload a file.</div>
-      <div class="pull-right">logged in as <em>{{ session.username }}</em> <small><a href="{{ url_for('generate_rankings') }}">(rankings)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
+      <div class="pull-right">logged in as {{ session.grade }} <em>{{ session.username }}</em> <small><a href="{{ url_for('generate_rankings') }}">(rankings)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
       {% else %}
       <div class="pull-right"><small><a href="{{ url_for('login') }}">(login)</a> | <a href="{{ url_for('register') }}">(register)</a> | <a href="{{ url_for('generate_rankings') }}">(rankings)</a></small></div>
       {% endif %}
@@ -32,10 +32,10 @@
           <label class="control-label" for="language">Select programming language:</label>
           <!-- <div class="col-sm-10"> -->
           <select class="form-control" name="language">
-            <option value="cpp">C++</option>
-            <option value="c">C</option>
-            <option value="pas">Pascal</option>
-            <option value="java">Java</option>
+            <option value="cpp">C++ (gcc -Wall -static -O2 -I. file.cpp)</option>
+            <option value="c">C (g++ -std=c++11 -Wall -static -O2 -I. file.cpp)</option>
+            <option value="pas">Pascal (fpc -O2 -Xs file.pas)</option>
+            <option value="java">Java (javac Main.java)</option>
             </select>
           <!-- </div> -->
         </div>
@@ -49,10 +49,12 @@
             </select>
           <!-- </div> -->
         </div>
+        <div class="col-xs-6 form-group">
         <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
+          <!-- <div class="col-sm-offset-2 col-sm-10"> -->
             <button type="submit" class="btn btn-default">Submit</button>
-          </div>
+          <!-- </div> -->
+        </div>
         </div>
         </div>
       </form>

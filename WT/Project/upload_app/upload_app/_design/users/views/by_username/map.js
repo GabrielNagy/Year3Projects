@@ -1,5 +1,5 @@
 function (doc) {
-  if(doc.username && doc.email && doc.date) {
-    emit(doc.username, doc.password)
+  if(doc.username && doc.email && doc.date && doc.grade) {
+      emit(doc.username, [doc.password, doc.grade])
   }
 }

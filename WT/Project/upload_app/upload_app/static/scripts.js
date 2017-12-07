@@ -1,5 +1,5 @@
 function start_task(uuid) {
-    div = $('<div class="progress-' + uuid + '"><div class="result"></div><samp><div class="replace-with-code">...</div></samp><div></div></div><hr>');
+    div = $('<div class="progress-' + uuid + '"><div class="result"></div><samp><div class="replace-with-code">running...</div></samp><div></div></div><hr>');
     $('#progress-' + uuid).append(div);
     $('.btn-' + uuid).prop('disabled', true);
     $.ajax({
@@ -27,7 +27,6 @@ function update_progress(status_url, status_div) {
         }
         if (data['state'] != 'PENDING' && data['state'] != 'PROGRESS') {
             if ('result' in data) {
-                // $(status_div.childNodes[0]).text('test');
                 $(status_div.childNodes[0]).text(data['result']);
             }
         }
