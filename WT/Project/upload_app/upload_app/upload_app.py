@@ -347,9 +347,9 @@ def run_tests(path, problem, language, grade, test_count):
             dest_file = problem + '.' + extension
             copy2(file_path, os.path.join(basedir, path, dest_file))
         if language == 'java':
-            time_elapsed = timeit(stmt="subprocess.check_output('java Main;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % working_directory, setup="import subprocess", number=1)
+            time_elapsed = timeit(stmt="subprocess.check_output('java Main;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % working_directory, setup="import subprocess", number=3) / 3
         else:
-            time_elapsed = timeit(stmt="subprocess.check_output('./%s;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % (problem, working_directory), setup="import subprocess", number=1)
+            time_elapsed = timeit(stmt="subprocess.check_output('./%s;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % (problem, working_directory), setup="import subprocess", number=3) / 3
         if compare_files('%s/%s/%s.out' % (basedir, path, problem), '%s/%s/%s.ok' % (basedir, path, problem)):
             results.append('Test {:d} PASSED in {:.3f} seconds\n'.format(test, time_elapsed))
             total += time_elapsed
