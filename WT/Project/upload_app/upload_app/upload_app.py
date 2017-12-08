@@ -347,17 +347,30 @@ def run_tests(path, problem, language, grade, test_count):
             dest_file = problem + '.' + extension
             copy2(file_path, os.path.join(basedir, path, dest_file))
         if language == 'java':
-            time_elapsed = timeit(stmt="subprocess.check_output('java Main;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % working_directory, setup="import subprocess", number=3) / 3
+            stmt = """\
+try:
+    subprocess32.check_output(['java', 'Main'], cwd='%s', stderr=subprocess32.STDOUT, timeout=2)
+except (subprocess32.CalledProcessError, subprocess32.TimeoutExpired):
+    pass""" % working_directory
         else:
-            time_elapsed = timeit(stmt="subprocess.check_output('./%s;exit 0', shell=True, cwd='%s', stderr=subprocess.STDOUT)" % (problem, working_directory), setup="import subprocess", number=3) / 3
+            stmt = """\
+try:
+    subprocess32.check_output(['./%s'], cwd='%s', stderr=subprocess32.STDOUT, timeout=2)
+except (subprocess32.CalledProcessError, subprocess32.TimeoutExpired):
+    pass""" % (problem, working_directory)
+        time_elapsed = timeit(stmt=stmt, setup="import subprocess32", number=3) / 3
         if compare_files('%s/%s/%s.out' % (basedir, path, problem), '%s/%s/%s.ok' % (basedir, path, problem)):
             results.append('Test {:d} PASSED in {:.3f} seconds\n'.format(test, time_elapsed))
             total += time_elapsed
         else:
-            results.append('Test {:d} FAILED\n'.format(test))
+            results.append('Test {:d} FAILED in {:.3f} seconds\n'.format(test, time_elapsed))
+            total += time_elapsed
             points = (test - 1) * 5
             results.append('Points: {:d}\n'.format(points))
-            results.append('Total: {:.3f}, Stopped because of failure.'.format(total, failed))
+            if time_elapsed >= 2:
+                results.append('Total: {:.3f}, Stopped because of timeout (over 2 sec/test).'.format(total, failed))
+            else:
+                results.append('Total: {:.3f}, Stopped because of failure.'.format(total, failed))
             return results
     points = (test_count - failed) * 5
     results.append('Points: {:d}\n'.format(points))
