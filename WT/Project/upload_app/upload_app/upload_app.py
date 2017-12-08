@@ -5,7 +5,7 @@ import couchdbkit
 from couchdbkit import Document, StringProperty, DateTimeProperty
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, Markup, jsonify, send_from_directory
 from flask_bcrypt import Bcrypt
-from flask_recaptcha import ReCaptcha
+# from flask_recaptcha import ReCaptcha
 import logging
 import os
 from werkzeug.utils import secure_filename
@@ -50,7 +50,7 @@ Bootstrap(app)
 bcrypt = Bcrypt(app)
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
-recaptcha = ReCaptcha(app=app)
+# recaptcha = ReCaptcha(app=app)
 
 
 def flash_errors(form):
@@ -139,24 +139,24 @@ def register():
 def login():
     error = None
     if request.method == 'POST':
-        if not recaptcha.verify():
-            result = g.db.view("users/by_username", key=request.form['username'])
-            if result.first() is None:
-                error = 'Invalid username'
-            else:
-                user = result.first()
-                if not bcrypt.check_password_hash(user['value'][0], request.form['password']):
-                    error = 'Invalid credentials'
-                else:
-                    session['logged_in'] = True
-                    session['username'] = request.form['username']
-                    session['grade'] = user['value'][1]
-                    if user['value'][2]:
-                        session['admin'] = user['value'][2]
-                    flash('You were successfully logged in', 'success')
-                    return redirect(url_for('status'))
+        # if not recaptcha.verify():
+        result = g.db.view("users/by_username", key=request.form['username'])
+        if result.first() is None:
+            error = 'Invalid username'
         else:
-            error = 'Please complete captcha'
+            user = result.first()
+            if not bcrypt.check_password_hash(user['value'][0], request.form['password']):
+                error = 'Invalid credentials'
+            else:
+                session['logged_in'] = True
+                session['username'] = request.form['username']
+                session['grade'] = user['value'][1]
+                if user['value'][2]:
+                    session['admin'] = user['value'][2]
+                flash('You were successfully logged in', 'success')
+                return redirect(url_for('status'))
+        # else:
+            # error = 'Please complete captcha'
     return render_template('login.html', error=error)
 
 
