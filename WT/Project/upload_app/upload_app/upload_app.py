@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-# from extensions import RequestContextTask
 import datetime
 import couchdbkit
 from couchdbkit import Document, StringProperty, DateTimeProperty
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, Markup, jsonify, send_from_directory
 from flask_bcrypt import Bcrypt
-# from flask_recaptcha import ReCaptcha
 import logging
 import os
 from werkzeug.utils import secure_filename
@@ -23,13 +21,6 @@ from itertools import izip
 DATABASE = 'upload_app'
 DEBUG = True
 SECRET_KEY = 'development key'
-RECAPTCHA_ENABLED = True
-RECAPTCHA_SITE_KEY = "6LcqfTkUAAAAABorDOh3Ex1fgOKoeDxC9_n9yCi8"
-RECAPTCHA_SECRET_KEY = "6LeYIbsSAAAAACRPIllxA7wvXjIE411PfdB2gt2J"
-RECAPTCHA_THEME = "light"
-RECAPTCHA_TYPE = "image"
-RECAPTCHA_SIZE = "normal"
-RECAPTCHA_RTABINDEX = 10
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 if "COUCHDB_USER" and "COUCHDB_PASS" in os.environ:
@@ -40,9 +31,19 @@ else:
 UPLOAD_FOLDER = 'static/uploads'
 SOURCE_FOLDER = 'run/src'
 BUILD_FOLDER = 'run/build'
-ALLOWED_EXTENSIONS = set(['cc', 'c', 'h', 'cpp', 'pas', 'java', 'c++', 'hh', 'hpp', 'h++'])
+PROBLEMS = ['maze', 'bisearch', 'strength']
+LANGUAGES = {
+    'c': ['C', "gcc -Wall -static -O2 -I. file.c"],
+    'cpp': ['C++', "g++ -std=c++11 -Wall -static -O2 -I. file.cpp"],
+    'pas': ['Pascal', "fpc -O2 -Xs file.pas"],
+    'java': ['Java', "javac Main.java"],
+    'py': ['Python', "python file.py"]
+}
+ALLOWED_EXTENSIONS = set(['cc', 'c', 'h', 'cpp', 'pas', 'java', 'py', 'c++', 'hh', 'hpp', 'h++'])
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+home = os.path.expanduser('~')
+working_directory = home + '/celery/'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -50,7 +51,6 @@ Bootstrap(app)
 bcrypt = Bcrypt(app)
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
-# recaptcha = ReCaptcha(app=app)
 
 
 def flash_errors(form):
@@ -139,7 +139,6 @@ def register():
 def login():
     error = None
     if request.method == 'POST':
-        # if not recaptcha.verify():
         result = g.db.view("users/by_username", key=request.form['username'])
         if result.first() is None:
             error = 'Invalid username'
@@ -155,8 +154,6 @@ def login():
                     session['admin'] = user['value'][2]
                 flash('You were successfully logged in', 'success')
                 return redirect(url_for('status'))
-        # else:
-            # error = 'Please complete captcha'
     return render_template('login.html', error=error)
 
 
@@ -181,7 +178,7 @@ def status():
             files = g.db.view("users/by_uploads")
         else:
             files = g.db.view("users/by_uploads", key=session.get('username'))
-    return render_template('status.html', files=files)
+    return render_template('status.html', files=files, problems=app.config['PROBLEMS'], languages=app.config['LANGUAGES'])
 
 
 @app.route('/add', methods=['POST'])
@@ -221,6 +218,8 @@ def add_entry():
             sourceSavedFilename = unique_id + '.pas'
         elif request.form['language'] == 'java':
             sourceSavedFilename = unique_id + '.java'
+        elif request.form['language'] == 'py':
+            sourceSavedFilename = unique_id + '.py'
         sourcefile.save(os.path.join(basedir, app.config['UPLOAD_FOLDER'], sourceSavedFilename))
         entry = Entry(
             _id=unique_id,
@@ -233,6 +232,8 @@ def add_entry():
         if headerfilename is not None:
             entry['original_header'] = headerfilename
         g.db.save_doc(entry)
+        session['last_problem'] = request.form['problem']
+        session['last_language'] = request.form['language']
         flash('Your problem was successfully uploaded.', 'success')
         return redirect(url_for('status'))
     flash('Invalid extension', 'danger')
@@ -245,6 +246,8 @@ def logout():
     session.pop('username', None)
     session.pop('grade', None)
     session.pop('admin', None)
+    session.pop('last_problem', None)
+    session.pop('last_language', None)
     flash('You were successfully logged out', 'success')
     return redirect(url_for('status'))
 
@@ -252,7 +255,7 @@ def logout():
 @app.route('/rankings/<problem>')
 def generate_specific_rankings(problem):
     grade = session.get('grade')
-    if problem not in ['kfib', 'dijkstra']:
+    if problem not in app.config['PROBLEMS']:
         flash("Invalid problem name", 'danger')
         return redirect(url_for('status'))
     rankings = g.db.view('users/by_results', startkey=["%s" % problem, "%s" % grade], endkey=["%s" % problem, "%s" % grade, {}])
@@ -312,11 +315,7 @@ def store_duration(path, stdout, failed=None):
             doc['stdout'] = concat
             doc['tested'] = 1
     else:
-        # for row in stdout.split('\n'):
-        #     if 'Points' in row:
-        #         points = row.split(': ')[1]
         doc['stdout'] = stdout
-        # doc['points'] = int(points)
         doc['tested'] = 2
     db.save_doc(doc)
     return True
@@ -340,26 +339,32 @@ def run_tests(path, problem, language, grade, test_count):
     results = []
     total = 0
     failed = 0
-    working_directory = basedir + '/' + path
+    run_directory = working_directory + path
     for test in range(1, test_count + 1):
         for file_path in glob.glob(r'%s/tests/%s/%s-test%d.*' % (basedir, problem, grade, test)):
             filename, extension = file_path.split('.')
             dest_file = problem + '.' + extension
-            copy2(file_path, os.path.join(basedir, path, dest_file))
+            copy2(file_path, os.path.join(working_directory, path, dest_file))
         if language == 'java':
             stmt = """\
 try:
     subprocess32.check_output(['java', 'Main'], cwd='%s', stderr=subprocess32.STDOUT, timeout=2)
 except (subprocess32.CalledProcessError, subprocess32.TimeoutExpired):
-    pass""" % working_directory
+    pass""" % run_directory
+        elif language == 'py':
+            stmt = """\
+try:
+    subprocess32.check_output(['python', '%s'], cwd='%s', stderr=subprocess32.STDOUT, timeout=2)
+except (subprocess32.CalledProcessError, subprocess32.TimeoutExpired):
+    pass""" % (problem, run_directory)
         else:
             stmt = """\
 try:
     subprocess32.check_output(['./%s'], cwd='%s', stderr=subprocess32.STDOUT, timeout=2)
 except (subprocess32.CalledProcessError, subprocess32.TimeoutExpired):
-    pass""" % (problem, working_directory)
+    pass""" % (problem, run_directory)
         time_elapsed = timeit(stmt=stmt, setup="import subprocess32", number=3) / 3
-        if compare_files('%s/%s/%s.out' % (basedir, path, problem), '%s/%s/%s.ok' % (basedir, path, problem)):
+        if compare_files('%s/%s/%s.out' % (working_directory, path, problem), '%s/%s/%s.ok' % (working_directory, path, problem)):
             results.append('Test {:d} PASSED in {:.3f} seconds\n'.format(test, time_elapsed))
             total += time_elapsed
         else:
@@ -380,18 +385,18 @@ except (subprocess32.CalledProcessError, subprocess32.TimeoutExpired):
 
 @celery.task(bind=True)
 def run_task(self, path, problem, language, grade):
-    if os.path.exists(os.path.join(basedir, path)):
-        rmtree(os.path.join(basedir, path))
+    if os.path.exists(os.path.join(working_directory, path)):
+        rmtree(os.path.join(working_directory, path))
     unique_path = os.path.join(basedir, app.config['UPLOAD_FOLDER'], path)
-    os.makedirs(os.path.join(basedir, path))
+    os.makedirs(os.path.join(working_directory, path))
     if language == 'c':
         sourcefile = unique_path + '.c'
         headerfile = unique_path + '.h'
         if os.path.isfile(headerfile):
-            copy2(headerfile, os.path.join(basedir, path, '%s.h' % problem))
-        copy2(sourcefile, os.path.join(basedir, path, '%s.c' % problem))
+            copy2(headerfile, os.path.join(working_directory, path, '%s.h' % problem))
+        copy2(sourcefile, os.path.join(working_directory, path, '%s.c' % problem))
         try:
-            subprocess.check_call(['gcc', '-Wall', '-O2', '-static', '%s.c' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
+            subprocess.check_call(['gcc', '-Wall', '-O2', '-static', '%s.c' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
         except subprocess.CalledProcessError, e:
             store_duration(path, e.output, 1)
             return {'status': e.output,
@@ -400,35 +405,38 @@ def run_task(self, path, problem, language, grade):
         sourcefile = unique_path + '.cpp'
         headerfile = unique_path + '.h'
         if os.path.isfile(headerfile):
-            copy2(headerfile, os.path.join(basedir, path, '%s.h' % problem))
-        copy2(sourcefile, os.path.join(basedir, path, '%s.cpp' % problem))
+            copy2(headerfile, os.path.join(working_directory, path, '%s.h' % problem))
+        copy2(sourcefile, os.path.join(working_directory, path, '%s.cpp' % problem))
         try:
-            subprocess.check_output(['g++', '-std=c++11', '-Wall', '-O2', '-static', '%s.cpp' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
+            subprocess.check_output(['g++', '-std=c++11', '-Wall', '-O2', '-static', '%s.cpp' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
         except subprocess.CalledProcessError, e:
             store_duration(path, e.output, 1)
             return {'status': e.output,
                     'result': 'Compilation error'}
     elif language == 'pas':
         sourcefile = unique_path + '.pas'
-        copy2(sourcefile, os.path.join(basedir, path, '%s.pas' % problem))
+        copy2(sourcefile, os.path.join(working_directory, path, '%s.pas' % problem))
         try:
-            subprocess.check_call(['fpc', '-O2', '-Xs', '%s.pas' % problem, '-o%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
+            subprocess.check_call(['fpc', '-O2', '-Xs', '%s.pas' % problem, '-o%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
         except subprocess.CalledProcessError, e:
             store_duration(path, e.output, 1)
             return {'status': e.output,
                     'result': 'Compilation error'}
     elif language == 'java':
         sourcefile = unique_path + '.java'
-        copy2(sourcefile, os.path.join(basedir, path, 'Main.java'))
+        copy2(sourcefile, os.path.join(working_directory, path, 'Main.java'))
         try:
-            subprocess.check_call(['javac', 'Main.java'], stderr=subprocess.STDOUT, cwd=os.path.join(basedir, path))
+            subprocess.check_call(['javac', 'Main.java'], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
         except subprocess.CalledProcessError, e:
             store_duration(path, e.output, 1)
             return {'status': e.output,
                     'result': 'Compilation error'}
+    elif language == 'py':
+        sourcefile = unique_path + '.py'
+        copy2(sourcefile, os.path.join(working_directory, path, '%s.py' % problem))
     stdout = run_tests(path, problem, language, grade, number_of_tests(problem, grade))
     store_duration(path, stdout)
-    rmtree(os.path.join(basedir, path))
+    rmtree(os.path.join(working_directory, path))
     return {'status': stdout,
             'result': 'Task completed!'}
 
@@ -450,7 +458,7 @@ def taskstatus(path):
     if task.state == 'PENDING':
         response = {
             'state': task.state,
-            'status': 'running...'
+            'status': 'Your task has been placed in the queue and is running. Be patient...'
         }
     elif task.state != 'FAILURE':
         response = {
@@ -460,10 +468,9 @@ def taskstatus(path):
         if 'result' in task.info:
             response['result'] = task.info['result']
     else:
-        # something went wrong in the background job
         response = {
             'state': task.state,
-            'status': str(task.info),  # this is the exception raised
+            'status': str(task.info),
         }
     return jsonify(response)
 

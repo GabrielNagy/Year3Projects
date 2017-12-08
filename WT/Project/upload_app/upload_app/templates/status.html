@@ -7,7 +7,7 @@
       <div class="panel-title pull-left">Please upload a file.</div>
       <div class="pull-right">logged in as {{ session.grade }} <em>{{ session.username }}</em> <small><a href="{{ url_for('generate_rankings') }}">(rankings)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
       {% else %}
-      <div class="pull-right"><small><a href="{{ url_for('login') }}">(login)</a> | <a href="{{ url_for('register') }}">(register)</a> | <a href="{{ url_for('generate_rankings') }}">(rankings)</a></small></div>
+      <!-- <div class="pull-right"><small><a href="{{ url_for('login') }}">(login)</a> | <a href="{{ url_for('register') }}">(register)</a> | <a href="{{ url_for('generate_rankings') }}">(rankings)</a></small></div> -->
       {% endif %}
       <div class="clearfix"></div>
     </div>
@@ -18,42 +18,39 @@
         <div class="row">
         <div class="col-xs-6 form-group">
           <label class="control-label" for="file-source">Upload source file:</label>
-          <!-- <div class="col-sm-10"> -->
             <label class="btn btn-default"><input type="file" name="file-source" hidden></label>
-          <!-- </div> -->
         </div>
         <div class="col-xs-6 form-group">
           <label class="control-label" for="file-header">Upload header file (if applicable):</label>
-          <!-- <div class="col-sm-10"> -->
             <label class="btn btn-default"><input type="file" name="file-header" hidden></label>
-          <!-- </div> -->
         </div>
         <div class="col-xs-6 form-group">
           <label class="control-label" for="language">Select programming language:</label>
-          <!-- <div class="col-sm-10"> -->
           <select class="form-control" name="language">
-            <option value="cpp">C++ (g++ -std=c++11 -Wall -static -O2 -I. file.cpp)</option>
-            <option value="c">C (gcc -Wall -static -O2 -I. file.cpp)</option>
-            <option value="pas">Pascal (fpc -O2 -Xs file.pas)</option>
-            <option value="java">Java (javac Main.java)</option>
+            {% for identifier, name in languages.iteritems() %}
+            {% if identifier == session.last_language %}
+            <option value="{{identifier}}" selected>{{name[0]}} ({{name[1]}})</option>
+            {% else %}
+            <option value="{{identifier}}">{{name[0]}} ({{name[1]}})</option>
+            {% endif %}
+            {% endfor %}
             </select>
-          <!-- </div> -->
         </div>
         <div class="col-xs-6 form-group">
           <label class="control-label" for="problem">Select problem:</label>
-          <!-- <div class="col-sm-10"> -->
           <select class="form-control" name="problem">
-            <option value="kfib">Problem 1: Kfib</option>
-            <option value="dijkstra">Problem 2: Dijkstra</option>
-            <option value="p3">Problem 3</option>
+            {% for problem in problems %}
+            {% if problem in session.last_problem %}
+            <option value="{{problem}}" selected>Problem {{loop.index}}: {{problem|capitalize}}</option>
+            {% else %}
+            <option value="{{problem}}">Problem {{loop.index}}: {{problem|capitalize}}</option>
+            {% endif %}
+            {% endfor %}
             </select>
-          <!-- </div> -->
         </div>
         <div class="col-xs-6 form-group">
         <div class="form-group">
-          <!-- <div class="col-sm-offset-2 col-sm-10"> -->
             <button type="submit" class="btn btn-default">Submit</button>
-          <!-- </div> -->
         </div>
         </div>
         </div>
@@ -100,6 +97,10 @@
 
   {% else %}
   Welcome to the application tester! In order to use it and upload files, you need to first register an account.
+
+  Registration will open in:
+  <p id="demo" style="text-align: center;  font-size: 60px;"></p>
+
   {% endif %}
 </div>
 {% endblock %}

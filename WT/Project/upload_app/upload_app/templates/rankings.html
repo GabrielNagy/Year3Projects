@@ -34,7 +34,7 @@
           <td>{{loop.index}}</td>
           <td>...</td>
           {% endif %}
-          <td>{{entry.key[2] * -1}}</td>
+          <td>{{entry.key[2]|abs}}</td>
           <td>{{entry.key[3]}}</td>
           <td>{{entry.key[4]}}</td>
         </tr>
@@ -44,7 +44,7 @@
         </table>
   
       {% else %}
-      Select a problem to view the rankings: <a href="{{ url_for('generate_specific_rankings', problem='kfib') }}">kfib</a>, <a href="{{ url_for('generate_specific_rankings', problem='dijkstra') }}">dijkstra</a>
+      Select a problem to view the rankings: <a href="{{ url_for('generate_specific_rankings', problem='maze') }}">maze</a>, <a href="{{ url_for('generate_specific_rankings', problem='bisearch') }}">bisearch</a>, <a href="{{ url_for('generate_specific_rankings', problem='strength') }}">strength</a>
     </div>
   </div>
   <div class="panel panel-primary">
@@ -75,7 +75,7 @@
             <td>{{loop.index}}</td>
             <td>{{entry.username}}</td>
             {% endif %}
-            <td>{{entry.points * -1}}</td>
+            <td>{{entry.points|abs}}</td>
             <td>{{entry.duration}}</td>
             {% if session.admin %}<td>{{entry.grade}}</td>{% endif %}
           </tr>
