@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+{% if session.admin %}
 <div class="container">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -69,13 +70,16 @@
             <td>{{loop.index}}</td>
             <td>{{entry.username}}</td>
             {% elif session.admin %}
-            {% if entry.grade == "elev" %} class="info">
-            {% else %} class="success">
-            {% endif %}
+            	{% if entry.grade == "elev" %} class="info">
+            	{% else %} class="success">
+            	{% endif %}
             <td>{{loop.index}}</td>
             <td>{{entry.username}}</td>
-            {% endif %}
-            <td>{{entry.points|abs}}</td>
+	    {% else %}>
+<td>{{loop.index}}</td>
+<td>...</td>            
+{% endif %}
+            <td>{{entry.points * -1}}</td>
             <td>{{entry.duration}}</td>
             {% if session.admin %}<td>{{entry.grade}}</td>{% endif %}
           </tr>
@@ -87,4 +91,23 @@
       
       {% endif %}
 </div>
+{% else %}
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {% if request.view_args['problem'] %}
+      <div class="panel-title pull-left">Rankings for problem <strong>{{ request.view_args['problem'] }}</strong></div>
+      <div class="pull-right">logged in as {{ session.grade }} <em>{{ session.username }}</em> <small><a href="{{url_for('status') }}">(home)</a> | <a href="{{url_for('generate_rankings') }}">(rankings)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
+      {% else %}
+      <div class="panel-title pull-left">Rankings</div>
+      <div class="pull-right">logged in as {{ session.grade }} <em>{{ session.username }}</em> <small><a href="{{url_for('status') }}">(home)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
+      {% endif %}
+      <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+<h1> Ranking disabled</h1>
+</div>
+</div>
+</div>
+{% endif %}
 {% endblock %}

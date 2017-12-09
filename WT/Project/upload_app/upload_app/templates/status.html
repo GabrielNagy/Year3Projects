@@ -7,7 +7,7 @@
       <div class="panel-title pull-left">Please upload a file.</div>
       <div class="pull-right">logged in as {{ session.grade }} <em>{{ session.username }}</em> <small><a href="{{ url_for('generate_rankings') }}">(rankings)</a> | <a href="{{ url_for('logout') }}">(logout)</a></small></div>
       {% else %}
-      <!-- <div class="pull-right"><small><a href="{{ url_for('login') }}">(login)</a> | <a href="{{ url_for('register') }}">(register)</a> | <a href="{{ url_for('generate_rankings') }}">(rankings)</a></small></div> -->
+      <div class="pull-right"><small><a href="{{ url_for('login') }}">(login)</a> | <a href="{{ url_for('register') }}">(register)</a> | <a href="{{ url_for('generate_rankings') }}">(rankings)</a></small></div> 
       {% endif %}
       <div class="clearfix"></div>
     </div>
@@ -97,9 +97,6 @@
 
   {% else %}
   Welcome to the application tester! In order to use it and upload files, you need to first register an account.
-
-  Registration will open in:
-  <p id="demo" style="text-align: center;  font-size: 60px;"></p>
 
   {% endif %}
 </div>

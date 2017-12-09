@@ -348,34 +348,38 @@ def run_tests(path, problem, language, grade, test_count):
         if language == 'java':
             stmt = """\
 try:
-    subprocess32.check_output(['java', 'Main'], cwd='%s', stderr=subprocess32.STDOUT, timeout=2)
+    subprocess32.check_output(['java', 'Main'], cwd='%s', stderr=subprocess32.STDOUT, timeout=4)
 except (subprocess32.CalledProcessError, subprocess32.TimeoutExpired):
     pass""" % run_directory
         elif language == 'py':
             stmt = """\
 try:
-    subprocess32.check_output(['python', '%s'], cwd='%s', stderr=subprocess32.STDOUT, timeout=2)
+    subprocess32.check_output(['python', '%s.py'], cwd='%s', stderr=subprocess32.STDOUT, timeout=4)
 except (subprocess32.CalledProcessError, subprocess32.TimeoutExpired):
     pass""" % (problem, run_directory)
         else:
             stmt = """\
 try:
-    subprocess32.check_output(['./%s'], cwd='%s', stderr=subprocess32.STDOUT, timeout=2)
+    subprocess32.check_output(['./%s'], cwd='%s', stderr=subprocess32.STDOUT, timeout=4)
 except (subprocess32.CalledProcessError, subprocess32.TimeoutExpired):
     pass""" % (problem, run_directory)
         time_elapsed = timeit(stmt=stmt, setup="import subprocess32", number=3) / 3
-        if compare_files('%s/%s/%s.out' % (working_directory, path, problem), '%s/%s/%s.ok' % (working_directory, path, problem)):
-            results.append('Test {:d} PASSED in {:.3f} seconds\n'.format(test, time_elapsed))
-            total += time_elapsed
-        else:
-            results.append('Test {:d} FAILED in {:.3f} seconds\n'.format(test, time_elapsed))
-            total += time_elapsed
-            points = (test - 1) * 5
-            results.append('Points: {:d}\n'.format(points))
-            if time_elapsed >= 2:
-                results.append('Total: {:.3f}, Stopped because of timeout (over 2 sec/test).'.format(total, failed))
+        try:
+            if compare_files('%s/%s/%s.out' % (working_directory, path, problem), '%s/%s/%s.ok' % (working_directory, path, problem)):
+                results.append('Test {:d} PASSED in {:.3f} seconds\n'.format(test, time_elapsed))
+                total += time_elapsed
             else:
-                results.append('Total: {:.3f}, Stopped because of failure.'.format(total, failed))
+                results.append('Test {:d} FAILED in {:.3f} seconds\n'.format(test, time_elapsed))
+                total += time_elapsed
+                points = (test - 1) * 5
+                results.append('Points: {:d}\n'.format(points))
+                if time_elapsed >= 4:
+                    results.append('Total: {:.3f}, Stopped because of timeout (over 4 sec/test).'.format(total, failed))
+                else:
+                    results.append('Total: {:.3f}, Stopped because of failure.'.format(total, failed))
+                return results
+        except IOError:
+            results.append('Error. Check output filename')
             return results
     points = (test_count - failed) * 5
     results.append('Points: {:d}\n'.format(points))
@@ -396,7 +400,7 @@ def run_task(self, path, problem, language, grade):
             copy2(headerfile, os.path.join(working_directory, path, '%s.h' % problem))
         copy2(sourcefile, os.path.join(working_directory, path, '%s.c' % problem))
         try:
-            subprocess.check_call(['gcc', '-Wall', '-O2', '-static', '%s.c' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
+            subprocess.check_output(['gcc', '-Wall', '-O2', '-static', '%s.c' % problem, '-I.', '-o', '%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
         except subprocess.CalledProcessError, e:
             store_duration(path, e.output, 1)
             return {'status': e.output,
@@ -417,7 +421,7 @@ def run_task(self, path, problem, language, grade):
         sourcefile = unique_path + '.pas'
         copy2(sourcefile, os.path.join(working_directory, path, '%s.pas' % problem))
         try:
-            subprocess.check_call(['fpc', '-O2', '-Xs', '%s.pas' % problem, '-o%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
+            subprocess.check_output(['fpc', '-O2', '-Xs', '%s.pas' % problem, '-o%s' % problem], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
         except subprocess.CalledProcessError, e:
             store_duration(path, e.output, 1)
             return {'status': e.output,
@@ -426,7 +430,7 @@ def run_task(self, path, problem, language, grade):
         sourcefile = unique_path + '.java'
         copy2(sourcefile, os.path.join(working_directory, path, 'Main.java'))
         try:
-            subprocess.check_call(['javac', 'Main.java'], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
+            subprocess.check_output(['javac', 'Main.java'], stderr=subprocess.STDOUT, cwd=os.path.join(working_directory, path))
         except subprocess.CalledProcessError, e:
             store_duration(path, e.output, 1)
             return {'status': e.output,
@@ -435,7 +439,10 @@ def run_task(self, path, problem, language, grade):
         sourcefile = unique_path + '.py'
         copy2(sourcefile, os.path.join(working_directory, path, '%s.py' % problem))
     stdout = run_tests(path, problem, language, grade, number_of_tests(problem, grade))
-    store_duration(path, stdout)
+    if 'Error. Check output filename' in stdout:
+        store_duration(path, stdout, 1)
+    else:
+        store_duration(path, stdout)
     rmtree(os.path.join(working_directory, path))
     return {'status': stdout,
             'result': 'Task completed!'}
