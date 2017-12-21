@@ -94,6 +94,7 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
+\listings_params "basicstyle={\ttfamily},columns=fullflexible"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -1219,20 +1220,435 @@ key "angular-introduction"
 NodeJS
 \end_layout
 
+\begin_layout Standard
+Node.js (Node) is an open source development platform for executing JavaScript
+ code server-side.
+ Node is useful for developing applications that require a persistent connection
+ from the browser to the server and is often used for real-time applications
+ such as chat, news feeds and web push notifications.
+\end_layout
+
+\begin_layout Standard
+Node.js is intended to run on a dedicated HTTP server and to employ a single
+ thread with one process at a time.
+ Node.js applications are event-based and run asynchronously.
+ Code built on the Node platform does not follow the traditional model of
+ receive, process, send, wait, receive.
+ Instead, Node processes incoming requests in a constant event stack and
+ sends small requests one after the other without waiting for responses.
+\end_layout
+
+\begin_layout Standard
+This is a shift away from mainstream models that run larger, more complex
+ processes and run several threads concurrently, with each thread waiting
+ for its appropriate response before moving on.
+\end_layout
+
+\begin_layout Standard
+One of the major advantages of Node.js, according to its creator Ryan Dahl,
+ is that it does not block input/output (I/O).
+ Some developers are highly critical of Node.js and point out that if a single
+ process requires a significant number of CPU cycles, the application will
+ block and that the blocking can crash the application.
+ Proponents of the Node.js model claim that CPU processing time is less of
+ a concern because of the high number of small processes that Node code
+ is based on.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "node-whatis"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+npm
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+npm
+\emph default
+ is a package manager for the JavaScript programming language.
+ It is the default package manager for the JavaScript runtime environment
+ 
+\emph on
+Node.js
+\emph default
+.
+ It consists of a command line client, also called 
+\emph on
+npm
+\emph default
+, and an online database of public and paid-for private packages, called
+ the npm registry.
+ The registry is accessed via the client, and the available packages can
+ be browsed and searched via the npm website.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+npm
+\emph default
+ is included as a recommended feature in Node.js installer.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-guide"
+
+\end_inset
+
+ npm consists of a command line client that interacts with a remote registry.
+ It allows users to consume and distribute JavaScript modules that are available
+ on the registry.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-ampersand"
+
+\end_inset
+
+ Packages on the registry are in CommonJS format and include a metadata
+ file in JSON format.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-security"
+
+\end_inset
+
+ Over 477,000 packages are available on the main npm registry.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-understanding"
+
+\end_inset
+
+ The registry has no vetting process for submission, which means that packages
+ found there can be low quality, insecure, or malicious.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-security"
+
+\end_inset
+
+ Instead, npm relies on user reports to take down packages if they violate
+ policies by being insecure, malicious or low quality.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-conduct"
+
+\end_inset
+
+ npm exposes statistics including number of downloads and number of depending
+ packages to assist developers in judging the quality of packages.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-stat"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+npm
+\emph default
+ can manage packages that are local dependencies of a particular project,
+ as well as globally-installed JavaScript tools.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-manage"
+
+\end_inset
+
+ When used as a dependency manager for a local project, npm can install,
+ in one command, all the dependencies of a project through the 
+\family typewriter
+package.json
+\family default
+ file.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-install"
+
+\end_inset
+
+ In the package.json file, each dependency can specify a range of valid versions
+ using the semantic versioning scheme, allowing developers to auto-update
+ their packages while at the same time avoiding unwanted breaking changes.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-semver"
+
+\end_inset
+
+ npm also provides version-bumping tools for developers to tag their packages
+ with a particular version.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-version"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are a number of alternatives to 
+\emph on
+npm
+\emph default
+ for installing modular JavaScript, most popular of which is 
+\emph on
+Yarn
+\emph default
+, which was open-sourced by Facebook in October 2016.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-yarn"
+
+\end_inset
+
+ One of the main reasons for this development was that 
+\emph on
+npm
+\emph default
+ broke down on Facebook's continuous integration environments, due to sandboxing
+ and no internet access.
+ Yarn replaces the existing workflow for the npm client while remaining
+ compatible with the npm registry.
+\end_layout
+
+\begin_layout Standard
+In the Node ecosystem, dependencies get placed within a 
+\family typewriter
+node_modules
+\family default
+ directory in your project.
+ However, this file structure can differ from the actual dependency tree
+ as duplicate dependencies are merged together.
+ The npm client installs dependencies into the 
+\family typewriter
+node_modules
+\family default
+ directory non-deterministically.
+ This means that based on the order dependencies are installed, the structure
+ of a 
+\family typewriter
+node_modules
+\family default
+ directory could be different from one person to another.
+ These differences can cause “works on my machine” bugs that take a long
+ time to hunt down.
+\end_layout
+
+\begin_layout Standard
+Yarn resolves these issues around versioning and non-determinism by using
+ lockfiles and an install algorithm that is deterministic and reliable.
+ These lockfiles lock the installed dependencies to a specific version,
+ and ensure that every install results in the exact same file structure
+ in 
+\family typewriter
+node_modules
+\family default
+ across all machines.
+ The written lockfile uses a concise format with ordered keys to ensure
+ that changes are minimal and review is simple.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-facebook"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Gulp
 \end_layout
 
 \begin_layout Standard
-gulp build system
-\end_layout
 
-\begin_layout Subsection
-Less
+\emph on
+gulp.js
+\emph default
+ is an open-source JavaScript toolkit by Fractal Innovations and the open
+ source community at GitHub, used as a streaming build system in front-end
+ web development.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-whatis"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-extension to CSS, backwards compatible, extends CSS with dynamic variables
+It is a task runner built on 
+\emph on
+Node.js
+\emph default
+ and 
+\emph on
+npm
+\emph default
+, used for automation of time-consuming and repetitive tasks involved in
+ web development like minification, concatenation, cache busting, unit testing,
+ linting, optimization, etc.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-building"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+gulp
+\emph default
+ is a build tool in JavaScript built on node streams.
+ These streams facilitate the connection of file operations through pipelines.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-pipelines"
+
+\end_inset
+
+ gulp reads the file system and pipes the data at hand from its one single-purpo
+sed plugin to other through the .pipe() operator, doing one task at a time.
+ The original files are not affected until all the plugins are processed.
+ It can be configured either to modify the original files or to create new
+ ones.
+ This grants the ability to perform complex tasks through linking its numerous
+ plugins.
+ The users can also write their own plugins to define their own tasks.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-readme"
+
+\end_inset
+
+ Unlike other task runners that run tasks by configuration, gulp requires
+ knowledge of JavaScript and coding to define its tasks.
+ gulp is a build system which means apart from running tasks, it is also
+ capable of copying files from one location to another, compiling, deploying,
+ creating notifications, unit testing, linting, etc.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-whatis"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Task-runners like gulp and grunt are built on Node.js rather than npm, because
+ the basic npm scripts are inefficient when executing multiple tasks.
+ Even though some developers prefer npm scripts because they can be simple
+ and easy to implement, there are numerous ways where gulp and grunt seem
+ to have an advantage over each other and the default provided scripts.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-cli"
+
+\end_inset
+
+ Grunt runs tasks by transforming files and saves as new ones in temporary
+ folders and the output of one task is taken as input for another and so
+ on until the output reaches the destination folder.
+ This involves a lot of I/O calls and creation of many temporary files.
+ Whereas gulp streams through the file system and does not require any of
+ these temporary locations decreasing the number of I/O calls thus, improving
+ performance.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-performance"
+
+\end_inset
+
+ Grunt uses configuration files to perform tasks whereas gulp requires its
+ build file to be coded.
+ In grunt, each plugin needs to be configured to match its input location
+ to the previous plugin’s output.
+ In gulp, the plugins are automatically pipe-lined.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-pipelines"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The gulp tasks are run from a 
+\series bold
+Command Line Interface
+\series default
+ (CLI)
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-cli"
+
+\end_inset
+
+ shell and require 
+\family typewriter
+package.json
+\family default
+ and 
+\family typewriter
+gulpfile.js
+\family default
+ (simply gulpfile) in the project root directory.
+ The gulpfile is where plugins are loaded and tasks are defined.
+ First, all the necessary modules are loaded and then tasks are defined
+ in the gulpfile.
+ All the necessary plugins specified in the gulpfile are installed into
+ the devDependencies.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "npm-install"
+
+\end_inset
+
+ The default task is run with 
+\family typewriter
+gulp
+\family default
+.
+ Individual tasks can be defined by gulp.task and are run by 
+\family typewriter
+gulp <task> <othertask>
+\family default
+.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-start"
+
+\end_inset
+
+ Complex tasks are defined by chaining the plugins with the help of the
+ 
+\family typewriter
+.pipe()
+\family default
+ operator.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "gulp-book"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1240,8 +1656,214 @@ CoffeeScript
 \end_layout
 
 \begin_layout Standard
-alternative to Angular's typically used TypeScript, a pythonic type of JavaScrip
-t
+
+\emph on
+CoffeeScript
+\emph default
+ is a programming language that transcompiles to 
+\emph on
+JavaScript
+\emph default
+.
+ It adds syntactic sugar inspired by Ruby, Python and Haskell in an effort
+ to enhance JavaScript's brevity and readability.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "coffeescript-book"
+
+\end_inset
+
+ Specific additional features include list comprehension and pattern matching.
+\end_layout
+
+\begin_layout Standard
+Almost everything is an expression in CoffeeScript, for example 
+\family typewriter
+if
+\family default
+, 
+\family typewriter
+switch
+\family default
+ and 
+\family typewriter
+for
+\family default
+ expressions (which have no return value in JavaScript) return a value.
+ As in Perl, these control statements also have postfix versions; for example,
+ 
+\family typewriter
+if
+\family default
+ can also be written after the conditional statement.
+\end_layout
+
+\begin_layout Standard
+Many unnecessary parentheses and braces can be omitted; for example, blocks
+ of code can be denoted by indentation instead of braces, function calls
+ are implicit, and object literals are often detected automatically.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+CoffeeScript
+\emph default
+ was chosen for Buildbot development because of its familiarities with Python.
+ As most of its developers are Python experts, they found it helpful to
+ code the frontend using a similar syntax as the backend.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "coffeescript-style"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As of December 2017, switching the buildbot frontend codebase from CoffeeScript
+ to TypeScript or another more-modern language is being considered.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "coffeescript-switch"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Code snippets
+\end_layout
+
+\begin_layout Standard
+To compute the greatest common divisor of two integers using the euclidean
+ algorithm, in JavaScript one usually needs a 
+\family typewriter
+while
+\family default
+ loop:
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/loop.js"
+lstparams "breaklines=true,captionpos=b,frame=b,basicstyle={{\\ttm\\ttfamily}},otherkeywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{loop.js}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Whereas in CoffeeScript one can use 
+\family typewriter
+until
+\family default
+ and pattern-matching instead:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/loop.coffee"
+lstparams "breaklines=true,captionpos=b,frame=b,basicstyle={{\\ttm\\ttfamily}},otherkeywords={until},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{loop.coffee}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A linear search can be implemented in one line using the 
+\family typewriter
+when
+\family default
+ keyword:
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/linearSearch.coffee"
+lstparams "breaklines=true,captionpos=b,frame=b,basicstyle={{\\ttm\\ttfamily}},otherkeywords={until, for, in, when},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={\\color{red}\\ttfamily},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{deepgreen}\\ttfamily},morestring={[b]\"},caption={\\textit{linearSearch.coffee}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ruby-style string interpolation is included in CoffeeScript.
+ Double-quoted strings allow for interpolated values using 
+\family typewriter
+#{...}
+\family default
+ and single-quoted strings are treated as literals:
+\begin_inset CommandInset citation
+LatexCommand citep
+key "coffeescript-interpolation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/interpolation.coffee"
+lstparams "breaklines=true,captionpos=b,frame=b,basicstyle={{\\ttm\\ttfamily}},otherkeywords={until, for, in, when},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={\\color{red}\\ttfamily},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{deepgreen}\\ttfamily\\textit},morestring={[b]\"},caption={\\textit{interpolation.coffee}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+CoffeeScript allows us to chain two comparisons together in a form that
+ more closely matches the way a mathematician would write it:
+\begin_inset CommandInset citation
+LatexCommand citep
+key "coffeescript-ranges"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/comparingRanges.coffee"
+lstparams "breaklines=true,captionpos=b,frame=b,basicstyle={{\\ttm\\ttfamily}},otherkeywords={until, for, in, when},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={\\color{red}\\ttfamily},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{deepgreen}\\ttfamily\\textit},morestring={[b]\"},caption={\\textit{comparingRanges.coffee}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A simple way to integrate small snippets of JavaScript code into a CoffeeScript
+ codebase, without converting its syntax would be to wrap the JavaScript
+ with backticks:
+\begin_inset CommandInset citation
+LatexCommand citep
+key "coffeescript-embed"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/embedJS.coffee"
+lstparams "breaklines=true,captionpos=b,frame=b,basicstyle={{\\ttm\\ttfamily}},otherkeywords={until, for, in, when},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={\\color{red}\\ttfamily},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{deepgreen}\\ttfamily\\textit},morestring={[b]\"},caption={\\textit{embedJS.coffee}}"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1249,9 +1871,60 @@ pug
 \end_layout
 
 \begin_layout Standard
-(formerly Jade).
- template engine for NodeJS.
- buildbot's preferred alternative to html
+Formerly known as Jade (a registered trademark, and as a result a rename
+ was needed), 
+\emph on
+pug
+\emph default
+ is a high performance and feature-rich templating engine.
+ Simply put, 
+\emph on
+pug 
+\emph default
+is a clean, whitespace/indentation sensitive syntax for simplifying and
+ escaping the archaic syntax of HTML.
+\end_layout
+
+\begin_layout Standard
+Just like SASS, Pug is a prepocessor and, as such it facilitates accomplishing
+ tasks like wrapping away repetitive work by providing features not available
+ in plain HTML.
+ It provides the ability to write dynamic and reusable HTML documents, it's
+ an open source HTML templating language for Node.js (server-side JavaScript),
+ totally free to use and provides fast and easy HTML.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "pug-starting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A basic syntax comparison can be seen below:
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/example.html"
+lstparams "breaklines=true,captionpos=b,frame=b,language=HTML,basicstyle={{\\ttm\\ttfamily}},keywordstyle={\\color{blue}},stringstyle={\\color{red}},stringstyle={\\color{red}\\ttfamily},showstringspaces=false,captionpos=b,comment={[l]{\\#}},otherkeywords={header, section, footer},commentstyle={\\color{deepgreen}\\ttfamily\\textit},morestring={[b]\"},caption={\\textit{example.html}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/example.pug"
+lstparams "breaklines=true,captionpos=b,frame=b,basicstyle={{\\ttm\\ttfamily}},keywordstyle={\\color{blue}},stringstyle={\\color{red}},stringstyle={\\color{red}\\ttfamily},showstringspaces=false,captionpos=b,comment={[l]{\\#}},otherkeywords={html, head, body, header, section, footer},commentstyle={\\color{deepgreen}\\ttfamily\\textit},morestring={[b]\"},caption={\\textit{example.pug}}"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
@@ -1262,12 +1935,368 @@ Default implementations
 Concepts and terminology
 \end_layout
 
+\begin_layout Standard
+In its 15 years of existence, buildbot has defined some basic concepts that
+ need to be understanded if one wants to configure and extend it.
+\end_layout
+
 \begin_layout Subsection
-SourceStamps
+Source Stamps
+\end_layout
+
+\begin_layout Standard
+Source code comes from repositories, provided by version control systems.
+ Repositories are generally identified by URLs, e.g., 
+\family typewriter
+git://github.com/buildbot/buildbot.git
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+In these days of distributed version control systems, the same 
+\emph on
+codebase
+\emph default
+ may appear in multiple repositories.
+ For example, 
+\family typewriter
+https://github.com/mozilla/mozilla-central
+\family default
+ and 
+\family typewriter
+http://hg.mozilla.org/mozilla-release
+\family default
+ both contain the Firefox codebase, although not exactly the same code.
+\end_layout
+
+\begin_layout Standard
+Many 
+\emph on
+projects
+\emph default
+ are built from multiple codebases.
+ For example, a company may build several applications based on the same
+ core library.
+ The “app” codebase and the “core” codebase are in separate repositories,
+ but are compiled together and constitute a single project.
+ Changes to either codebase should cause a rebuild of the application.
+\end_layout
+
+\begin_layout Standard
+Most version control systems define some sort of 
+\emph on
+revision
+\emph default
+ that can be used (sometimes in combination with a 
+\emph on
+branch
+\emph default
+) to uniquely specify a particular version of the source code.
+\end_layout
+
+\begin_layout Standard
+To build a project, Buildbot needs to know exactly which version of each
+ codebase it should build.
+ It uses a 
+\emph on
+source stamp
+\emph default
+ to do so for each codebase; the collection of sourcestamps required for
+ a project is called a 
+\emph on
+source stamp set
+\emph default
+.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-sourcestamp"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 Changes
+\end_layout
+
+\begin_layout Subsubsection
+Who
+\end_layout
+
+\begin_layout Standard
+Each 
+\family typewriter
+\series bold
+Change
+\family default
+\series default
+ has a 
+\family typewriter
+\series bold
+who
+\family default
+\series default
+ attribute, which specifies which developer is responsible for the change.
+ This is a string which comes from a namespace controlled by the VC repository.
+ Frequently this means it is a username on the host which runs the repository,
+ but not all VC systems require this.
+ Each 
+\family typewriter
+\series bold
+StatusNotifier
+\family default
+\series default
+ will map the 
+\family typewriter
+\series bold
+who
+\family default
+\series default
+ attribute into something appropriate for their particular means of communicatio
+n: an email address, an IRC handle, etc.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-who"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Files
+\end_layout
+
+\begin_layout Standard
+It also has a list of 
+\family typewriter
+\series bold
+files
+\family default
+\series default
+, which are just the tree-relative filenames of any files that were added,
+ deleted, or modified for this 
+\family typewriter
+\series bold
+Change
+\family default
+\series default
+.
+ These filenames are used by the 
+\family typewriter
+\series bold
+fileIsImportant
+\family default
+\series default
+ function (in the scheduler) to decide whether it is worth triggering a
+ new build or not, e.g.
+ the function could use the following function to only run a build if a
+ C file were checked in:
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-files"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/has_C_files.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{has\\_C\\_files.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Comments
+\end_layout
+
+\begin_layout Standard
+The Change also has a 
+\family typewriter
+\series bold
+comments
+\family default
+\series default
+ attribute, which is a string containing any checkin comments.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-comments"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Project
+\end_layout
+
+\begin_layout Standard
+The 
+\family typewriter
+\series bold
+project
+\family default
+\series default
+ attribute of a change or source stamp describes the project to which it
+ corresponds, as a short human-readable string.
+ This is useful in cases where multiple independent projects are built on
+ the same buildmaster.
+ In such cases, it can be used to control which builds are scheduled for
+ a given commit, and to limit status displays to only one project.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-project"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Repository
+\end_layout
+
+\begin_layout Standard
+This attribute specifies the repository in which this change occurred.
+ In the case of DVCS’s, this information may be required to check out the
+ committed source code.
+ However, using the repository from a change has security risks: if Buildbot
+ is configured to blindly trust this information, then it may easily be
+ tricked into building arbitrary source code, potentially compromising the
+ workers and the integrity of subsequent builds.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-repository"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Codebase
+\end_layout
+
+\begin_layout Standard
+This attribute specifies the codebase to which this change was made.
+ As described in the Source Stamps section, multiple repositories may contain
+ the same codebase.
+ A change’s codebase is usually determined by the 
+\family typewriter
+\series bold
+codebaseGenerator
+\family default
+\series default
+ configuration.
+ By default the codebase is ‘’ (empty); this value is used automatically
+ for single-codebase configurations.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-codebase"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Revision
+\end_layout
+
+\begin_layout Standard
+Each Change can have a 
+\family typewriter
+\series bold
+revision
+\family default
+\series default
+ attribute, which describes how to get a tree with a specific state: a tree
+ which includes this Change (and all that came before it) but none that
+ come after it.
+ If this information is unavailable, the 
+\family typewriter
+\series bold
+revision
+\family default
+\series default
+ attribute will be 
+\family typewriter
+None
+\family default
+.
+ These revisions are provided by the 
+\family typewriter
+\series bold
+ChangeSource
+\family default
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+Revisions are always strings.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-revision"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Branches
+\end_layout
+
+\begin_layout Standard
+The Change might also have a 
+\family typewriter
+\series bold
+branch
+\family default
+\series default
+ attribute.
+ This indicates that all of the Change’s files are in the same named branch.
+ The schedulers get to decide whether the branch should be built or not.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-branches"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Change Properties
+\end_layout
+
+\begin_layout Standard
+A Change may have one or more properties attached to it, usually specified
+ through the Force Build form or 
+\family typewriter
+\series bold
+sendchange
+\family default
+\series default
+.
+ These are useful for custom buildbot implementations.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-changeproperties"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -2017,6 +3046,1855 @@ status collapsed
 \end_inset
 
  
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "node-whatis"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+What is Node.js? - Definition from WhatIs.com, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://whatis.techtarget.com/definition/Nodejs
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-guide"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+A Beginner's Guide to npm - the Node Package Manager, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://www.sitepoint.com/beginners-guide-node-package-manager
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-ampersand"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Ampersand.js - Learn, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://ampersandjs.com/learn/npm-browserify-and-modules
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-security"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Ojamaa, Andres; Duuna, Karl, Assessing the Security of Node.js Platform,
+ URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6470829
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-understanding"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Understanding npm, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://unpm.nodesource.com
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-conduct"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+npm Code of Conduct: acceptable package content, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://www.npmjs.com/policies/conduct
+\backslash
+#acceptable-package-content
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-stat"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+npm-stat: download statistics for NPM packages, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://npm-stat.com
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-manage"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+How To Use npm to Manage Node.js Packages on a Linux Server, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://www.digitalocean.com/community/tutorials/how-to-use-npm-to-manage-node-js-
+packages-on-a-linux-server
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-install"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+npm-install, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://docs.npmjs.com/cli/install
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-semver"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+semver, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://docs.npmjs.com/misc/semver
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-version"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+npm-version, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://docs.npmjs.com/cli/version
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-yarn"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+The npm Blog - Hello, Yarn!, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://blog.npmjs.org/post/151660845210/hello-yarn
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "npm-facebook"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Yarn: A new package manager for JavaScript | Engineering Blog | Facebook
+ Code, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://code.facebook.com/posts/1840075619545360/yarn-a-new-package-manager-for-ja
+vascript
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "gulp-whatis"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Mao, Jed; Schmitt, Maximilian; Stryjewski, Tomasz; Country Holt, Cary; Lubelski,
+ Wiliam, Developing a Gulp Edge (1st ed.), Bleeding Edge Press, 2014
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "gulp-pipelines"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+substack/stream-handbook: how to write note programs with streams, URL:
+ 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/substack/stream-handbook
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "gulp-readme"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+gulpjs/gulp: Writing a plugin, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/gulpjs/gulp/blob/master/docs/writing-a-plugin/README.md
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "gulp-building"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Building With Gulp - Smashing Magazine, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://www.smashingmagazine.com/2014/06/building-with-gulp
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "gulp-cli"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+gulpjs/gulp: gulp CLI docs, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/gulpjs/gulp/blob/master/docs/CLI.md
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "gulp-performance"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Gulp for Beginners, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://css-tricks.com/gulp-for-beginners
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "gulp-start"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+gulpjs/gulp: Getting Started, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "gulp-book"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Maynard, Travis, Getting Started with Gulp, Packt Publishing Ltd., 2015
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "coffeescript-book"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+MacCaw, Alex, The Little Book on CoffeeScript (1st ed.), O'Reilly Media,
+ 2012
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "coffeescript-interpolation"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+CoffeeScript Cookbook - String Interpolation, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://coffeescript-cookbook.github.io/chapters/strings/interpolation
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "coffeescript-ranges"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+CoffeeScript Cookbook - Comparing Ranges, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://coffeescript-cookbook.github.io/chapters/syntax/comparing_ranges
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "coffeescript-embed"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+CoffeeScript Cookbook - Embedding JavaScript, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://coffeescript-cookbook.github.io/chapters/syntax/embedding_javascript
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "coffeescript-switch"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+coffeescript -> javascript ES6 (ES2015) ? · Issue 
+\backslash
+#3804 · buildbot/buildbot - Embedding JavaScript, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/buildbot/buildbot/issues/3804
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "coffeescript-style"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+CoffeeScript Coding Style - Buildbot latest documentation, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/developer/coffeescript-style.html
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "pug-starting"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Getting started with Pug template engine - Codeburst, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://codeburst.io/getting-started-with-pug-template-engine-e49cfa291e33
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-sourcestamp"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#source-stamps
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-who"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Who, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#who
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-files"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Files, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#files
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-comments"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Comments, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#comments
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-project"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Project, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#project
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-repository"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Repository, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#repository
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-codebase"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Codebase, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#codebase
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-revision"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Revision, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#revision
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-changeproperties"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Change Properties, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#change-properties
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-branches"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Branches, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#branches
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-who-5"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#source-stamps
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-who-6"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#source-stamps
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-who-7"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Concepts - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#source-stamps
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
