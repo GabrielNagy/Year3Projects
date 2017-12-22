@@ -1920,7 +1920,7 @@ lstparams "breaklines=true,captionpos=b,frame=b,language=HTML,basicstyle={{\\ttm
 \begin_inset CommandInset include
 LatexCommand lstinputlisting
 filename "code/example.pug"
-lstparams "breaklines=true,captionpos=b,frame=b,basicstyle={{\\ttm\\ttfamily}},keywordstyle={\\color{blue}},stringstyle={\\color{red}},stringstyle={\\color{red}\\ttfamily},showstringspaces=false,captionpos=b,comment={[l]{\\#}},otherkeywords={html, head, body, header, section, footer},commentstyle={\\color{deepgreen}\\ttfamily\\textit},morestring={[b]\"},caption={\\textit{example.pug}}"
+lstparams "breaklines=true,captionpos=b,frame=b,basicstyle={{\\ttm\\ttfamily}},keywordstyle={\\color{blue}},stringstyle={\\color{red}},stringstyle={\\color{red}\\ttfamily},showstringspaces=false,captionpos=b,comment={[l]{\\#}},otherkeywords={html, head, body, header, section, footer, title},commentstyle={\\color{deepgreen}\\ttfamily\\textit},morestring={[b]\"},caption={\\textit{example.pug}}"
 
 \end_inset
 
@@ -1937,7 +1937,7 @@ Concepts and terminology
 
 \begin_layout Standard
 In its 15 years of existence, buildbot has defined some basic concepts that
- need to be understanded if one wants to configure and extend it.
+ need to be understood if one wants to configure and extend the platform.
 \end_layout
 
 \begin_layout Subsection
@@ -2205,7 +2205,7 @@ key "concepts-codebase"
 
 \end_inset
 
-
+ For our implementation we will be using the default option for this attribute.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2300,63 +2300,1340 @@ key "concepts-changeproperties"
 \end_layout
 
 \begin_layout Subsection
+Schedulers
+\end_layout
+
+\begin_layout Standard
+Each Buildmaster has a set of scheduler objects, each of which gets a copy
+ of every incoming 
+\family typewriter
+\series bold
+Change
+\family default
+\series default
+.
+ The Schedulers are responsible for deciding when 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+s should be run.
+ Some Buildbot installations might have a single scheduler, while others
+ may have several, each for a different purpose.
+\end_layout
+
+\begin_layout Standard
+For example, a 
+\emph on
+quick
+\emph default
+ scheduler might exist to give immediate feedback to developers, hoping
+ to catch obvious problems in the code that can be detected quickly.
+ These typically do not run the full test suite, nor do they run on a wide
+ variety of platforms.
+ They also usually do a VC update rather than performing a brand-new checkout
+ each time.
+\end_layout
+
+\begin_layout Standard
+A separate 
+\emph on
+full
+\emph default
+ scheduler might run more comprehensive tests, to catch more subtle problems.
+ configured to run after the quick scheduler, to give developers time to
+ commit fixes to bugs caught by the quick scheduler before running the comprehen
+sive tests.
+ This scheduler would also feed multiple 
+\family typewriter
+\series bold
+Builders
+\family default
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+Many schedulers can be configured to wait a while after seeing a source-code
+ change - this is the 
+\emph on
+tree stable timer
+\emph default
+.
+ The timer allows multiple commits to be “batched” together.
+ This is particularly useful in distributed version control systems, where
+ a developer may push a long sequence of changes all at once.
+ To save resources, it’s often desirable only to test the most recent change.
+\end_layout
+
+\begin_layout Standard
+Schedulers can also filter out the changes they are interested in, based
+ on a number of criteria.
+ For example, a scheduler that only builds documentation might skip any
+ changes that do not affect the documentation.
+ Schedulers can also filter on the branch to which a commit was made.
+\end_layout
+
+\begin_layout Standard
+There is some support for configuring dependencies between builds - for
+ example, you may want to build packages only for revisions which pass all
+ of the unit tests.
+ This support is under active development in Buildbot, and is referred to
+ as “build coordination”.
+\end_layout
+
+\begin_layout Standard
+Periodic builds (those which are run every N seconds rather than after new
+ Changes arrive) are triggered by a special 
+\family typewriter
+\series bold
+Periodic
+\family default
+\series default
+ scheduler.
+\end_layout
+
+\begin_layout Standard
+Each scheduler creates and submits 
+\family typewriter
+\series bold
+BuildSet
+\family default
+\series default
+ objects to the 
+\family typewriter
+\series bold
+BuildMaster
+\family default
+\series default
+, which is then responsible for making sure the individual 
+\family typewriter
+\series bold
+BuildRequests
+\family default
+\series default
+ are delivered to the target 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+s.
+\end_layout
+
+\begin_layout Standard
+Scheduler instances are activated by placing them in the 
+\family typewriter
+\series bold
+schedulers
+\family default
+\series default
+ list in the buildmaster config file.
+ Each scheduler must have a unique name.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-scheduler"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 BuildSets
+\end_layout
+
+\begin_layout Standard
+A 
+\family typewriter
+\series bold
+BuildSet
+\family default
+\series default
+ is the name given to a set of 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+s that all compile/test the same version of the tree on multiple 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+s.
+ In general, all these component 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+s will perform the same sequence of 
+\family typewriter
+\series bold
+Step
+\family default
+\series default
+s, using the same source code, but on different platforms or against a different
+ set of libraries.
+\end_layout
+
+\begin_layout Standard
+The 
+\family typewriter
+\series bold
+BuildSet
+\family default
+\series default
+ is tracked as a single unit, which fails if any of the component 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+s have failed, and therefore can succeed only if 
+\emph on
+all
+\emph default
+ of the component 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+s have succeeded.
+ There are two kinds of status notification messages that can be emitted
+ for a 
+\family typewriter
+\series bold
+BuildSet
+\family default
+\series default
+: the 
+\family typewriter
+firstFailure
+\family default
+ type (which fires as soon as we know the 
+\family typewriter
+\series bold
+BuildSet
+\family default
+\series default
+ will fail), and the 
+\family typewriter
+Finished
+\family default
+ type (which fires once the 
+\family typewriter
+\series bold
+BuildSet
+\family default
+\series default
+ has completely finished, regardless of whether the overall set passed or
+ failed).
+\end_layout
+
+\begin_layout Standard
+A 
+\family typewriter
+\series bold
+BuildSet
+\family default
+\series default
+ is created with set of one or more 
+\emph on
+source stamp
+\emph default
+ tuples of 
+\family typewriter
+(branch, revision, changes, patch)
+\family default
+, some of which may be 
+\family typewriter
+None
+\family default
+, and a list of 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+s on which it is to be run.
+ They are then given to the BuildMaster, which is responsible for creating
+ a separate 
+\family typewriter
+\series bold
+BuildRequest
+\family default
+\series default
+ for each 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+The buildmaster is responsible for turning the 
+\family typewriter
+\series bold
+BuildSet
+\family default
+\series default
+ into a set of 
+\family typewriter
+\series bold
+BuildRequest
+\family default
+\series default
+ objects and queueing them on the appropriate 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+s.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-buildsets"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 BuildRequests
 \end_layout
 
+\begin_layout Standard
+A 
+\family typewriter
+\series bold
+BuildRequest
+\family default
+\series default
+ is a request to build a specific set of source code (specified by one ore
+ more source stamps) on a single 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+.
+ Each 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+ runs the 
+\family typewriter
+\series bold
+BuildRequest
+\family default
+\series default
+ as soon as it can (i.e.
+ when an associated worker becomes free).
+ 
+\family typewriter
+\series bold
+BuildRequest
+\family default
+\series default
+s are prioritized from oldest to newest, so when a worker becomes free,
+ the 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+ with the oldest 
+\family typewriter
+\series bold
+BuildRequest
+\family default
+\series default
+ is run.
+\end_layout
+
+\begin_layout Standard
+The 
+\family typewriter
+\series bold
+BuildRequest
+\family default
+\series default
+ contains one 
+\family typewriter
+\series bold
+SourceStamp
+\family default
+\series default
+ specification per codebase.
+ The actual process of running the build (the series of 
+\family typewriter
+\series bold
+Step
+\family default
+\series default
+s that will be executed) is implemented by the 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+ object.
+ In the future this might be changed, to have the 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+ define 
+\emph on
+what
+\emph default
+ gets built, and a separate 
+\family typewriter
+\series bold
+BuildProcess
+\family default
+\series default
+ (provided by the Builder) to define 
+\emph on
+how
+\emph default
+ it gets built.
+\end_layout
+
+\begin_layout Standard
+The 
+\family typewriter
+\series bold
+BuildRequest
+\family default
+\series default
+ may be mergeable with other compatible 
+\family typewriter
+\series bold
+BuildRequest
+\family default
+\series default
+s.
+ Builds that are triggered by incoming 
+\family typewriter
+\series bold
+Change
+\family default
+\series default
+s will generally be mergeable.
+ Builds that are triggered by user requests are generally not, unless they
+ are multiple requests to build the 
+\emph on
+latest sources
+\emph default
+ of the same branch.
+ A merge of buildrequests is performed per codebase, thus on changes having
+ the same codebase.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-buildrequests"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Builders
 \end_layout
 
-\begin_layout Subsection
-Schedulers
+\begin_layout Standard
+The Buildmaster runs a collection of 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+s, each of which handles a single type of build (e.g.
+ full versus quick), on one or more workers.
+ 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+s serve as a kind of queue for a particular type of build.
+ Each 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+ gets a separate column in the waterfall display.
+ In general, each 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+ runs independently (although various kinds of interlocks can cause one
+ 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+ to have an effect on another).
+\end_layout
+
+\begin_layout Standard
+Each builder is a long-lived object which controls a sequence of 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+s.
+ Each 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+ is created when the config file is first parsed, and lives forever (or
+ rather until it is removed from the config file).
+ It mediates the connections to the workers that do all the work, and is
+ responsible for creating the 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+ objects.
+\end_layout
+
+\begin_layout Standard
+Each builder gets a unique name, and the path name of a directory where
+ it gets to do all its work (there is a buildmaster-side directory for keeping
+ status information, as well as a worker-side directory where the actual
+ checkout/compile/test commands are executed).
+\end_layout
+
+\begin_layout Standard
+A builder also has a 
+\family typewriter
+\series bold
+BuildFactory
+\family default
+\series default
+, which is responsible for creating new 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+ instances: because the 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+ instance is what actually performs each build, choosing the 
+\family typewriter
+\series bold
+BuildFactory
+\family default
+\series default
+ is the way to specify what happens each time a build is done.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-builders"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 Builds
 \end_layout
 
-\begin_layout Subsection
-Master
+\begin_layout Standard
+A build is a single compile or test run of a particular version of the source
+ code, and is comprised of a series of steps.
+ It is ultimately up to you what constitutes a build, but for compiled software
+ it is generally the checkout, configure, make, and make check sequence.
+ For interpreted projects like Python modules, a build is generally a checkout
+ followed by an invocation of the bundled test suite.
+\end_layout
+
+\begin_layout Standard
+A 
+\family typewriter
+\series bold
+BuildFactory
+\family default
+\series default
+ describes the steps a build will perform.
+ The builder which starts a build uses its configured build factory to determine
+ the build’s steps.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-builds"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 Workers
 \end_layout
 
+\begin_layout Standard
+Each builder is associated with one of more 
+\family typewriter
+\series bold
+Worker
+\family default
+\series default
+s.
+ A builder which is used to perform Mac OS X builds (as opposed to Linux
+ or Solaris builds) should naturally be associated with a Mac worker.
+\end_layout
+
+\begin_layout Standard
+If multiple workers are available for any given builder, you will have some
+ measure of redundancy: in case one worker goes offline, the others can
+ still keep the 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+ working.
+ In addition, multiple workers will allow multiple simultaneous builds for
+ the same 
+\family typewriter
+\series bold
+Builder
+\family default
+\series default
+, which might be useful if you have a lot of forced or 
+\family typewriter
+try
+\family default
+ builds taking place.
+\end_layout
+
+\begin_layout Standard
+If you use this feature, it is important to make sure that the workers are
+ all, in fact, capable of running the given build.
+ The worker hosts should be configured similarly, otherwise you will spend
+ a lot of time trying (unsuccessfully) to reproduce a failure that only
+ occurs on some of the workers and not the others.
+ Different platforms, operating systems, versions of major programs or libraries
+, all these things mean you should use separate Builders.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-workers"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Users
+\end_layout
+
+\begin_layout Standard
+Buildbot has a somewhat limited awareness of 
+\emph on
+users
+\emph default
+.
+ It assumes the world consists of a set of developers, each of whom can
+ be described by a couple of simple attributes.
+ These developers make changes to the source code, causing builds which
+ may succeed or fail.
+\end_layout
+
+\begin_layout Standard
+Users also may have different levels of authorization when issuing Buildbot
+ commands, such as forcing a build from the web interface or from an IRC
+ channel.
+\end_layout
+
+\begin_layout Standard
+Each developer is primarily known through the source control system.
+ Each 
+\family typewriter
+\series bold
+Change
+\family default
+\series default
+ object that arrives is tagged with a 
+\family typewriter
+\series bold
+who
+\family default
+\series default
+ field that typically gives the account name (on the repository machine)
+ of the user responsible for that change.
+ This string is displayed on the HTML status pages and in each 
+\family typewriter
+\series bold
+Build
+\family default
+\series default
+'s 
+\emph on
+blamelist
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+To do more with the User than just refer to them, this username needs to
+ be mapped into an address of some sort.
+ The responsibility for this mapping is left up to the status module which
+ needs the address.
+ In the future, the responsibility for managing users will be transferred
+ to User Objects.
+\end_layout
+
+\begin_layout Standard
+The 
+\family typewriter
+who
+\family default
+ fields in 
+\family typewriter
+git
+\family default
+ Changes are used to create 
+\emph on
+User Objects
+\emph default
+, which allow for more control and flexibility in how Buildbot manages users.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-users"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Build Properties
+\end_layout
+
+\begin_layout Standard
+Each build has a set of 
+\emph on
+Build Properties
+\emph default
+, which can be used by its build steps to modify their actions.
+ These properties, in the form of key-value pairs, provide a general framework
+ for dynamically altering the behavior of a build based on its circumstances.
+\end_layout
+
+\begin_layout Standard
+Properties form a simple kind of variable in a build.
+ Some properties are set when the build starts, and properties can be changed
+ as a build progresses – properties set or changed in one step may be accessed
+ in subsequent steps.
+ Property values can be numbers, strings, lists, or dictionaries - basically,
+ anything that can be represented in JSON.
+\end_layout
+
+\begin_layout Standard
+Properties are very flexible, and can be used to implement all manner of
+ functionality.
+ Here are some examples:
+\end_layout
+
+\begin_layout Standard
+Most Source steps record the revision that they checked out in the 
+\family typewriter
+got_revision
+\family default
+ property.
+ A later step could use this property to specify the name of a fully-built
+ tarball, dropped in an easily-accessible directory for later testing.
+\end_layout
+
+\begin_layout Standard
+Some projects want to perform nightly builds as well as building in response
+ to committed changes.
+ Such a project would run two schedulers, both pointing to the same set
+ of builders, but could provide an 
+\family typewriter
+is_nightly
+\family default
+ property so that steps can distinguish the nightly builds, perhaps to run
+ more resource-intensive tests.
+\end_layout
+
+\begin_layout Standard
+Some projects have different build processes on different systems.
+ Rather than create a build factory for each worker, the steps can use worker
+ properties to identify the unique aspects of each worker and adapt the
+ build process dynamically.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-buildproperties"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 Data API
 \end_layout
 
+\begin_layout Standard
+The data layer combines access to stored state and messages, ensuring consistenc
+y between them, and exposing a well-defined API that can be used both internally
+ and externally.
+ Using caching and the clock information provided by the db and mq layers,
+ this layer ensures that its callers can easily receive a dump of current
+ state plus changes to that state, without missing or duplicating messages.
+\end_layout
+
+\begin_layout Subsubsection
+Sections
+\end_layout
+
+\begin_layout Standard
+The data API is divided into four sections:
+\end_layout
+
+\begin_layout Itemize
+getters - fetching data from the database API;
+\end_layout
+
+\begin_layout Itemize
+subscriptions - subscribing to messages from the mq layer;
+\end_layout
+
+\begin_layout Itemize
+control - allows state to be changed in specific ways by sending appropriate
+ messages (e.g., stopping a build);
+\end_layout
+
+\begin_layout Itemize
+updates - direct updates to state appropriate messages.
+\end_layout
+
+\begin_layout Standard
+The getters and subscriptions are exposed everywhere.
+ Access to the control section should be authenticated at higher levels,
+ as the data layer does no authentication.
+ The updates section is for use only by the process layer.
+\end_layout
+
+\begin_layout Standard
+The interfaces for all sections but the updates sections are intended to
+ be language-agnostic.
+ That is, they should be callable from JavaScript via HTTP, or via some
+ other interface added to Buildbot after the fact.
+\end_layout
+
+\begin_layout Subsubsection
+Updates
+\end_layout
+
+\begin_layout Standard
+The updates section defines a free-form set of methods that Buildbot’s process
+ implementation calls to update data.
+ Most update methods both modify state via the database API and send a message
+ via the message queue API.
+ Some are simple wrappers for these APIs, while others contain more complex
+ logic, e.g., building a source stamp set for a collection of changes.
+ This section is the proper place to put common functionality, e.g., rebuilding
+ builds or assembling buildsets.
+\end_layout
+
+\begin_layout Subsubsection
+Data Model
+\end_layout
+
+\begin_layout Standard
+The data API enforces a strong and well-defined model on Buildbot’s data.
+ This model is influenced by REST, in the sense that it defines resources,
+ representations for resources, and identifiers for resources.
+ For each resource type, the API specifies
+\end_layout
+
+\begin_layout Itemize
+the attributes of the resource and their types (e.g., changes have a string
+ specifying their project);
+\end_layout
+
+\begin_layout Itemize
+the format of links to other resources (e.g., buildsets to sourcestamp sets);
+\end_layout
+
+\begin_layout Itemize
+the paths relating to the resource type;
+\end_layout
+
+\begin_layout Itemize
+the format of routing keys for messages relating to the resource type;
+\end_layout
+
+\begin_layout Itemize
+the events that can occur on that resource (e.g., a buildrequest can be claimed);
+ 
+\end_layout
+
+\begin_layout Itemize
+options and filters for getting resources.
+\end_layout
+
+\begin_layout Standard
+Some resource type attributes only appear in certain formats, as noted in
+ the documentation for the resource types.
+ In general, messages do not include any optional attributes, nor links.
+\end_layout
+
+\begin_layout Standard
+Paths are given here separated by slashes, with key names prefixed by 
+\family typewriter
+:
+\family default
+ and described below.
+ Similarly, message routing keys given here are separated by dots, with
+ key names prefixed by 
+\family typewriter
+$
+\family default
+.
+ The translation to tuples and other formats should be obvious.
+\end_layout
+
+\begin_layout Standard
+All strings in the data model are unicode strings.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-data-api"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Web interface
 \end_layout
 
-\begin_layout Subsection
-Home page
+\begin_layout Standard
+One of the goals of the ‘nine’ project is to rework Buildbot’s web services
+ to use a more modern, consistent design and implement UI features in client-sid
+e JavaScript instead of server-side Python.
+\end_layout
+
+\begin_layout Standard
+The rationale behind this is that a client side UI relieves pressure on
+ the server while being more responsive for the user.
+ The web server only concentrates on serving data via a REST interface wrapping
+ the Data API.
+ This removes a lot of sources of latency where, in previous versions, long
+ synchronous calculations were made on the server to generate complex pages.
+\end_layout
+
+\begin_layout Standard
+Another big advantage is live updates of status pages, without having to
+ poll or reload.
+ The new system uses Comet techniques in order to relay Data API events
+ to connected clients.
+\end_layout
+
+\begin_layout Standard
+Finally, making web services an integral part of Buildbot, rather than a
+ status plugin, allows tighter integration with the rest of the application.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The 
+\family typewriter
+www
+\family default
+ service exposes three pieces via HTTP:
+\end_layout
+
+\begin_layout Itemize
+A REST interface wrapping Data API;
+\end_layout
+
+\begin_layout Itemize
+HTTP-based messaging protocols wrapping the Messaging and Queues interface;
+ 
+\end_layout
+
+\begin_layout Itemize
+Static resources implementing the client-side UI.
+\end_layout
+
+\begin_layout Standard
+The REST interface is a very thin wrapper: URLs are translated directly
+ into Data API paths, and results are returned directly, in JSON format,
+ based on the JSON API.
+ Control calls are handled with a simplified form of JSONRPC 2.0.
+\end_layout
+
+\begin_layout Standard
+The message interface is also a thin wrapper around Buildbot’s MQ mechanism.
+ Clients can subscribe to messages, and receive copies of the messages,
+ in JSON, as they are received by the buildmaster.
+\end_layout
+
+\begin_layout Standard
+The client-side UI is an AngularJS application.
+ Buildbot uses the Python setuptools entry-point mechanism to allow multiple
+ packages to be combined into a single client-side experience.
+ This allows frontend developers and users to build custom components for
+ the web UI without hacking Buildbot itself.
+\end_layout
+
+\begin_layout Standard
+Python development and AngularJS development are very different processes,
+ requiring different environment requirements and skillsets.
+ To maximize hackability, Buildbot separates the two cleanly.
+ An experienced AngularJS hacker should be quite comfortable in the www/
+ directory, with a few exceptions described below.
+ Similarly, an experienced Python hacker can simply download the pre-built
+ web UI and never venture near the www/ directory.
+\end_layout
+
+\begin_layout Subsubsection*
+URLs
+\end_layout
+
+\begin_layout Standard
+The Buildbot web interface is rooted at its base URL, as configured by the
+ user.
+ It is entirely possible for this base URL to contain path components, e.g.,
+ 
+\family typewriter
+http://build.example.org/buildbot/
+\family default
+, if hosted behind an HTTP proxy.
+ To accomplish this, all URLs are generated relative to the base URL.
+\end_layout
+
+\begin_layout Standard
+Overall, the space under the base URL looks like this:
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+/
+\family default
+ – The HTML document that loads the UI
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+/api/v{version}
+\family default
+ – The root of the REST APIs, each versioned numerically.
+ Users should, in general, use the latest version.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+/ws
+\family default
+ – The WebSocket endpoint to subscribe to messages from the mq system.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+/sse
+\family default
+ – The server sent event endpoint where clients can subscribe to messages
+ from the mq system.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "www-server"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 Grid view
 \end_layout
 
+\begin_layout Standard
+Grid view shows the whole buildbot activity arranged by builders vertically
+ and changes horizontally.
+ It is equivalent to Buildbot Eight’s grid view.
+\end_layout
+
+\begin_layout Standard
+By default, changes on all branches are displayed but only one branch may
+ be filtered by the user.
+ Builders can also be filtered by tags.
+ This feature is similar to the one in the builder list.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "www-grid"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename grid_view.png
+	width 15cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sample grid view
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Sample-grid-view"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Waterfall view
+\end_layout
+
+\begin_layout Standard
+Waterfall shows the whole buildbot activity in a vertical time line.
+ Builds are represented with boxes whose height vary according to their
+ duration.
+ Builds are sorted by builders in the horizontal axes, which allow you to
+ see how builders are scheduled together.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "www-waterfall"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename waterfall_view.png
+	width 15cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sample waterfall view
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Sample-waterfall-view"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 Console view
 \end_layout
 
+\begin_layout Standard
+Console view shows the whole buildbot activity arranged by changes as discovered
+ by Change Sources vertically and builders horizontally.
+ If a builder has no build in the current time range, it will not be displayed.
+ If no change is available for a build, then it will generate a fake change
+ according to the 
+\family typewriter
+got_revision
+\family default
+ property.
+\end_layout
+
+\begin_layout Standard
+Console view will also group the builders by tags.
+ When there are several tags defined per builders, it will first group the
+ builders by the tag that is defined for most builders.
+ Then given those builders, it will group them again in another tag cluster.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "www-console"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename console_view.png
+	width 15cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sample console view
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Sample-console-view"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Settings
+\end_layout
+
+\begin_layout Standard
+The settings page provides some option tweaking accessible for the user,
+ and more important configuration options for logged in administrators.
+ These settings can be extended in the buildbot Angular app.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename bb_settings.png
+	width 15cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sample settings menu
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Sample-settings-menu"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
@@ -2409,6 +3686,16 @@ User scripts
 
 \begin_layout Standard
 user try scripts to send patches with uncomitted code to buildbot for testing
+\end_layout
+
+\begin_layout Section
+Capturing metrics
+\end_layout
+
+\begin_layout Standard
+buildbot metrics + Prometheus 
+\backslash
+w alertmanager + grafana
 \end_layout
 
 \begin_layout Section
@@ -4759,7 +6046,7 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "concepts-who-5"
+key "concepts-scheduler"
 
 \end_inset
 
@@ -4776,7 +6063,7 @@ status collapsed
 
 \end_inset
 
-Concepts - Buildbot latest documentation: Source Stamps, URL: 
+Scheduling Builds - Buildbot latest documentation: Source Stamps, URL: 
 \begin_inset Flex URL
 status open
 
@@ -4784,7 +6071,7 @@ status open
 
 http://docs.buildbot.net/latest/manual/concepts.html
 \backslash
-#source-stamps
+#scheduling-builds
 \end_layout
 
 \end_inset
@@ -4806,7 +6093,7 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "concepts-who-6"
+key "concepts-buildsets"
 
 \end_inset
 
@@ -4823,7 +6110,7 @@ status collapsed
 
 \end_inset
 
-Concepts - Buildbot latest documentation: Source Stamps, URL: 
+Buildsets - Buildbot latest documentation: Source Stamps, URL: 
 \begin_inset Flex URL
 status open
 
@@ -4831,7 +6118,7 @@ status open
 
 http://docs.buildbot.net/latest/manual/concepts.html
 \backslash
-#source-stamps
+#buildsets
 \end_layout
 
 \end_inset
@@ -4853,7 +6140,7 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "concepts-who-7"
+key "concepts-buildrequests"
 
 \end_inset
 
@@ -4870,7 +6157,7 @@ status collapsed
 
 \end_inset
 
-Concepts - Buildbot latest documentation: Source Stamps, URL: 
+BuildRequests - Buildbot latest documentation: Source Stamps, URL: 
 \begin_inset Flex URL
 status open
 
@@ -4878,7 +6165,992 @@ status open
 
 http://docs.buildbot.net/latest/manual/concepts.html
 \backslash
-#source-stamps
+#buildrequests
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-builders"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Builders - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#builders
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-workers"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Workers - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#workers
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-builds"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Builds - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#builds
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-users"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Users - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#users
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-buildproperties"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Build Properties - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/concepts.html
+\backslash
+#build-properties
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-server"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+WWW Server - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/developer/www-server.html
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "concepts-data-api"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Data API - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/developer/data.html
+\backslash
+#data-api
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-console"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Console View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#console-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-waterfall"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Waterfall View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#waterfall-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-3"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-4"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-5"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-6"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-7"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-8"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-9"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-10"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-11"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-12"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "www-grid-13"
+
+\end_inset
+
+
+\size normal
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Grid View - Buildbot latest documentation: Source Stamps, URL: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://docs.buildbot.net/latest/manual/cfg-www.html
+\backslash
+#grid-view
 \end_layout
 
 \end_inset
