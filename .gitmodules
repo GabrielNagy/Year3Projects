@@ -1,3 +1,0 @@
-[submodule "WT/Project/upload_app/upload_app/run/googletest"]
-	path = WT/Project/upload_app/upload_app/run/googletest
-	url = https://github.com/google/googletest
