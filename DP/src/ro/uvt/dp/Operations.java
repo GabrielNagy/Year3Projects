@@ -1,11 +1,11 @@
 package ro.uvt.dp;
 
 public interface Operations {
-	public double getTotalAmount();
+	double getTotalAmount();
 
-	public double getInterest();
+	double getInterest();
 
-	public void depose(double amount);
+	void deposit(double amount);
 
-	public void retrieve(double amount);
+	void withdraw(double amount);
 }

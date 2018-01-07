@@ -1,87 +1,70 @@
 package ro.uvt.dp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.time.LocalDate;
 
-import ro.uvt.dp.TYPE;
+import ro.uvt.dp.Account.TYPE;
 
+/**
+ * 
+ * Class that is used to store the information about one bank client
+ *
+ */
 public class Client {
-	public static final int NUMAR_MAX_CONTURI = 5;
+	public static final int MAX_ACCOUNT_NUMBER = 5;
 
-	private final String name;
-	private final String address;
-	private final Account accounts[];
-	private final int accountsNr = 0;
-	private final String dateOfBirth;
+	private String name;
+	private String address;
+	private ArrayList<Account> accounts = new ArrayList<>();
+	private String cnp = null;
 
-	private Client(ClientBuilder builder) {
-		this.name = builder.name;
-		this.address = builder.address;
-		this.accounts = builder.accounts;
-		this.dateOfBirth = builder.dateOfBirth;
-	}
-
-	public static class ClientBuilder {
-		private final String name;
-		private final String address;
-		private final Account accounts[];
-		private String dateOfBirth;
-		
-		public ClientBuilder(String name, String address, Account accounts[]) {
-			this.name = name;
-			this.address = address;
-			this.accounts = new Account[NUMAR_MAX_CONTURI];
-		}
-		
-		public ClientBuilder dob(String dateOfBirth) {
-			this.dateOfBirth = dateOfBirth;
-			return this;
-		}
-		
-		public Client build() {
-			return new Client(this);
-		}
-	}
-	
-	public Client(String nume, String adresa, TYPE tip, String numarCont, double suma) {
+	public Client(String nume, String adresa, TYPE tip, String numarCont, double suma, String cnp) {
 		this.name = nume;
 		this.address = adresa;
-		accounts = new Account[NUMAR_MAX_CONTURI];
+		this.cnp = cnp;
 		addAccount(tip, numarCont, suma);
 	}
 
-	public void addAccount(TYPE tip, String numarCont, double suma) {
+	public boolean addAccount(TYPE tip, String accountCode, double suma) {
 		Account c = null;
-		if (tip == TYPE.EUR)
-			c = new ContEUR(numarCont, suma);
-		else if (tip == TYPE.RON)
-			c = new AccountRON(numarCont, suma);
-		accounts[accountsNr++] = c;
+		if (tip == Account.TYPE.EUR)
+			c = new AccountEUR(accountCode, suma);
+		else if (tip == Account.TYPE.RON)
+			c = new AccountRON(accountCode, suma);
+		if(accounts.size() + 1 <= MAX_ACCOUNT_NUMBER) {
+			accounts.add(c);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean removeAccount(String accountCode) {
+		Account acc = getAccount(accountCode);
+		if(accounts.contains(acc) && acc.getTotalAmount() == 0) {
+			accounts.remove(acc);
+			return true;
+		}
+		return false;
 	}
 
 	public Account getAccount(String accountCode) {
-		for (int i = 0; i < accountsNr; i++) {
-			if (accounts[i].getAccountNumber().equals(accountCode)) {
-				return accounts[i];
+		for(Account a : accounts)
+		{
+			if(a.getAccountNumber().equals(accountCode)){
+				return a;
 			}
 		}
 		return null;
 	}
 
-	@Override
-	public String toString() {
-		return "\n\tClient [name=" + name + ", address=" + address + ", acounts=" + Arrays.toString(accounts) + "]";
-	}
 
 	public String getName() {
 		return name;
 	}
-	
-	public String getAddress() {
-		return address;
+
+	@Override
+	public String toString() {
+		return "\n\tClient [name=" + name + ", cnp=" + cnp + ", address=" + address + ", acounts=" + accounts.toString() + "]";
 	}
 
-	public String getDateOfBirth() {
-		return dateOfBirth;
-	}
 }

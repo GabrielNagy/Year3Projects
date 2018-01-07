@@ -2,8 +2,8 @@ package ro.uvt.dp;
 
 public class AccountRON extends Account implements Transfer {
 
-	public AccountRON(String numarCont, double suma) {
-		super(numarCont, suma);
+	public AccountRON(String accountIBAN, double amount) {
+		super(accountIBAN, amount);
 	}
 
 	public double getInterest() {
@@ -21,7 +21,7 @@ public class AccountRON extends Account implements Transfer {
 
 	@Override
 	public void transfer(Account c, double s) {
-		c.retrieve(s);
-		depose(s);
+		c.withdraw(s);
+		deposit(s);
 	}
 }

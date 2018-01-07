@@ -4,7 +4,6 @@ import ro.uvt.dp.Account;
 import ro.uvt.dp.AccountRON;
 import ro.uvt.dp.Bank;
 import ro.uvt.dp.Client;
-import ro.uvt.dp.Account.TYPE;
 
 public class Test {
 
@@ -13,11 +12,12 @@ public class Test {
 		 * Create BCR bank with 2 clients
 		 */
 		Bank bcr = new Bank("Banca BCR");
-		// creare client Ionescu cu 2 conturi unul in EUR si unul in RON
+		// creates Ionescu client that has two accounts one in EUR and one in
+		// RON
 		Client cl1 = new Client("Ionescu Ion", "Timisoara", Account.TYPE.EUR, "EUR124", 200.9);
 		bcr.addClient(cl1);
 		cl1.addAccount(Account.TYPE.RON, "RON1234", 400);
-		// creare client Marinecu cu un cont in RON
+		// Creates Marinescu client that has only one account in RON
 		Client cl2 = new Client("Marinescu Marin", "Timisoara", Account.TYPE.RON, "RON126", 100);
 		bcr.addClient(cl2);
 		System.out.println(bcr);
@@ -43,7 +43,7 @@ public class Test {
 			System.out.println(cl);
 		}
 
-		// tranfer between accounts RON126 si RON1234
+		// transfer between accounts RON126 and RON1234
 		AccountRON c1 = (AccountRON) cl.getAccount("RON126");
 		AccountRON c2 = (AccountRON) bcr.getClient("Ionescu Ion").getAccount("RON1234");
 		c1.transfer(c2, 40);
