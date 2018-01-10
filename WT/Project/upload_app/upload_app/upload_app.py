@@ -31,7 +31,7 @@ else:
 UPLOAD_FOLDER = 'static/uploads'
 SOURCE_FOLDER = 'run/src'
 BUILD_FOLDER = 'run/build'
-PROBLEMS = ['maze', 'bisearch', 'strength']
+PROBLEMS = ['kfib', 'bisearch', 'strength']
 LANGUAGES = {
     'c': ['C', "gcc -Wall -static -O2 -I. file.c"],
     'cpp': ['C++', "g++ -std=c++11 -Wall -static -O2 -I. file.cpp"],
