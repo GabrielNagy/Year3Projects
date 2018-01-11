@@ -1169,11 +1169,7 @@ key "flask-foreword"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-We will make use of Flask's modular design to quickly deploy web dashboards
+ We will make use of Flask's modular design to quickly deploy web dashboards
  for Buildbot.
 \end_layout
 
