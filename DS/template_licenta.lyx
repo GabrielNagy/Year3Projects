@@ -1149,6 +1149,35 @@ Being a Single Page Application, all Buildbot pages are loaded from the
 \end_layout
 
 \begin_layout Subsection
+Flask
+\end_layout
+
+\begin_layout Standard
+Flask is a BSD licensed micro web framework written in Python, based on
+ 
+\emph on
+Werkzeug
+\emph default
+, a powerful WSGI utility library for Python, and 
+\emph on
+Jinja2
+\emph default
+, a full featured template engine.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "flask-foreword"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We will make use of Flask's modular design to quickly deploy web dashboards
+ for Buildbot.
+\end_layout
+
+\begin_layout Subsection
 Angular
 \end_layout
 
@@ -4297,12 +4326,41 @@ alwaysRun
 Web interface development
 \end_layout
 
+\begin_layout Standard
+While Buildbot's default web views (console, grid, waterfall) may be useful
+ for some users, the real advantage lies in their customizability.
+ We will build the same custom dashboard twice, once with Flask/WSGI, and
+ once with Angular.
+ At the end, we will compare and contrast the two approaches.
+\end_layout
+
 \begin_layout Subsection
 Flask/WSGI dashboards
 \end_layout
 
 \begin_layout Standard
-pros/cons
+The simpler way, for most Python developers, is to use the 
+\family typewriter
+buildbot_wsgi_dashboards 
+\family default
+plugin to write a server side generated dashboard and integrate it in the
+ UI.
+\end_layout
+
+\begin_layout Standard
+The plugin is compatible with any WSGI web framework, we will use Flask
+ as it is one of the more popular ones.
+ A 
+\family typewriter
+/index.html
+\family default
+ route needs to be implemented, which will render the code representing
+ the dashboard.
+ The application framework runs in a thread outside of Twisted and it provides
+ a synchronous wrapper for accessing the Data API.
+ The HTML output is ran inside the Angular application, using its CSS and
+ some of the directives defined by the Buildbot UI.
+ It also has full access to the application JS context.
 \end_layout
 
 \begin_layout Subsection
@@ -7426,7 +7484,7 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "www-grid-6"
+key "flask-foreword"
 
 \end_inset
 
@@ -7443,15 +7501,13 @@ status collapsed
 
 \end_inset
 
-Grid View - Buildbot latest documentation: Source Stamps, URL: 
+Foreword - Flask Documentation (0.12), URL: 
 \begin_inset Flex URL
 status open
 
 \begin_layout Plain Layout
 
-http://docs.buildbot.net/latest/manual/cfg-www.html
-\backslash
-#grid-view
+http://flask.pocoo.org/docs/0.12/foreword/
 \end_layout
 
 \end_inset
@@ -7490,15 +7546,16 @@ status collapsed
 
 \end_inset
 
-Grid View - Buildbot latest documentation: Source Stamps, URL: 
+Customization - Buildbot latest documentation: Writing dashboards with Flask
+ or Bottle, URL: 
 \begin_inset Flex URL
 status open
 
 \begin_layout Plain Layout
 
-http://docs.buildbot.net/latest/manual/cfg-www.html
+http://docs.buildbot.net/latest/manual/customization.html
 \backslash
-#grid-view
+#writing-dashboards-with-flask-or-bottle
 \end_layout
 
 \end_inset
