@@ -12,6 +12,8 @@
 \definecolor{deepblue}{rgb}{0,0,0.5}
 \definecolor{deepred}{rgb}{0.6,0,0}
 \definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{lightgray}{RGB}{211,211,211}
+\definecolor{gray}{RGB}{128,128,128}
 %\usepackage{...insert other packages here...}
 \usepackage{indentfirst}
 \newtheorem{thm}{Teorema}[section]
@@ -3645,19 +3647,650 @@ Backend componentization
 \end_layout
 
 \begin_layout Standard
-split master configuration into multiple modules to facilitate scalability
+By default, the Buildbot master configuration resides in the 
+\family typewriter
+master.cfg
+\family default
+ file in the buildmaster's base directory.
+ A sample file is automatically installed when a new master is created.
+\end_layout
+
+\begin_layout Standard
+The config file is written in Python and it defines a dictionary named 
+\family typewriter
+BuildmasterConfig
+\family default
+, with a number of keys that are specially treated.
+ Being a pythonic configuration, we can benefit from the features of the
+ programming language, such as componentization of the configuration parts
+ into modules.
+ This comes in handy when we are dealing with large configurations.
+ At first the 
+\family typewriter
+master.cfg
+\family default
+ file seems suitable, but as we add more builders and workers, we need to
+ keep the code readable, thus we split 
+\family typewriter
+master.cfg
+\family default
+ into multiple modules.
+\end_layout
+
+\begin_layout Standard
+The figure below illustrates this componentization for the Nokia Buildbot
+ project, which has 4 projects running on the same master (CAS, INCT, FRI,
+ DEM), each of them having an arbitrary number of builders (
+\family typewriter
+builders
+\family default
+ subfolder) and a specific web dashboard (
+\family typewriter
+dashboard
+\family default
+ subfolder).
+\end_layout
+
+\begin_layout Standard
+Some of the build steps have log outputs that do not match Buildbot's default
+ parsers, so custom logparsers have been implemented (
+\family typewriter
+builders/steps
+\family default
+ subfolder).
+ 
+\end_layout
+
+\begin_layout Standard
+Custom notifiers have the purpose of informing the user/admin about vital
+ build or system information, the current implemented one uses LDAP to query
+ the active directory in order to find the e-mail address of an user (
+\family typewriter
+notifier
+\family default
+ subfolder).
+ 
+\end_layout
+
+\begin_layout Standard
+As the project increases in size, metrics become necessary.
+ We use Prometheus to keep track of information, and Grafana to crunch it
+ and present it in an user-friendly way (
+\family typewriter
+reporters
+\family default
+ subfolder).
+\end_layout
+
+\begin_layout Standard
+All of these components could be worked into the 
+\family typewriter
+master.cfg
+\family default
+ file, but the result would be an approx.
+ 2300 line configuration file that encompasses each category, making code
+ modifications and additions more prone to errors and most certainly a chore
+ to go through.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename config_tree.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sample configuration componentization
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 Email look-up using LDAP
 \end_layout
 
+\begin_layout Standard
+Making users aware of their build status and results is an important part
+ of the CI process.
+ To keep user input to a minimum, we can figure out their e-mail address
+ from their Linux username.
+ For this purpose, we use Python's LDAP (Lightweight Directory Access Protocol)
+ module to search through the active directory for the user's information.
+\end_layout
+
+\begin_layout Standard
+To send e-mails to users, Buildbot provides a 
+\family typewriter
+MailNotifier
+\family default
+ reporter that does most of the job.
+ This is a basic example:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/mailnotifier_default.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{mailnotifier\\_default.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Concerning our use case, we need to configure a proper 
+\family typewriter
+lookup
+\family default
+ function.
+ For builds triggered by VCS commits, this is automatically managed by adding
+ the e-mail addresses of the committers.
+ However, try builds do not provide the e-mail parameter, so it has to be
+ figured out using the user's Unix username.
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ldap_bash.png
+	width 15cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Using 
+\family typewriter
+ldapsearch
+\family default
+ to get the e-mail address from the Active Directory
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For Buildbot integration, we have to implement an 
+\family typewriter
+IEmailLookup
+\family default
+ interface that is provided by Buildbot.
+ This interface has a 
+\family typewriter
+getAddress
+\family default
+ method that turns an username string into a valid e-mail address.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "email-lookup"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To implement the interface, we need to adapt the 
+\family typewriter
+ldapsearch
+\family default
+ to Python code:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/iemaillookup.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{IEmailLookup.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As shown in the code, the class takes an optional argument, 
+\family typewriter
+emailsMap
+\family default
+, which is a dictionary of username and e-mail key/value pairs.
+ This is usually done to avoid querying the Active Directory for an user
+ that has used the system before.
+\end_layout
+
+\begin_layout Standard
+Finally, to deploy this interface, we import it in the master configuration
+ file, and we adjust our 
+\family typewriter
+MailNotifier
+\family default
+ reporter accordingly, also adding a HTML template as desired:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/mailnotifier_extended.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{gray}\\ttfamily\\textit},caption={\\textit{mailnotifier\\_extended.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, each time user-triggered builds on builders with the 
+\family typewriter
+cas
+\family default
+ tag are completed, the user receives an e-mail with the status of his build.
+ If the user submitted a patchfile, it is also included in the e-mail.
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename mail_contents.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Contents of the e-mail sent by Buildbot
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Log parsing
 \end_layout
 
+\begin_layout Standard
+Buildbot provides a number of parsers for commonly used commands such as
+ compilers (cmake, make, visual c++...) and tests (cppcheck, make test, trial...).
+ However, there are special cases that do not fit the default parsers and
+ custom ones have to be implemented.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-logobservers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As it will be used in other sections, we will implement a simple parser
+ for the 
+\family typewriter
+clang-tidy
+\family default
+ command.
+ We begin by creating a new class that inherits the default 
+\family typewriter
+ShellCommand
+\family default
+.
+ We provide the class with a 
+\family typewriter
+logConsumer
+\family default
+ function that incrementally gets every line of the command's output, and
+ we feed the lines to the 
+\family typewriter
+gatherTestStatistics
+\family default
+ function that parses the lines.
+ We use Python's regular expressions module to search for the desired content.
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/clangtidy_1.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{clangtidy.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\family typewriter
+__init__
+\family default
+ function initializes our new 
+\family typewriter
+ShellCommand
+\family default
+, adding a log observer to the 
+\family typewriter
+stdio
+\family default
+ output, and providing initial fields for possible errors and warnings.
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/clangtidy_2.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{clangtidy.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The command is mostly done as we successfully parsed its output.
+ However, it must be evaluated in order to set a status after the step is
+ finished.
+ The evaluation is straightforward, if we have something in the 
+\family typewriter
+errors
+\family default
+ field, we mark the step as failed, if we have 
+\family typewriter
+warnings
+\family default
+ and no 
+\family typewriter
+errors
+\family default
+, we mark the step as having warnings (the build will not stop).
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/clangtidy_3.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{clangtidy.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We successfully implemented our parser, however the user does not know the
+ error/warning count until he opens the log.
+ To fix that, we can update the step's description with the count.
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/clangtidy_4.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{clangtidy.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now have a fully working 
+\family typewriter
+clang-tidy
+\family default
+ command parser.
+ It is a good practice to write unit tests for our code, so we make a generic
+ test suite:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/clangtidy_test.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{clangtidy\\_test.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+All that remains to do is to import this class into the configuration file,
+ and create the step using 
+\family typewriter
+steps.ClangTidy
+\family default
+ instead of 
+\family typewriter
+steps.ShellCommand
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+Buildbot now correctly processes the output and updates the result accordingly:
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename clangtidy_summary.png
+	width 15cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+clang-tidy command output
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Preferential build steps
+\end_layout
+
+\begin_layout Standard
+In our use cases, there is the possibility of patching more than one component
+ in a build.
+ By default, Buildbot executes all commands until failed.
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+BuildStep
+\family default
+s are usually specified in the buildmaster’s configuration file, in a list
+ that goes into the 
+\family typewriter
+BuildFactory
+\family default
+.
+ The 
+\family typewriter
+BuildStep
+\family default
+ instances in this list are used as templates to construct new independent
+ copies for each build (so that state can be kept on the 
+\family typewriter
+BuildStep
+\family default
+ in one build without affecting a later build).
+ Each 
+\family typewriter
+BuildFactory
+\family default
+ can be created with a list of steps, or the factory can be created empty
+ and then steps added to it using the 
+\family typewriter
+addStep
+\family default
+ method:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/simple_factory.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{simple\\_factory.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However, we would like to execute only certain commands, depending on the
+ status of the previous commands.
+ To accomplish that, we need to know that Buildbot steps finish with a status
+ described by one of four values defined in 
+\family typewriter
+buildbot.status.builder
+\family default
+: 
+\family typewriter
+SUCCESS
+\family default
+, 
+\family typewriter
+WARNINGS
+\family default
+, 
+\family typewriter
+FAILURE
+\family default
+ or 
+\family typewriter
+SKIPPED
+\family default
+.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "concepts-buildsteps"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let's say that we have a builder that checks out a source, runs a linter
+ and builds the code only if the lint step had no errors, then cleans up
+ the build folder.
+ An example for this use case can be seen below:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/preferential_factory.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{preferential\\_factory.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To skip a step, Buildbot provides us with the 
+\family typewriter
+doStepIf
+\family default
+ parameter for a 
+\family typewriter
+ShellCommand
+\family default
+ .
+ The value is set to a lambda function that returns 
+\family typewriter
+True
+\family default
+ only if the previous step's result is 
+\family typewriter
+FAILURE
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+step.build.executedSteps
+\family default
+ is a list of the executed steps including the one that is running when
+ the list is queried.
+ We get the result of the 
+\family typewriter
+clang-tidy
+\family default
+ command by selecting the second to last executed step.
+ In Python this is easily done by going backwards on the list, providing
+ it with a negative value (
+\family typewriter
+[-2]
+\family default
+).
+\end_layout
+
+\begin_layout Standard
+At the end, we want to clean the workspace so it does not interfere with
+ future builds.
+ By default, Buildbot stops a build when a step fails.
+ To override that, we provide the 
+\family typewriter
+rm -rf
+\family default
+ command with the 
+\family typewriter
+alwaysRun
+\family default
+ parameter.
 \end_layout
 
 \begin_layout Section
@@ -6063,7 +6696,7 @@ status collapsed
 
 \end_inset
 
-Scheduling Builds - Buildbot latest documentation: Source Stamps, URL: 
+Scheduling Builds - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6110,7 +6743,7 @@ status collapsed
 
 \end_inset
 
-Buildsets - Buildbot latest documentation: Source Stamps, URL: 
+Buildsets - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6157,7 +6790,7 @@ status collapsed
 
 \end_inset
 
-BuildRequests - Buildbot latest documentation: Source Stamps, URL: 
+BuildRequests - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6204,7 +6837,7 @@ status collapsed
 
 \end_inset
 
-Builders - Buildbot latest documentation: Source Stamps, URL: 
+Builders - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6251,7 +6884,7 @@ status collapsed
 
 \end_inset
 
-Workers - Buildbot latest documentation: Source Stamps, URL: 
+Workers - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6298,7 +6931,7 @@ status collapsed
 
 \end_inset
 
-Builds - Buildbot latest documentation: Source Stamps, URL: 
+Builds - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6345,7 +6978,7 @@ status collapsed
 
 \end_inset
 
-Users - Buildbot latest documentation: Source Stamps, URL: 
+Users - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6392,7 +7025,7 @@ status collapsed
 
 \end_inset
 
-Build Properties - Buildbot latest documentation: Source Stamps, URL: 
+Build Properties - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6439,7 +7072,7 @@ status collapsed
 
 \end_inset
 
-WWW Server - Buildbot latest documentation: Source Stamps, URL: 
+WWW Server - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6484,7 +7117,7 @@ status collapsed
 
 \end_inset
 
-Data API - Buildbot latest documentation: Source Stamps, URL: 
+Data API - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6531,7 +7164,7 @@ status collapsed
 
 \end_inset
 
-Grid View - Buildbot latest documentation: Source Stamps, URL: 
+Grid View - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6578,7 +7211,7 @@ status collapsed
 
 \end_inset
 
-Console View - Buildbot latest documentation: Source Stamps, URL: 
+Console View - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6625,7 +7258,7 @@ status collapsed
 
 \end_inset
 
-Waterfall View - Buildbot latest documentation: Source Stamps, URL: 
+Waterfall View - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
@@ -6655,7 +7288,7 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "www-grid-3"
+key "concepts-buildsteps"
 
 \end_inset
 
@@ -6672,15 +7305,13 @@ status collapsed
 
 \end_inset
 
-Grid View - Buildbot latest documentation: Source Stamps, URL: 
+Build Steps - Buildbot latest documentation, URL: 
 \begin_inset Flex URL
 status open
 
 \begin_layout Plain Layout
 
-http://docs.buildbot.net/latest/manual/cfg-www.html
-\backslash
-#grid-view
+http://docs.buildbot.net/latest/manual/cfg-buildsteps.html
 \end_layout
 
 \end_inset
@@ -6702,7 +7333,7 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "www-grid-4"
+key "concepts-logobservers"
 
 \end_inset
 
@@ -6719,15 +7350,16 @@ status collapsed
 
 \end_inset
 
-Grid View - Buildbot latest documentation: Source Stamps, URL: 
+Customization - Buildbot latest documentation: Adding Log Observers, URL:
+ 
 \begin_inset Flex URL
 status open
 
 \begin_layout Plain Layout
 
-http://docs.buildbot.net/latest/manual/cfg-www.html
+http://docs.buildbot.net/latest/manual/customization.html
 \backslash
-#grid-view
+#adding-logobservers
 \end_layout
 
 \end_inset
@@ -6749,7 +7381,7 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "www-grid-5"
+key "email-lookup"
 
 \end_inset
 
@@ -6766,15 +7398,13 @@ status collapsed
 
 \end_inset
 
-Grid View - Buildbot latest documentation: Source Stamps, URL: 
+buildbot.interfaces.IEmailLookup, URL: 
 \begin_inset Flex URL
 status open
 
 \begin_layout Plain Layout
 
-http://docs.buildbot.net/latest/manual/cfg-www.html
-\backslash
-#grid-view
+http://docs.buildbot.net/0.8.3/reference/buildbot.interfaces.IEmailLookup-class.html
 \end_layout
 
 \end_inset
