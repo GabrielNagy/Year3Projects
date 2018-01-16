@@ -1,0 +1,28 @@
+<div class="container mydashboard">
+  <!-- Create a table of builds organised by builders in columns -->
+  <table class="table">
+    <tr><th>SourceStamp</th>
+      {% for builder in builders %}
+      <th><a ng-href="#/builders/{{builder.builderid}}" class="ng-binding" href="#/builders/{{builder.builderid}}">{{builder.name}}</a></th>
+      {% endfor %}
+    </tr>
+    {% for ssid, data in bigdata.items() | sort(reverse=True) %}
+    <tr>
+      <th><changedetails change="{{data.change}}"/></th>
+      {% for builder in builders %}
+      <th>
+        {% for build in data.builders[builder.builderid] | sort() %}
+        {% if build.type == "build" %}
+        <a class="badge-status badge results_{{build.results_text}}" href="#/builders/{{builder.builderid}}/builds/{{build.number}}">{{build.number}}</a>
+        {% endif %}
+        {% if build.type == "buildrequest" %}
+        <a class="badge-status badge results_{{build.results_text}}" href="#/buildrequests/{{build.id}}">{{build.id}}</a>
+        {% endif %}
+        {% endfor %}
+      </th>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    </tr>
+  </table>
+</div>

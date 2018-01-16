@@ -4357,6 +4357,194 @@ The plugin is compatible with any WSGI web framework, we will use Flask
  The HTML output is ran inside the Angular application, using its CSS and
  some of the directives defined by the Buildbot UI.
  It also has full access to the application JS context.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "buildbot-flask"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For our custom dashboard, we need to be able to filter by tag, and to show
+ both poller-triggered builds and manually triggered builds.
+ Our end result will look similar to this figure:
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename dashboard_build.png
+	width 15cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Custom dashboard result
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We begin by creating the logic for the dashboard.
+ First we create the helper functions for obtaining the changed file list
+ and the fake change creator, since Buildbot doesn't generate one when triggerin
+g a manual build:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/helper_flask.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,caption={\\textit{helper\\_functions.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We will use of this data when filling in the template fields.
+ By making use of Buildbot's Data API we obtain information about the builders
+ and buildsets that we want to display:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/flask_1.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{gray}\\ttfamily\\textit},caption={\\textit{flask\\_dashboard.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next, we iterate through the buildsets, keeping the ones that interest us,
+ and saving the information that we want to show in the template:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/flask_2.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{gray}\\ttfamily\\textit},caption={\\textit{flask\\_dashboard.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At the end we return the template with our parsed content, the builders
+ and a dictionary of all the related data we want to show:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/flask_3.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{gray}\\ttfamily\\textit},caption={\\textit{flask\\_dashboard.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To keep the page small, we remove the bloat by minifying our HTML response.
+ This can be easily done in Flask with the help of the 
+\family typewriter
+@after_request
+\family default
+ decorator:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/flask_4.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{gray}\\ttfamily\\textit},caption={\\textit{flask\\_dashboard.py}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the HTML part, we generate a simple table, filling it out with the data
+ returned by our Flask file
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/flask_template.html"
+lstparams "breaklines=true,captionpos=b,frame=b,language=HTML,basicstyle={{\\ttm\\ttfamily}},keywordstyle={\\color{blue}},stringstyle={\\color{red}},stringstyle={\\color{red}\\ttfamily},showstringspaces=false,captionpos=b,comment={[l]{\\#}},otherkeywords={header, section, footer, tr, th},commentstyle={\\color{deepgreen}\\ttfamily\\textit},morestring={[b]\"},caption={\\textit{flask\\_template.html}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The only thing left to do is to load our dashboard in the 
+\family typewriter
+master.cfg
+\family default
+ file.
+ We do this by importing our Flask file and appending to the 
+\family typewriter
+c['www']['plugins']['wsgi_dashboards']
+\family default
+ key:
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "code/flask_master.py"
+lstparams "breaklines=true,captionpos=b,frame=b,language=Python,basicstyle={{\\ttm}},otherkeywords={self},keywordstyle={{\\ttb\\color{deepblue}}},stringstyle={{\\color{deepgreen}}},showstringspaces=false,captionpos=b,comment={[l]{\\#}},commentstyle={\\color{gray}\\ttfamily\\textit},caption={\\textit{master.cfg}}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+After we restart/reconfig our Buildbot, our new dashboard can be seen in
+ the sidebar:
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename buildbot_sidebar.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Newly modified sidebar
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -4364,7 +4552,49 @@ Angular dashboards
 \end_layout
 
 \begin_layout Standard
-pros/cons
+Though easy to implement and familiar to Python developers, the Flask dashboard
+ is not efficient for long term use, since it is not asynchronously updated
+ when builds are added, and the whole page has to be reloaded, making this
+ a very time and resource consuming activity.
+\end_layout
+
+\begin_layout Standard
+The right solution would be to follow the approach of 
+\emph on
+Console
+\emph default
+ and 
+\emph on
+Waterfall view
+\emph default
+ and create these dashboards as Buildbot plugins using Angular.
+ By choosing this approach, we benefit from real-time loading with AJAX,
+ reducing our load by a large margin.
+ For developers unfamiliar with Node.js and its practices, this approach
+ may seem unfriendly.
+ However, the developers have put up a 
+\begin_inset Quotes eld
+\end_inset
+
+quick-start guide
+\begin_inset Quotes erd
+\end_inset
+
+ for Angular live coding.
+\begin_inset CommandInset citation
+LatexCommand citep
+key "buildbot-angular"
+
+\end_inset
+
+ In short, one has to locally build the frontend of Buildbot, scaffold a
+ dashboard template and install a browser plugin in order to benefit from
+ live reloading when the code changes.
+\end_layout
+
+\begin_layout Standard
+Using CoffeeScript and Jade, we recreate the dashboard logic previously
+ used with Flask.
 \end_layout
 
 \begin_layout Section
@@ -7525,7 +7755,7 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "www-grid-7"
+key "buildbot-flask"
 
 \end_inset
 
@@ -7573,7 +7803,7 @@ status collapsed
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "www-grid-8"
+key "buildbot-angular"
 
 \end_inset
 
@@ -7590,15 +7820,13 @@ status collapsed
 
 \end_inset
 
-Grid View - Buildbot latest documentation: Source Stamps, URL: 
+Buildbot UI Plugin for Python developer - Buildbot - Medium, URL: 
 \begin_inset Flex URL
 status open
 
 \begin_layout Plain Layout
 
-http://docs.buildbot.net/latest/manual/cfg-www.html
-\backslash
-#grid-view
+https://medium.com/buildbot/buildbot-ui-plugin-for-python-developer-ef9dcfdedac0
 \end_layout
 
 \end_inset
