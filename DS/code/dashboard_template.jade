@@ -1,0 +1,21 @@
+.container.mydashboard
+  table.table
+    tr
+      th SourceStamp
+      th(ng-repeat="builder in builders")
+        a(ng-href='#/builders/{{ builder.builderid }}'
+          ng-bind='builder.name')
+    tr(ng-repeat="(id, sourcestamp) in sourcestampsMap")
+      td
+        changedetails(change='sourcestamp.change')
+          td(ng-repeat="builder in builders")
+            a(ng-repeat="(buildid, build) in builds[id][builder.builderid]")
+                        span.badge-status(
+                                        ng-class="results2class(build, 'pulse')"
+                                        ng-click='d.selectBuild(build)')
+                            | {{ build.number }}
+            a(ng-repeat="(buildrequestid, buildrequest) in buildrequests[id][builder.builderid]", ui-sref="buildrequest({buildrequest: buildrequest.buildrequestid})")
+              span.badge-status(ng-class="results2class(buildrequest, 'pulse')")
+                .badge-inactive {{buildrequest.buildrequestid}}
+                .badge-active {{results2text(buildrequest)}}
+                            | {{ buildrequest.buildrequestid }}
