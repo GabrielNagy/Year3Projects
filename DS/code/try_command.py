@@ -4,7 +4,6 @@ import os
 import subprocess
 import sys
 import keypress
-import time
 from argparse import RawTextHelpFormatter
 
 configuration = {
@@ -70,6 +69,7 @@ def trigger_buildbot(who, configuration, branch, comments="", patch=None, builde
 
     if not dryrun:
         subprocess.check_call(command, shell=True)
+
 
 if __name__ == "__main__":
 

@@ -2,13 +2,10 @@ import flask_template
 
 c['www']['plugins']['wsgi_dashboards'].append(
     {
-        'name': 'fridashboard',  # as used in URLs
-        'caption': 'FRI Dashboard',  # Title displayed in the UI'
+        'name': 'fridashboard',  # what should appear in the URLs
+        'caption': 'FRI Dashboard',  # what should be displayed in the UI
         'app': flask_template.fridashboardapp,
-        # priority of the dashboard in the left menu (lower is higher in the
-        # menu)
-        'order': 5,
-        # available icon list can be found at http://fontawesome.io/icons/
-        'icon': 'bars'
+        'order': 5,  # priority in menu bar (lower order means higher priority)
+        'icon': 'bars'  # icon to be shown in the UI (from fontawesome.io)
     }
 )

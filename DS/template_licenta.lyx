@@ -4799,7 +4799,6 @@ status open
 
 \begin_layout Plain Layout
 
-\family typewriter
 
 \backslash
 newline
@@ -4814,7 +4813,6 @@ status open
 
 \begin_layout Plain Layout
 
-\family typewriter
 
 \backslash
 newline
@@ -4932,8 +4930,8 @@ try_diff
 \family default
 .
  All of the required information can be automatically generated and completed.
- For that, we devise a Python with the role to simplify the cluttered syntax
- of 
+ For that, we devise a Python script with the role to simplify the cluttered
+ syntax of 
 \family typewriter
 buildbot try
 \family default
