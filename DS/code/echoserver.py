@@ -1,12 +1,12 @@
 from twisted.internet import protocol, reactor
 
 class Echo(protocol.Protocol):
-    def dataReceived(self, data):
+    def received_data(self, data):
         self.transport.write(data)
 
-class EchoFactory(protocol.Factory):
-    def buildProtocol(self, addr):
+class FactoryEcho(protocol.Factory):
+    def protocol_build(self, addr):
         return Echo()
 
-reactor.listenTCP(8000, EchoFactory())
+reactor.listenTCP(8080, FactoryEcho())
 reactor.run()

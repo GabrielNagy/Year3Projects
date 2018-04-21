@@ -1,5 +1,5 @@
-def has_C_files(change):
+def is_python_file(change):
     for name in change.files:
-        if name.endswith(".c"):
+        if name.endswith(".py"):
             return True
     return False
