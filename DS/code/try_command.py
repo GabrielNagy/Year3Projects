@@ -42,12 +42,13 @@ def compose_patch_cmd(who, repo_type, scheduler, login, password, project_repo, 
     return change_cmd
 
 
-class TriggerBuildbotFailed(Exception):
-    pass
-
-
 def clean_workspace():
-    subprocess.check_call("rm patch*", shell=True)
+    subprocess.check_call(["rm", "patch.txt"])
+
+
+class TriggerBuildbotFailed(Exception):
+    clean_workspace()
+    pass
 
 
 def trigger_buildbot(who, configuration, branch, comments="", patch=None, builders=[], filelist=None, dryrun=False, verbose=False):
@@ -100,17 +101,14 @@ if __name__ == "__main__":
                         "If no patch is specified, git diff will be run automatically.")
     parser.add_argument('-b', '--branch', dest='branch', type=str, required=False,
                         default=default_branch, help="branch name, e.g.\n"
-                        "  master\n"
-                        )
+                        "  master\n")
     args = parser.parse_args()
 
     subprocess.call(diff_command, shell=True)
     if os.stat(args.patchfile).st_size == 0:
         print("Generated patch file is empty. Did you modify anything?")
-        clean_workspace()
-        sys.exit(1)
-
-    patch_files = subprocess.check_output(['git', 'diff', '--stat'])
+        raise TriggerBuildbotFailed("Empty patch file")
+    patch_files = subprocess.check_output(['git', 'ls-files', '--modified', '--others', '--exclude-standard'])
     while True:
         print("\nBuildbot try script triggered. Patch file saved to patch.txt.")
         print("\nFiles to be modified:\n" + patch_files)
@@ -118,7 +116,7 @@ if __name__ == "__main__":
         letter = keypress.read_single_keypress()
         if letter == 'x':
             clean_workspace()
-            sys.exit(1)
+            sys.exit(0)
         if letter == 'd':
             print("\n\n*** PATCH CONTENTS ***\n")
             subprocess.call(['git', 'diff'])
