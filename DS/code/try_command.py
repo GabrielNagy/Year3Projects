@@ -106,9 +106,8 @@ if __name__ == "__main__":
 
     subprocess.call(diff_command, shell=True)
     if os.stat(args.patchfile).st_size == 0:
-        print("Generated patch file is empty. Did you modify anything?")
-        raise TriggerBuildbotFailed("Empty patch file")
-    patch_files = subprocess.check_output(['git', 'ls-files', '--modified', '--others', '--exclude-standard'])
+        raise TriggerBuildbotFailed("Empty patch file. Make sure to stage the files you want to test (git add)")
+    patch_files = subprocess.check_output(['git', 'diff', '--staged', '--stat'])
     while True:
         print("\nBuildbot try script triggered. Patch file saved to patch.txt.")
         print("\nFiles to be modified:\n" + patch_files)
@@ -119,7 +118,7 @@ if __name__ == "__main__":
             sys.exit(0)
         if letter == 'd':
             print("\n\n*** PATCH CONTENTS ***\n")
-            subprocess.call(['git', 'diff'])
+            subprocess.call(['cat', args.patchfile])
             print("\n\n**************************\n")
         if letter == 'r':
             print("   sending...")
@@ -134,7 +133,7 @@ if __name__ == "__main__":
                          filelist=patch_files,
                          comments=args.comment,
                          dryrun=args.dryrun,
-                         verbose=args.verbose,)
+                         verbose=args.verbose)
     except TriggerBuildbotFailed as e:
         print(e)
 
