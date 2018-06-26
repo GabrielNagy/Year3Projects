@@ -1,0 +1,3 @@
+[submodule "DS/thesis-documentation"]
+	path = DS/thesis-documentation
+	url = git@gitlab.com:gabuscus/thesis-documentation.git
